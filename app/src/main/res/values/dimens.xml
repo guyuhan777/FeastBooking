@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="app_body_margin">10sp</dimen>
-    <dimen name="app_text_title_margin">25sp</dimen>
+    <dimen name="app_body_margin">10dp</dimen>
+    <dimen name="app_text_title_margin">25dp</dimen>
     <dimen name="app_text_title_size">20sp</dimen>
+    <dimen name="app_text_normal">15sp</dimen>
 </resources>

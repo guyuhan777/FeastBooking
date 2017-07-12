@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">FeastBooking</string>
+    <string name="home_page_title">特別推介</string>
+    <string name="home_page_recommend_more">更多酒樓</string>
+    <string name="back_text">返回</string>
+    <string name="hotel_detail_title">酒店詳情</string>
 </resources>

@@ -1,19 +1,26 @@
 package com.iplay.feastbooking.ui;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.iplay.feastbooking.R;
 import com.iplay.feastbooking.basic.BasicActivity;
 
-public class HomePageActivity extends BasicActivity {
+public class HomePageActivity extends BasicActivity implements View.OnClickListener{
+
+    private String TAG = "HomePageActivity";
 
     private GridView recommended_hotel_gv;
+
+    private TextView recommend_more_hotel_tv;
 
     private int[] hotel_icon_image_ids;
 
@@ -32,6 +39,15 @@ public class HomePageActivity extends BasicActivity {
             hotel_icon_image_ids[i] = R.drawable.shenzi;
         }
         recommended_hotel_gv.setAdapter(new ImageAdapter(this));
+        recommended_hotel_gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d(TAG,"position : " + position);
+                HotelDetailActivity.start(HomePageActivity.this);
+            }
+        });
+        recommend_more_hotel_tv = (TextView) findViewById(R.id.home_page_recommend_more);
+        recommend_more_hotel_tv.setOnClickListener(this);
     }
 
     @Override
@@ -44,11 +60,18 @@ public class HomePageActivity extends BasicActivity {
 
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+
+        }
+    }
+
     private class ImageAdapter extends BaseAdapter {
 
         private Context context;
 
-        public ImageAdapter(Context context){
+        ImageAdapter(Context context){
             this.context = context;
         }
 
