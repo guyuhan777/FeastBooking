@@ -24,8 +24,8 @@ public abstract class BasicActivity extends AppCompatActivity {
 
     public void init(){
         setContentView();
-        findViews();
         getData();
+        findViews();
         showContent();
     }
 
