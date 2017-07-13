@@ -1,7 +1,6 @@
-package com.iplay.feastbooking.ui;
+package com.iplay.feastbooking.ui.homePage;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +10,10 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.iplay.feastbooking.R;
 import com.iplay.feastbooking.basic.BasicActivity;
+import com.iplay.feastbooking.ui.hotelDetail.HotelDetailActivity;
 
 public class HomePageActivity extends BasicActivity implements View.OnClickListener{
 
@@ -34,16 +35,12 @@ public class HomePageActivity extends BasicActivity implements View.OnClickListe
     @Override
     public void findViews() {
         recommended_hotel_gv = (GridView) findViewById(R.id.home_page_recommend_grid_view);
-        hotel_icon_image_ids = new int[size];
-        for ( int i = 0 ; i < size ; i++){
-            hotel_icon_image_ids[i] = R.drawable.shenzi;
-        }
+
         recommended_hotel_gv.setAdapter(new ImageAdapter(this));
         recommended_hotel_gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d(TAG,"position : " + position);
-                HotelDetailActivity.start(HomePageActivity.this);
+                HotelDetailActivity.start(HomePageActivity.this,hotel_icon_image_ids[position]);
             }
         });
         recommend_more_hotel_tv = (TextView) findViewById(R.id.home_page_recommend_more);
@@ -52,7 +49,15 @@ public class HomePageActivity extends BasicActivity implements View.OnClickListe
 
     @Override
     public void getData() {
-
+        hotel_icon_image_ids = new int[size];
+        hotel_icon_image_ids[0] = R.drawable.hotel1;
+        hotel_icon_image_ids[1] = R.drawable.hotel2;
+        hotel_icon_image_ids[2] = R.drawable.hotel3;
+        hotel_icon_image_ids[3] = R.drawable.hotel4;
+        hotel_icon_image_ids[4] = R.drawable.hotel5;
+        hotel_icon_image_ids[5] = R.drawable.hotel6;
+        hotel_icon_image_ids[6] = R.drawable.hotel7;
+        hotel_icon_image_ids[7] = R.drawable.hotel8;
     }
 
     @Override
@@ -92,7 +97,7 @@ public class HomePageActivity extends BasicActivity implements View.OnClickListe
             }else {
                 vh = (ViewHolder) convertView.getTag();
             }
-            vh.iv.setImageDrawable(getDrawable(hotel_icon_image_ids[position]));
+            Glide.with(context).load(hotel_icon_image_ids[position]).into(vh.iv);
             return convertView;
         }
 

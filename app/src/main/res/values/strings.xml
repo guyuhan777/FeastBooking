@@ -2,6 +2,12 @@
     <string name="app_name">FeastBooking</string>
     <string name="home_page_title">特別推介</string>
     <string name="home_page_recommend_more">更多酒樓</string>
-    <string name="back_text">返回</string>
+    <string name="back_text">＜</string>
+    <string name="detail_text">＞</string>
+    <string name="hotel_feast_title">宴席菜單</string>
     <string name="hotel_detail_title">酒店詳情</string>
+    <string name="hotel_description">酒店簡介</string>
+    <string name="hotel_reserve">預定</string>
+    <string name="hotel_flexible_content" formatted="false">\t近期折扣: \n\t 2017.07.15:50%; \n\t 2017.07.16:60%\n\t 2017.07.17:40%。</string>
+    <string name="hotel_fixed_content" formatted="false">四季酒店及度假酒店是世界知名的豪华酒店，对每位客人尊崇备至、四季如一。在中国最富盛名的城市中拥有9家奢华酒店，旨在为您缔造五星级的尊尚享受。欢迎登陆我们的全新官方网站, 查看关于我们或致电(400) 148 7200，让我们为您创造更多终身难忘的美妙体验。</string>
 </resources>
