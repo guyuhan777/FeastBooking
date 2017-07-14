@@ -19,7 +19,7 @@ public class HotelDetailActivity extends BasicActivity implements View.OnClickLi
 
     private static final String TAG = "HotelDetailActivity";
 
-    private TextView back_tv;
+    private ImageView back_tv;
 
     private ImageView hotel_icon_iv;
 
@@ -44,7 +44,7 @@ public class HotelDetailActivity extends BasicActivity implements View.OnClickLi
 
     @Override
     public void findViews() {
-        back_tv = (TextView) findViewById(R.id.back_tv);
+        back_tv = (ImageView) findViewById(R.id.back_tv);
         back_tv.setOnClickListener(this);
         hotel_icon_iv = (ImageView) findViewById(R.id.hotel_icon);
         Glide.with(this).load(drawableId).into(hotel_icon_iv);

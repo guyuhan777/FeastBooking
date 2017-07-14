@@ -13,16 +13,17 @@
             android:scaleType="centerCrop"
             android:layout_width="match_parent"
             android:layout_height="250dp" />
-        <TextView
+        <LinearLayout
             android:fitsSystemWindows="true"
-            android:id="@+id/back_tv"
-            android:textStyle="bold"
-            android:layout_marginLeft="@dimen/app_body_margin"
-            android:text="@string/back_text"
-            android:textSize="@dimen/app_back_size"
-            android:textColor="@color/white"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/back_tv"
+                android:layout_marginLeft="@dimen/app_body_margin"
+                android:background="@drawable/back_2"
+                android:layout_width="@dimen/app_back_size"
+                android:layout_height="@dimen/app_back_size" />
+        </LinearLayout>
     </FrameLayout>
     <LinearLayout
         android:id="@+id/hotel_bottom_ll"
@@ -35,7 +36,7 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:layout_gravity="center_vertical"
-            android:background="@color/blue_hint"
+            android:background="@drawable/button"
             android:layout_marginTop="@dimen/app_body_margin"
             android:layout_marginBottom="@dimen/app_body_margin"
             android:text="@string/hotel_reserve"

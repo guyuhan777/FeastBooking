@@ -1,6 +1,9 @@
 package com.iplay.feastbooking.ui.homePage;
 
+import android.app.Fragment;
 import android.content.Context;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,12 +15,19 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.iplay.feastbooking.R;
-import com.iplay.feastbooking.basic.BasicActivity;
+import com.iplay.feastbooking.ui.home.HomeActivity;
 import com.iplay.feastbooking.ui.hotelDetail.HotelDetailActivity;
+import com.iplay.feastbooking.ui.recommendedHotel.RecommendedHotelFragment;
 
-public class HomePageActivity extends BasicActivity implements View.OnClickListener{
+/**
+ * Created by admin on 2017/7/14.
+ */
 
-    private String TAG = "HomePageActivity";
+public class HomePageFragment extends Fragment implements View.OnClickListener {
+
+    private static final String TAG = "HomePageFragment";
+
+    private View view;
 
     private GridView recommended_hotel_gv;
 
@@ -25,30 +35,36 @@ public class HomePageActivity extends BasicActivity implements View.OnClickListe
 
     private int[] hotel_icon_image_ids;
 
-    private int size = 8;
+    private int size = 9;
 
+    @Nullable
     @Override
-    public void setContentView() {
-        setContentView(R.layout.main_view);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.main_view,container,false);
+        init();
+        return view;
     }
 
-    @Override
-    public void findViews() {
-        recommended_hotel_gv = (GridView) findViewById(R.id.home_page_recommend_grid_view);
+    private void init(){
+        intData();
+        initView();
+    }
 
-        recommended_hotel_gv.setAdapter(new ImageAdapter(this));
+    private void initView(){
+        recommended_hotel_gv = (GridView) view.findViewById(R.id.home_page_recommend_grid_view);
+
+        recommended_hotel_gv.setAdapter(new ImageAdapter(getActivity()));
         recommended_hotel_gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                HotelDetailActivity.start(HomePageActivity.this,hotel_icon_image_ids[position]);
+                HotelDetailActivity.start(getActivity(),hotel_icon_image_ids[position]);
             }
         });
-        recommend_more_hotel_tv = (TextView) findViewById(R.id.home_page_recommend_more);
+        recommend_more_hotel_tv = (TextView) view.findViewById(R.id.home_page_recommend_more);
         recommend_more_hotel_tv.setOnClickListener(this);
     }
 
-    @Override
-    public void getData() {
+    private void intData(){
         hotel_icon_image_ids = new int[size];
         hotel_icon_image_ids[0] = R.drawable.hotel1;
         hotel_icon_image_ids[1] = R.drawable.hotel2;
@@ -58,17 +74,19 @@ public class HomePageActivity extends BasicActivity implements View.OnClickListe
         hotel_icon_image_ids[5] = R.drawable.hotel6;
         hotel_icon_image_ids[6] = R.drawable.hotel7;
         hotel_icon_image_ids[7] = R.drawable.hotel8;
-    }
-
-    @Override
-    public void showContent() {
-
+        hotel_icon_image_ids[8] = R.drawable.hotel9;
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-
+            case R.id.home_page_recommend_more:
+                HomeActivity activity = (HomeActivity) getActivity();
+                if(activity.recommendedHotelFragment==null){
+                    activity.recommendedHotelFragment = new RecommendedHotelFragment();
+                }
+                activity.replaceFragment(activity.recommendedHotelFragment);
+                break;
         }
     }
 

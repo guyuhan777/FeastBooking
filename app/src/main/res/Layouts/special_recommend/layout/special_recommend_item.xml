@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_marginTop="@dimen/app_body_margin"
+    android:background="@color/white"
+    android:layout_marginLeft="@dimen/app_body_margin"
+    android:layout_marginRight="@dimen/app_body_margin"
+    android:layout_width="match_parent"
+    android:layout_height="160dp">
+    <ImageView
+        android:id="@+id/hotel_icon"
+        android:layout_width="200dp"
+        android:layout_height="160dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true" />
+    <RelativeLayout
+        android:layout_marginLeft="@dimen/app_body_margin"
+        android:layout_marginTop="2dp"
+        android:layout_marginRight="5dp"
+        android:layout_toRightOf="@id/hotel_icon"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/hotel_loc"
+            android:text="天河"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/hotel_dist"
+            android:text="5.0km"
+            android:layout_alignParentRight="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/hotel_name"
+            android:layout_below="@id/hotel_loc"
+            android:layout_marginTop="@dimen/app_body_margin"
+            android:textSize="23sp"
+            android:textColor="@color/deep_grey"
+            android:text="天河酒店"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/remark"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/app_body_margin"
+            android:text="13条评论"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <LinearLayout
+            android:id="@+id/feast_price_area"
+            android:layout_above="@id/remark"
+            android:layout_marginBottom="2dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textColor="@color/red"
+                android:text="2888.0-4888.0"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/app_title_color"
+                android:text="/桌"/>
+        </LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>

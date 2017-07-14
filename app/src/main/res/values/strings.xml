@@ -1,9 +1,15 @@
 <resources>
     <string name="app_name">FeastBooking</string>
     <string name="home_page_title">特別推介</string>
-    <string name="home_page_recommend_more">更多酒樓</string>
+    <string name="home_page_recommend_more">更多酒樓 ＞</string>
     <string name="back_text">＜</string>
     <string name="detail_text">＞</string>
+    <string name="filter_tab_1">綜合</string>
+    <string name="filter_tab_2">訂單</string>
+    <string name="filter_tab_3">价格</string>
+    <string name="filter_tab_4">篩選</string>
+    <string name="hotel_list_title">婚宴酒樓</string>
+    <string name="hotel_default_name">酒店特價大優惠</string>
     <string name="hotel_feast_title">宴席菜單</string>
     <string name="hotel_detail_title">酒店詳情</string>
     <string name="hotel_description">酒店簡介</string>

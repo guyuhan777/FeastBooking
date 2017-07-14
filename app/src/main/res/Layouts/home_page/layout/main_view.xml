@@ -3,48 +3,51 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.iplay.feastbooking.ui.homePage.HomePageActivity">
-    <RelativeLayout
-        android:fitsSystemWindows="true"
+    android:background="@color/light_grey">
+    <TextView
+        android:gravity="center"
+        android:background="@color/white"
+        android:id="@+id/home_page_title"
+        android:paddingTop="@dimen/app_text_title_margin"
+        android:textStyle="bold"
+        android:textSize="@dimen/app_text_title_size"
+        android:textColor="@color/app_title_color"
+        android:text="@string/home_page_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <LinearLayout
+        android:id="@+id/home_sl"
+        android:layout_below="@id/home_page_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <include layout="@layout/seperateline_horizontal" />
+    </LinearLayout>
+    <GridView
+        android:id="@+id/home_page_recommend_grid_view"
         android:layout_marginLeft="@dimen/app_body_margin"
         android:layout_marginRight="@dimen/app_body_margin"
+        android:layout_below="@id/home_sl"
+        android:layout_marginTop="@dimen/app_body_margin"
+        android:overScrollMode="never"
+        android:stretchMode="columnWidth"
+        android:columnWidth="120dp"
+        android:horizontalSpacing="10dp"
+        android:verticalSpacing="10dp"
+        android:fadeScrollbars="true"
+        android:numColumns="3"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true">
-        <TextView
-            android:id="@+id/home_page_title"
-            android:layout_marginTop="@dimen/app_text_title_margin"
-            android:textStyle="bold"
-            android:textSize="@dimen/app_text_title_size"
-            android:textColor="@color/app_title_color"
-            android:text="@string/home_page_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-        <GridView
-            android:id="@+id/home_page_recommend_grid_view"
-            android:layout_marginTop="@dimen/app_text_title_margin"
-            android:overScrollMode="never"
-            android:layout_below="@id/home_page_title"
-            android:stretchMode="columnWidth"
-            android:columnWidth="90dp"
-            android:horizontalSpacing="10dp"
-            android:verticalSpacing="30dp"
-            android:fadeScrollbars="true"
-            android:numColumns="4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-        </GridView>
-        <TextView
-            android:id="@+id/home_page_recommend_more"
-            android:layout_below="@id/home_page_recommend_grid_view"
-            android:layout_alignParentRight="true"
-            android:layout_marginTop="35dp"
-            android:textStyle="bold"
-            android:textSize="@dimen/app_text_normal"
-            android:textColor="@color/blue_hint"
-            android:text="@string/home_page_recommend_more"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </RelativeLayout>
+        android:layout_height="wrap_content">
+    </GridView>
+    <TextView
+        android:id="@+id/home_page_recommend_more"
+        android:layout_margin="@dimen/app_body_margin"
+        android:layout_below="@id/home_page_recommend_grid_view"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="20dp"
+        android:textStyle="bold"
+        android:textSize="@dimen/app_text_normal"
+        android:textColor="@color/blue_hint"
+        android:text="@string/home_page_recommend_more"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 </RelativeLayout>
