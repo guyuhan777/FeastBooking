@@ -8,27 +8,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white">
+        <View
+            android:id="@+id/status_bar_fix"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="#00000000" />
         <RelativeLayout
             android:id="@+id/up_part"
+            android:layout_below="@id/status_bar_fix"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <LinearLayout
-                android:id="@+id/left_part"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <ImageView
-                    android:id="@+id/back_iv"
-                    android:background="@drawable/back_4"
-                    android:layout_marginLeft="@dimen/app_body_margin"
-                    android:layout_width="@dimen/app_back_size"
-                    android:layout_height="@dimen/app_back_size" />
-                <TextView
-                    android:layout_gravity="center_vertical"
-                    android:textSize="@dimen/app_text_title_size"
-                    android:text="@string/home_page_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
             <TextView
                 android:textColor="@color/app_title_color"
                 android:textSize="@dimen/app_text_title_size"
@@ -47,7 +36,7 @@
                 android:layout_height="@dimen/app_back_size" />
         </RelativeLayout>
         <LinearLayout
-            android:paddingTop="5dp"
+            android:paddingTop="10dp"
             android:id="@+id/sl"
             android:layout_below="@id/up_part"
             android:layout_width="match_parent"
@@ -56,6 +45,7 @@
         </LinearLayout>
         <LinearLayout
             android:layout_below="@id/sl"
+            android:paddingBottom="@dimen/app_body_margin"
             android:layout_width="match_parent"
             android:layout_marginTop="5dp"
             android:layout_marginLeft="@dimen/app_body_margin"
@@ -75,8 +65,8 @@
                     android:layout_height="wrap_content" />
                 <ImageView
                     android:background="@drawable/sort_down"
-                    android:layout_width="@dimen/app_back_size"
-                    android:layout_height="@dimen/app_back_size" />
+                    android:layout_width="@dimen/app_tab_font_size"
+                    android:layout_height="@dimen/app_tab_font_size" />
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/filter_tab_2"
@@ -92,8 +82,8 @@
                     android:layout_height="wrap_content" />
                 <ImageView
                     android:background="@drawable/sort_down"
-                    android:layout_width="@dimen/app_back_size"
-                    android:layout_height="@dimen/app_back_size" />
+                    android:layout_width="@dimen/app_tab_font_size"
+                    android:layout_height="@dimen/app_tab_font_size" />
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/filter_tab_3"
@@ -109,8 +99,8 @@
                     android:layout_height="wrap_content" />
                 <ImageView
                     android:background="@drawable/sort_down"
-                    android:layout_width="@dimen/app_back_size"
-                    android:layout_height="@dimen/app_back_size" />
+                    android:layout_width="@dimen/app_tab_font_size"
+                    android:layout_height="@dimen/app_tab_font_size" />
             </LinearLayout>
             <LinearLayout
                 android:id="@+id/filter_tab_4"
@@ -126,15 +116,15 @@
                     android:layout_height="wrap_content" />
                 <ImageView
                     android:background="@drawable/filter"
-                    android:layout_width="@dimen/app_back_size"
-                    android:layout_height="@dimen/app_back_size" />
+                    android:layout_width="@dimen/app_tab_font_size"
+                    android:layout_height="@dimen/app_tab_font_size" />
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/special_recommend_rv"
+        android:id="@+id/main_recycler_view"
         android:layout_below="@id/special_recommend_title_part"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
     </android.support.v7.widget.RecyclerView>
 </RelativeLayout>

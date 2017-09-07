@@ -9,11 +9,4 @@
         android:layout_height="120dp"
         android:scaleType="centerCrop"
         android:layout_centerHorizontal="true"/>
-    <TextView
-        android:id="@+id/recommended_hotel_name"
-        android:layout_below="@id/recommended_hotel_icon"
-        android:text="@string/hotel_default_name"
-        android:gravity="center"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 </RelativeLayout>

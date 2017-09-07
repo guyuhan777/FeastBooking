@@ -11,10 +11,12 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.iplay.feastbooking.R;
+import com.iplay.feastbooking.assistance.WindowAttr;
 import com.iplay.feastbooking.ui.home.HomeActivity;
 import com.iplay.feastbooking.ui.hotelDetail.HotelDetailActivity;
 import com.iplay.feastbooking.ui.recommendedHotel.RecommendedHotelFragment;
@@ -25,17 +27,20 @@ import com.iplay.feastbooking.ui.recommendedHotel.RecommendedHotelFragment;
 
 public class HomePageFragment extends Fragment implements View.OnClickListener {
 
-    private static final String TAG = "HomePageFragment";
+    public static final String TAG = "HomePageFragment";
 
-    private View view;
+    private View view ;
 
     private GridView recommended_hotel_gv;
 
     private TextView recommend_more_hotel_tv;
 
+    private View statusView;
+
     private int[] hotel_icon_image_ids;
 
     private int size = 9;
+
 
     @Nullable
     @Override
@@ -51,6 +56,10 @@ public class HomePageFragment extends Fragment implements View.OnClickListener {
     }
 
     private void initView(){
+
+        statusView = (View) view.findViewById(R.id.status_bar_fix);
+        statusView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, WindowAttr.getStatusBarHeight(getActivity())));
+
         recommended_hotel_gv = (GridView) view.findViewById(R.id.home_page_recommend_grid_view);
 
         recommended_hotel_gv.setAdapter(new ImageAdapter(getActivity()));
@@ -82,10 +91,8 @@ public class HomePageFragment extends Fragment implements View.OnClickListener {
         switch (v.getId()){
             case R.id.home_page_recommend_more:
                 HomeActivity activity = (HomeActivity) getActivity();
-                if(activity.recommendedHotelFragment==null){
-                    activity.recommendedHotelFragment = new RecommendedHotelFragment();
-                }
-                activity.replaceFragment(activity.recommendedHotelFragment);
+                RecommendedHotelFragment recommendedHotelFragment = new RecommendedHotelFragment();
+                activity.replaceFragment(recommendedHotelFragment,RecommendedHotelFragment.TAG);
                 break;
         }
     }

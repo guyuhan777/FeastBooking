@@ -4,17 +4,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/light_grey">
-    <TextView
-        android:gravity="center"
-        android:background="@color/white"
+    <LinearLayout
         android:id="@+id/home_page_title"
-        android:paddingTop="@dimen/app_text_title_margin"
-        android:textStyle="bold"
-        android:textSize="@dimen/app_text_title_size"
-        android:textColor="@color/app_title_color"
-        android:text="@string/home_page_title"
+        android:background="@color/white"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <View
+            android:id="@+id/status_bar_fix"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="#00000000" />
+        <TextView
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textSize="@dimen/app_text_title_size"
+            android:textColor="@color/app_title_color"
+            android:text="@string/home_page_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/app_body_margin"/>
+    </LinearLayout>
     <LinearLayout
         android:id="@+id/home_sl"
         android:layout_below="@id/home_page_title"

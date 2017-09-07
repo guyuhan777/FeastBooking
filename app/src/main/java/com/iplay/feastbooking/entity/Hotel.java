@@ -5,13 +5,19 @@ package com.iplay.feastbooking.entity;
  */
 
 public class Hotel {
-
     public String hotel_name;
 
     public String location;
 
-    public double distance;
-
     public int icon_id;
 
+    public double startPricePerTable;
+
+    public double endPricePerTable;
+
+    public int startTableAmount;
+
+    public int endTableAmount;
+
+    public int numOfComment;
 }

@@ -25,6 +25,7 @@ android {
                     'src/main/res/layouts/home',
                     'src/main/res/layouts/special_recommend',
                     'src/main/res/layouts/other',
+                    'src/main/res/layouts/self',
                     'src/main/res/layouts/hotel_detail',
                     'src/main/res/layouts/seperate_line',
                     'src/main/res/layouts',
@@ -39,7 +40,9 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    compile 'com.jude:rollviewpager:1.4.6'
     compile 'com.ashokvarma.android:bottom-navigation-bar:2.0.2'
+    compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:recyclerview-v7:25.3.1'

@@ -10,13 +10,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
-import com.bumptech.glide.Glide;
 import com.iplay.feastbooking.R;
-import com.iplay.feastbooking.basic.BasicViewHolder;
-import com.iplay.feastbooking.component.pull2Load.LoadMoreDataListener;
-import com.iplay.feastbooking.component.view.viewHolder.HotelRecyclerItemViewHolder;
-import com.iplay.feastbooking.component.view.viewHolder.ProgressViewHolder;
+import com.iplay.feastbooking.assistance.WindowAttr;
+import com.iplay.feastbooking.basic.BasicRecyclerViewAdapter;
 import com.iplay.feastbooking.entity.Hotel;
 import com.iplay.feastbooking.factory.HotelFactory;
 
@@ -26,70 +24,47 @@ import java.util.List;
  * Created by admin on 2017/7/14.
  */
 
-public class RecommendedHotelFragment extends Fragment implements LoadMoreDataListener{
+public class RecommendedHotelFragment extends Fragment implements View.OnClickListener{
 
-    private static final String TAG = "recommendHotelFragment";
+    public static final String TAG = "recommendHotelFragment";
+
+    private View statusView;
 
     private View view;
 
-    private RecyclerView recommendedHotel_rv;
+    private Context mContext;
+
+    private RecyclerView mainView;
+
+    private View adsHeader;
+
+    private View loadStateFooter;
+
+    private View adsGridView;
+
+    private View title_recommend;
+
+    private View title_all;
 
     private List<Hotel> hotels;
 
-    private Context mContext;
+    private int visibleThreshold= 1;
 
-    private HotelAdapter adapter;
+    private int totalItemCount;
 
     private int lastVisibleItemPosition;
 
     private boolean isLoading;
 
-    private int visibleThreshold= 1;
-
     private Handler handler = new Handler();
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.special_recommend_layout,container,false);
-        mContext = getActivity();
-        init();
-        return view;
+    private BasicRecyclerViewAdapter adapter;
+
+    private void setLoaded(){
+        isLoading = false;
     }
 
-    private void init(){
-        dataInit();
-        viewInit();
-    }
-
-    private void dataInit(){
-        hotels = HotelFactory.generateHotel();
-    }
-
-    private void viewInit(){
-        recommendedHotel_rv = (RecyclerView) view.findViewById(R.id.special_recommend_rv);
-        adapter = new HotelAdapter();
-        recommendedHotel_rv.setAdapter(adapter);
-        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        recommendedHotel_rv.setLayoutManager(linearLayoutManager);
-        recommendedHotel_rv.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                int totalItemCount = linearLayoutManager.getItemCount();
-                lastVisibleItemPosition = linearLayoutManager.findLastVisibleItemPosition();
-                if(!isLoading && totalItemCount <= lastVisibleItemPosition + visibleThreshold){
-                    loadMoreData();
-                    isLoading = true;
-                }
-            }
-        });
-    }
-
-
-    @Override
-    public void loadMoreData() {
+    public void loadMoreData(){
         hotels.add(null);
         adapter.notifyDataSetChanged();
         handler.postDelayed(new Runnable() {
@@ -97,57 +72,66 @@ public class RecommendedHotelFragment extends Fragment implements LoadMoreDataLi
             public void run() {
                 hotels.remove(hotels.size()-1);
                 adapter.notifyDataSetChanged();
-                List<Hotel> moreHotels = HotelFactory.getMoreHotel();
-                hotels.addAll(moreHotels);
+                List<Hotel> list = HotelFactory.getMoreHotel();
+                for(int i=0;i<list.size();i++){
+                    hotels.add(list.get(i));
+                }
                 adapter.notifyDataSetChanged();
-                isLoading = false;
+                setLoaded();
             }
         },3000);
     }
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        view = inflater.inflate(R.layout.special_recommend_layout,container,false);
+        mContext = getActivity();
 
-    private class HotelAdapter extends RecyclerView.Adapter<BasicViewHolder>{
-        @Override
-        public BasicViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            BasicViewHolder holder = null;
-            switch (viewType){
-                case TYPE_ITEM:
-                    holder = new HotelRecyclerItemViewHolder(LayoutInflater.from(mContext).inflate(R.layout.special_recommend_item,parent,false));
-                    break;
-                case TYPE_PROG:
-                    holder = new ProgressViewHolder(LayoutInflater.from(mContext).inflate(R.layout.progress_bar,parent,false));
-                    break;
+        statusView = (View) view.findViewById(R.id.status_bar_fix);
+        statusView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, WindowAttr.getStatusBarHeight(getActivity())));
+
+        adsHeader = (View) LayoutInflater.from(mContext).inflate(R.layout.advertisement_item,container,false);
+        loadStateFooter = (View) LayoutInflater.from(mContext).inflate(R.layout.progress_bar,container,false);
+        adsGridView = (View) LayoutInflater.from(mContext).inflate(R.layout.recommend_hotel_grid_item,container,false);
+        title_recommend = (View) LayoutInflater.from(mContext).inflate(R.layout.recomment_title_item,container,false);
+        title_all = (View) LayoutInflater.from(mContext).inflate(R.layout.recomment_title_item,container,false);
+
+        hotels = HotelFactory.generateHotel();
+
+        adapter = new BasicRecyclerViewAdapter(getActivity().getApplicationContext());
+        adapter.setData(hotels);
+        adapter.setmHeaderView(adsHeader);
+        adapter.setTitle_recommend(title_recommend);
+        adapter.setmGridView(adsGridView);
+        adapter.setTitle_all(title_all);
+        adapter.setmFooterView(loadStateFooter);
+
+        mainView = (RecyclerView) view.findViewById(R.id.main_recycler_view);
+        final LinearLayoutManager manager = new LinearLayoutManager(getActivity());
+        manager.setOrientation(LinearLayoutManager.VERTICAL);
+        mainView.setLayoutManager(manager);
+        mainView.setAdapter(adapter);
+
+        mainView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                totalItemCount = manager.getItemCount();
+                lastVisibleItemPosition = manager.findLastVisibleItemPosition();
+                if(!isLoading && totalItemCount <= lastVisibleItemPosition + visibleThreshold){
+                    loadMoreData();
+                    isLoading = true;
+                }
             }
-            return holder;
-        }
+        });
 
-        @Override
-        public void onBindViewHolder(BasicViewHolder holder, int position) {
-            switch (getItemViewType(position)){
-                case TYPE_ITEM:
-                    HotelRecyclerItemViewHolder itemViewHolder= (HotelRecyclerItemViewHolder) holder;
-                    Hotel hotel = hotels.get(position);
-                    itemViewHolder.hotel_dist.setText(hotel.distance+"km");
-                    itemViewHolder.hotel_name.setText(hotel.hotel_name);
-                    itemViewHolder.hotel_loc.setText(hotel.location);
-                    Glide.with(mContext).load(hotel.icon_id).into(itemViewHolder.hotel_icon_iv);
-                    break;
-                case TYPE_PROG:
-                    ProgressViewHolder progressViewHolder = (ProgressViewHolder) holder;
-                    if(progressViewHolder.pb!=null){
-                        progressViewHolder.pb.setIndeterminate(true);
-                    }
-                    break;
-            }
-        }
+        return view;
+    }
 
-        @Override
-        public int getItemViewType(int position) {
-            return hotels.get(position)!=null?TYPE_ITEM:TYPE_PROG;
-        }
-
-        @Override
-        public int getItemCount() {
-            return hotels==null?0:hotels.size();
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
         }
     }
+
 }

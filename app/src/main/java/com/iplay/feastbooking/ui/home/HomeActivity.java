@@ -1,6 +1,7 @@
 package com.iplay.feastbooking.ui.home;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.view.View;
 
@@ -8,8 +9,8 @@ import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 import com.iplay.feastbooking.R;
 import com.iplay.feastbooking.basic.BasicActivity;
-import com.iplay.feastbooking.ui.homePage.HomePageFragment;
 import com.iplay.feastbooking.ui.recommendedHotel.RecommendedHotelFragment;
+import com.iplay.feastbooking.ui.self.SelfFragment;
 
 /**
  * Created by admin on 2017/7/14.
@@ -21,9 +22,9 @@ public class HomeActivity extends BasicActivity implements BottomNavigationBar.O
 
     public BottomNavigationBar bottom_bar;
 
-    private HomePageFragment homePageFragment;
+    //private HomePageFragment homePageFragment;
 
-    public RecommendedHotelFragment recommendedHotelFragment;
+    //public RecommendedHotelFragment recommendedHotelFragment;
 
     @Override
     public void setContentView() {
@@ -40,6 +41,7 @@ public class HomeActivity extends BasicActivity implements BottomNavigationBar.O
                 .addItem(new BottomNavigationItem(R.drawable.me,"我"))
                 .setFirstSelectedPosition(0).initialise();
         bottom_bar.setTabSelectedListener(this);
+        bottom_bar.selectTab(0);
     }
 
     @Override
@@ -60,15 +62,29 @@ public class HomeActivity extends BasicActivity implements BottomNavigationBar.O
         }
     }
 
+
+    public void replaceFragment(Fragment fragment,String tag){
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.home_fragment_area,fragment,tag);
+        transaction.addToBackStack(tag);
+        transaction.commit();
+    }
+
     @Override
     public void onTabSelected(int position) {
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        FragmentManager fragmentManager = getFragmentManager();
+        while(fragmentManager.getBackStackEntryCount() > 0){
+            fragmentManager.popBackStackImmediate();
+        }
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
         switch (position){
             case 0:
-                if(homePageFragment == null){
-                    homePageFragment = new HomePageFragment();
-                }
-                transaction.replace(R.id.home_fragment_area,homePageFragment);
+                RecommendedHotelFragment recommendedFragment = new RecommendedHotelFragment();
+                transaction.replace(R.id.home_fragment_area,recommendedFragment,RecommendedHotelFragment.TAG);
+                break;
+            case 1:
+                SelfFragment selfFragment = new SelfFragment();
+                transaction.replace(R.id.home_fragment_area,selfFragment,SelfFragment.TAG);
                 break;
         }
         transaction.commit();

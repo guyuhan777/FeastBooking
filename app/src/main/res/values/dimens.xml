@@ -5,7 +5,7 @@
     <dimen name="app_text_title_size">20sp</dimen>
     <dimen name="app_text_normal">15sp</dimen>
     <dimen name="app_button_font_size">25sp</dimen>
-    <dimen name="app_tab_font_size">25sp</dimen>
+    <dimen name="app_tab_font_size">20sp</dimen>
     <dimen name="app_back_size">30dp</dimen>
     <dimen name="app_recycle_view_text_size">18sp</dimen>
 </resources>
