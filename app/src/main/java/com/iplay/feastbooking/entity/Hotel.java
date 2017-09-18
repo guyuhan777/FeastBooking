@@ -1,10 +1,13 @@
 package com.iplay.feastbooking.entity;
 
+import java.io.Serializable;
+import java.util.List;
+
 /**
  * Created by admin on 2017/7/14.
  */
 
-public class Hotel {
+public class Hotel implements Serializable{
     public String hotel_name;
 
     public String location;
@@ -20,4 +23,15 @@ public class Hotel {
     public int endTableAmount;
 
     public int numOfComment;
+
+    public double rate;
+
+    public List<HotelRecentDiscount> recentDiscounts;
+
+    public String description;
+
+    public List<HotelFeast> feasts;
+
+    public List<HotelRoom> rooms;
+
 }

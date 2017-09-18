@@ -1,5 +1,6 @@
 package com.iplay.feastbooking.component.view.viewHolder;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.iplay.feastbooking.R;
 import com.iplay.feastbooking.basic.BasicViewHolder;
+import com.iplay.feastbooking.ui.hotelDetail.NewHotelDetailActivity;
 
 /**
  * Created by admin on 2017/9/7.
@@ -19,18 +21,21 @@ public class RecommendHotelGridViewHolder extends BasicViewHolder {
 
     private GridView recommended_hotel_gv;
 
-    private int[] hotel_icon_image_ids = new int[9];
+    private int[] hotel_icon_image_ids = new int[6];
+
+    private Context mContext;
+
+    public void setmContext(Context context){
+        mContext = context;
+    }
 
     private void dataInit(){
-        hotel_icon_image_ids[0] = R.drawable.hotel1;
-        hotel_icon_image_ids[1] = R.drawable.hotel2;
-        hotel_icon_image_ids[2] = R.drawable.hotel3;
-        hotel_icon_image_ids[3] = R.drawable.hotel4;
-        hotel_icon_image_ids[4] = R.drawable.hotel5;
-        hotel_icon_image_ids[5] = R.drawable.hotel6;
-        hotel_icon_image_ids[6] = R.drawable.hotel7;
-        hotel_icon_image_ids[7] = R.drawable.hotel8;
-        hotel_icon_image_ids[8] = R.drawable.hotel9;
+        hotel_icon_image_ids[0] = R.drawable.timg;
+        hotel_icon_image_ids[1] = R.drawable.timg2;
+        hotel_icon_image_ids[2] = R.drawable.timg3;
+        hotel_icon_image_ids[3] = R.drawable.timg4;
+        hotel_icon_image_ids[4] = R.drawable.timg;
+        hotel_icon_image_ids[5] = R.drawable.timg2;
     }
 
     public RecommendHotelGridViewHolder(View itemView) {
@@ -42,7 +47,7 @@ public class RecommendHotelGridViewHolder extends BasicViewHolder {
         recommended_hotel_gv.setAdapter(adapter);
     }
 
-    static class ImageAdapter extends BaseAdapter {
+    class ImageAdapter extends BaseAdapter {
 
         private int[] hotel_icon_image_ids;
 
@@ -62,6 +67,12 @@ public class RecommendHotelGridViewHolder extends BasicViewHolder {
                 convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.home_page_recommend_grid_item,parent,false);
                 vh = new ViewHolder();
                 vh.iv = (ImageView) convertView.findViewById(R.id.recommended_hotel_icon);
+                vh.iv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        NewHotelDetailActivity.start(mContext);
+                    }
+                });
                 convertView.setTag(vh);
             }else {
                 vh = (ViewHolder) convertView.getTag();
@@ -82,6 +93,7 @@ public class RecommendHotelGridViewHolder extends BasicViewHolder {
 
         class ViewHolder{
             ImageView iv;
+
         }
     }
 }

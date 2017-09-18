@@ -26,10 +26,9 @@ public class AdvertisementViewHolder extends BasicViewHolder {
 
     static class AdsLoopAdapter extends LoopPagerAdapter {
         private int[] images = {
-                R.drawable.hotel1,
-                R.drawable.hotel2,
-                R.drawable.hotel3,
-                R.drawable.hotel4
+                R.drawable.ad,
+                R.drawable.ad2,
+                R.drawable.ad3
         };
 
         public AdsLoopAdapter(RollPagerView view){

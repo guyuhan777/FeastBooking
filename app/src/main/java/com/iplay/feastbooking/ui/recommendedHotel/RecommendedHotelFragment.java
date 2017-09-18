@@ -98,7 +98,7 @@ public class RecommendedHotelFragment extends Fragment implements View.OnClickLi
 
         hotels = HotelFactory.generateHotel();
 
-        adapter = new BasicRecyclerViewAdapter(getActivity().getApplicationContext());
+        adapter = new BasicRecyclerViewAdapter(getActivity());
         adapter.setData(hotels);
         adapter.setmHeaderView(adsHeader);
         adapter.setTitle_recommend(title_recommend);

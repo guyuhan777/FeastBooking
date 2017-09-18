@@ -113,7 +113,9 @@ public class BasicRecyclerViewAdapter extends RecyclerView.Adapter<BasicViewHold
             return new TitleViewHolder(title_recommend);
         }
         if(mGridView!=null && viewType == TYPE_GRID){
-            return new RecommendHotelGridViewHolder(mGridView);
+            RecommendHotelGridViewHolder holder = new RecommendHotelGridViewHolder(mGridView);
+            holder.setmContext(mContext);
+            return  holder;
         }
         if(title_all!=null && viewType == TYPE_TITLE_ALL){
             return new TitleViewHolder(title_all);

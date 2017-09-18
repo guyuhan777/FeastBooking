@@ -8,4 +8,7 @@
     <dimen name="app_tab_font_size">20sp</dimen>
     <dimen name="app_back_size">30dp</dimen>
     <dimen name="app_recycle_view_text_size">18sp</dimen>
+    <dimen name="app_title_margin">20dp</dimen>
+    <dimen name="app_rating_icon_size">15dp</dimen>
+    <dimen name="app_room_icon_size">120dp</dimen>
 </resources>

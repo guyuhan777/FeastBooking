@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:id="@+id/up_part"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <View
+            android:id="@+id/status_bar_fix_title"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="#00000000" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/back_iv"
+                android:layout_margin="5dp"
+                android:background="@drawable/back_4"
+                android:layout_width="30dp"
+                android:layout_height="30dp" />
+            <TextView
+                android:textStyle="bold"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="@dimen/app_body_margin"
+                android:layout_marginTop="@dimen/app_body_margin"
+                android:textSize="@dimen/app_text_title_size"
+                android:textColor="@color/app_title_color"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="永结同心宴"/>
+        </RelativeLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:background="@color/white"
+        android:id="@+id/bottom_button_group"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingBottom="@dimen/app_body_margin"
+        android:paddingTop="@dimen/app_body_margin">
+        <Button
+            android:textSize="@dimen/app_text_title_size"
+            android:textColor="@color/white"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/cha_xun_you_hui"
+            android:background="@drawable/button1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <android.support.v7.widget.RecyclerView
+        android:background="@color/white"
+        android:layout_below="@id/up_part"
+        android:layout_above="@id/bottom_button_group"
+        android:id="@+id/feast_recycler_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </android.support.v7.widget.RecyclerView>
+</RelativeLayout>
