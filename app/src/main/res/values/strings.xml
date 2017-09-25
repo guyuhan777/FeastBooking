@@ -1,4 +1,5 @@
 <resources>
+    <string name="huan_jing">環境</string>
     <string name="cha_xun_you_hui">查詢優惠</string>
     <string name="ping_fang_mi">㎡</string>
     <string name="app_name">FeastBooking</string>

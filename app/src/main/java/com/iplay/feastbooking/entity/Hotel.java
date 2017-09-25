@@ -8,6 +8,7 @@ import java.util.List;
  */
 
 public class Hotel implements Serializable{
+
     public String hotel_name;
 
     public String location;

@@ -78,19 +78,19 @@ public class NewHotelDetailActivity extends BasicActivity implements View.OnClic
                 super.onScrolled(recyclerView, dx, dy);
                 currentY += dy;
                 if(currentY <= 0){
-                    title_bar.setBackgroundColor(Color.argb(0,250,129,177));
+                    title_bar.setBackgroundColor(Color.argb(0,255,130,171));
                     Glide.with(NewHotelDetailActivity.this).load(R.drawable.back_2).into(back_iv);
                 }else if(currentY >0 && currentY <= height){
                     float scale = (float) currentY/height;
                     float alpha = scale * 255;
-                    title_bar.setBackgroundColor(Color.argb((int)alpha,250,129,177));
+                    title_bar.setBackgroundColor(Color.argb((int)alpha,255,130,171));
                     /*if(currentY >= height * 0.8){
                         Glide.with(NewHotelDetailActivity.this).load(R.drawable.back_4).into(back_iv);
                     }else{
                         Glide.with(NewHotelDetailActivity.this).load(R.drawable.back_2).into(back_iv);
                     }*/
                 }else{
-                    title_bar.setBackgroundColor(Color.argb(255,250,129,177));
+                    title_bar.setBackgroundColor(Color.argb(255,255,130,171));
                     //Glide.with(NewHotelDetailActivity.this).load(R.drawable.back_4).into(back_iv);
                 }
             }

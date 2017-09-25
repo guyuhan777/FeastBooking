@@ -34,14 +34,13 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="6">
                 <TextView
-                    android:layout_centerInParent="true"
                     android:textStyle="bold"
-                    android:layout_centerHorizontal="true"
+                    android:layout_centerInParent="true"
                     android:textSize="@dimen/app_text_title_size"
                     android:textColor="@color/app_title_color"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="永结同心宴"/>
+                    android:text="宴會廳 3F"/>
             </RelativeLayout>
             <RelativeLayout
                 android:layout_width="0dp"
@@ -63,7 +62,7 @@
             android:textSize="@dimen/app_text_title_size"
             android:textColor="@color/white"
             android:layout_gravity="center_horizontal"
-            android:text="@string/cha_xun_you_hui"
+            android:text="@string/consult"
             android:background="@drawable/button1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
@@ -72,7 +71,7 @@
         android:background="@color/white"
         android:layout_below="@id/up_part"
         android:layout_above="@id/bottom_button_group"
-        android:id="@+id/feast_recycler_content"
+        android:id="@+id/room_recycler_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     </android.support.v7.widget.RecyclerView>

@@ -18,6 +18,7 @@ import com.iplay.feastbooking.ui.hotelDetail.viewHolder.HotelFeastViewHolder;
 import com.iplay.feastbooking.ui.hotelDetail.viewHolder.HotelFixedDescribeViewHolder;
 import com.iplay.feastbooking.ui.hotelDetail.viewHolder.HotelRoomDescribeViewHolder;
 import com.iplay.feastbooking.ui.hotelDetail.viewHolder.HotelRoomTitleViewHolder;
+import com.iplay.feastbooking.ui.hotelRoom.HotelRoomActivity;
 
 /**
  * Created by admin on 2017/9/12.
@@ -75,8 +76,15 @@ public class HotelDetailAdapter extends RecyclerView.Adapter<BasicViewHolder> {
         }
         if(getItemViewType(position) == HOTEL_ROOM_DESCRIBE){
             HotelRoomDescribeViewHolder hrdvh = (HotelRoomDescribeViewHolder) holder;
-            HotelRoom hotelRoom = hotel.rooms.get(position-2);
+            final HotelRoom hotelRoom = hotel.rooms.get(position-2);
             Glide.with(mContext).load(hotelRoom.icon_id).into(hrdvh.hotel_room_icon);
+            hrdvh.itemView.setOnClickListener(new View.OnClickListener(){
+
+                @Override
+                public void onClick(View v) {
+                    HotelRoomActivity.start(mContext,hotelRoom);
+                }
+            });
         }
         if(getItemViewType(position) == HOTEL_FEAST){
             int index = position - 3 - hotel.rooms.size();

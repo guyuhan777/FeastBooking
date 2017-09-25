@@ -1,6 +1,7 @@
 package com.iplay.feastbooking.entity;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by admin on 2017/9/12.
@@ -20,4 +21,7 @@ public class HotelRoom implements Serializable{
 
     public double minExpense;
 
+    public List<String> configs;
+
+    public List<String> environments;
 }

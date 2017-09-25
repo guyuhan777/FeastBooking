@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:padding="@dimen/app_body_margin">
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+        <ImageView
+            android:src="@drawable/tick"
+            android:layout_width="@dimen/app_recycle_icon_size"
+            android:layout_height="@dimen/app_recycle_icon_size"
+            android:scaleType="centerCrop"/>
+        <TextView
+            android:text="有草坪"
+            android:textColor="@color/grey"
+            android:id="@+id/text2"
+            android:textSize="@dimen/app_text_normal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+        <ImageView
+            android:src="@drawable/tick"
+            android:layout_width="@dimen/app_recycle_icon_size"
+            android:layout_height="@dimen/app_recycle_icon_size"
+            android:scaleType="centerCrop"/>
+        <TextView
+            android:text="有草坪"
+            android:textColor="@color/grey"
+            android:id="@+id/text3"
+            android:textSize="@dimen/app_text_normal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+        <ImageView
+            android:src="@drawable/tick"
+            android:layout_width="@dimen/app_recycle_icon_size"
+            android:layout_height="@dimen/app_recycle_icon_size"
+            android:scaleType="centerCrop"/>
+        <TextView
+            android:text="有草坪"
+            android:textColor="@color/grey"
+            android:id="@+id/text1"
+            android:textSize="@dimen/app_text_normal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</LinearLayout>
