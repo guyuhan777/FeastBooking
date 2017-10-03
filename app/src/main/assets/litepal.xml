@@ -1,0 +1,11 @@
+<litepal>
+    <dbname value="feast_booking"/>
+
+    <version value ="6"/>
+
+    <list>
+        <mapping class="com.iplay.feastbooking.dao.UserDao"/>
+        <mapping class="com.iplay.feastbooking.dao.AdvertisementDao" />
+        <mapping class="com.iplay.feastbooking.dao.RecommendGridDao" />
+    </list>
+</litepal>

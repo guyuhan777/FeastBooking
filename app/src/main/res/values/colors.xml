@@ -6,6 +6,7 @@
     <color name="app_title_color">#000000</color>
     <color name="blue_hint">#58b7ef</color>
     <color name="white">#ffffff</color>
+    <color name="button_grey">#ebebeb</color>
     <color name="light_grey">#dbdbe1</color>
     <color name="grey">#C0C0C0</color>
     <color name="deep_grey">#808A87</color>

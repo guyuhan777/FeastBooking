@@ -1,0 +1,9 @@
+serverUrl=http://106.14.165.145:8083/api
+tokenPrefix=Bearer
+urlSeperator=/
+applyForRegistrationEmail=auth/applyForRegistrationEmail
+totpPost=auth/totp
+register=users
+advertisement=advertisements
+recommendations=recommendations
+resource=resources

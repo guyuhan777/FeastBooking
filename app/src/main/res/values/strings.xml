@@ -1,4 +1,9 @@
 <resources>
+    <string name="wan_cheng_zhu_ce">完成註冊</string>
+    <string name="huo_qu_yzm">獲取驗證碼</string>
+    <string name="you_xiang_zhu_ce">郵箱註冊</string>
+    <string name="yi_you_zhang_hu">已有賬戶?</string>
+    <string name="li_ji_deng_lu">立即登錄</string>
     <string name="huan_jing">環境</string>
     <string name="cha_xun_you_hui">查詢優惠</string>
     <string name="ping_fang_mi">㎡</string>

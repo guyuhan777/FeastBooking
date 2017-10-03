@@ -3,14 +3,22 @@ package com.iplay.feastbooking.ui.home;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 import com.iplay.feastbooking.R;
 import com.iplay.feastbooking.basic.BasicActivity;
+import com.iplay.feastbooking.dao.UserDao;
 import com.iplay.feastbooking.ui.recommendedHotel.RecommendedHotelFragment;
 import com.iplay.feastbooking.ui.self.SelfFragment;
+
+import org.litepal.crud.DataSupport;
+
+import java.util.List;
 
 /**
  * Created by admin on 2017/7/14.
@@ -20,11 +28,34 @@ public class HomeActivity extends BasicActivity implements BottomNavigationBar.O
 
     private static final String TAG = "HomeActivity";
 
+    public static final String KEY_USER = "user_key";
+
     public BottomNavigationBar bottom_bar;
 
-    //private HomePageFragment homePageFragment;
+    private String token;
 
-    //public RecommendedHotelFragment recommendedHotelFragment;
+    private RecommendedHotelFragment recommendedFragment;
+
+    private  SelfFragment selfFragment;
+
+    private Fragment currentFragment;
+
+    public void switchFragment(Fragment targetFragment){
+        if(currentFragment == targetFragment){
+            return;
+        }
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        if(currentFragment != null){
+            transaction.hide(currentFragment);
+        }
+        if(!targetFragment.isAdded()){
+            transaction.add(R.id.home_fragment_area, targetFragment);
+        }else {
+            transaction.show(targetFragment);
+        }
+        transaction.commit();
+        currentFragment = targetFragment;
+    }
 
     @Override
     public void setContentView() {
@@ -46,7 +77,13 @@ public class HomeActivity extends BasicActivity implements BottomNavigationBar.O
 
     @Override
     public void getData() {
-
+        List<UserDao> userDaos = DataSupport.where("isLogin = ?","" + 1).find(UserDao.class);
+        if(userDaos.size() != 1){
+            return;
+        }else{
+            Log.d("currentUser",userDaos.get(0).toString());
+            token = userDaos.get(0).getToken();
+        }
     }
 
     @Override
@@ -54,37 +91,27 @@ public class HomeActivity extends BasicActivity implements BottomNavigationBar.O
 
     }
 
-    public void replaceFragment(Fragment fragment){
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        if(fragment!=null){
-            transaction.replace(R.id.home_fragment_area,fragment);
-            transaction.commit();
-        }
-    }
-
-
-    public void replaceFragment(Fragment fragment,String tag){
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.home_fragment_area,fragment,tag);
-        transaction.addToBackStack(tag);
-        transaction.commit();
+    public static void startActivity(Context context){
+        Intent intent = new Intent(context, HomeActivity.class);
+        context.startActivity(intent);
     }
 
     @Override
     public void onTabSelected(int position) {
         FragmentManager fragmentManager = getFragmentManager();
-        while(fragmentManager.getBackStackEntryCount() > 0){
-            fragmentManager.popBackStackImmediate();
-        }
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         switch (position){
             case 0:
-                RecommendedHotelFragment recommendedFragment = new RecommendedHotelFragment();
-                transaction.replace(R.id.home_fragment_area,recommendedFragment,RecommendedHotelFragment.TAG);
+                if(recommendedFragment == null){
+                    recommendedFragment = new RecommendedHotelFragment();
+                }
+                switchFragment(recommendedFragment);
                 break;
             case 1:
-                SelfFragment selfFragment = new SelfFragment();
-                transaction.replace(R.id.home_fragment_area,selfFragment,SelfFragment.TAG);
+                if (selfFragment == null){
+                    selfFragment = new SelfFragment();
+                }
+                switchFragment(selfFragment);
                 break;
         }
         transaction.commit();

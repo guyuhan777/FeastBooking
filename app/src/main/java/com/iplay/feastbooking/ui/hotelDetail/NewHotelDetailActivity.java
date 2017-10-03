@@ -104,6 +104,7 @@ public class NewHotelDetailActivity extends BasicActivity implements View.OnClic
 
     @Override
     public void showContent() {
+
     }
 
     @Override

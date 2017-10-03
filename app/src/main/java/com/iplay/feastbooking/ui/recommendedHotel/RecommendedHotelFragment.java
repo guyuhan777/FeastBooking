@@ -1,6 +1,5 @@
 package com.iplay.feastbooking.ui.recommendedHotel;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,9 +13,16 @@ import android.widget.RelativeLayout;
 
 import com.iplay.feastbooking.R;
 import com.iplay.feastbooking.assistance.WindowAttr;
+import com.iplay.feastbooking.basic.BasicFragment;
 import com.iplay.feastbooking.basic.BasicRecyclerViewAdapter;
-import com.iplay.feastbooking.entity.Hotel;
-import com.iplay.feastbooking.factory.HotelFactory;
+import com.iplay.feastbooking.entity.Advertisement;
+import com.iplay.feastbooking.entity.RecommendGrid;
+import com.iplay.feastbooking.messageEvent.AdvertisementMessageEvent;
+import com.iplay.feastbooking.messageEvent.RecommendGridMessageEvent;
+import com.iplay.feastbooking.net.utilImpl.recommendHotelUtil.RecommendHotelListUtility;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
@@ -24,9 +30,13 @@ import java.util.List;
  * Created by admin on 2017/7/14.
  */
 
-public class RecommendedHotelFragment extends Fragment implements View.OnClickListener{
+public class RecommendedHotelFragment extends BasicFragment implements View.OnClickListener{
+
+    private RecommendHotelListUtility utility;
 
     public static final String TAG = "recommendHotelFragment";
+
+    private boolean isInit = false;
 
     private View statusView;
 
@@ -35,18 +45,6 @@ public class RecommendedHotelFragment extends Fragment implements View.OnClickLi
     private Context mContext;
 
     private RecyclerView mainView;
-
-    private View adsHeader;
-
-    private View loadStateFooter;
-
-    private View adsGridView;
-
-    private View title_recommend;
-
-    private View title_all;
-
-    private List<Hotel> hotels;
 
     private int visibleThreshold= 1;
 
@@ -65,46 +63,22 @@ public class RecommendedHotelFragment extends Fragment implements View.OnClickLi
     }
 
     public void loadMoreData(){
-        hotels.add(null);
-        adapter.notifyDataSetChanged();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                hotels.remove(hotels.size()-1);
-                adapter.notifyDataSetChanged();
-                List<Hotel> list = HotelFactory.getMoreHotel();
-                for(int i=0;i<list.size();i++){
-                    hotels.add(list.get(i));
-                }
-                adapter.notifyDataSetChanged();
-                setLoaded();
-            }
-        },3000);
+
     }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        isRegisteredNeed = true;
+
         view = inflater.inflate(R.layout.special_recommend_layout,container,false);
         mContext = getActivity();
 
         statusView = (View) view.findViewById(R.id.status_bar_fix);
         statusView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, WindowAttr.getStatusBarHeight(getActivity())));
 
-        adsHeader = (View) LayoutInflater.from(mContext).inflate(R.layout.advertisement_item,container,false);
-        loadStateFooter = (View) LayoutInflater.from(mContext).inflate(R.layout.progress_bar,container,false);
-        adsGridView = (View) LayoutInflater.from(mContext).inflate(R.layout.recommend_hotel_grid_item,container,false);
-        title_recommend = (View) LayoutInflater.from(mContext).inflate(R.layout.recomment_title_item,container,false);
-        title_all = (View) LayoutInflater.from(mContext).inflate(R.layout.recomment_title_item,container,false);
-
-        hotels = HotelFactory.generateHotel();
-
         adapter = new BasicRecyclerViewAdapter(getActivity());
-        adapter.setData(hotels);
-        adapter.setmHeaderView(adsHeader);
-        adapter.setTitle_recommend(title_recommend);
-        adapter.setmGridView(adsGridView);
-        adapter.setTitle_all(title_all);
-        adapter.setmFooterView(loadStateFooter);
+        utility = RecommendHotelListUtility.getInstance(mContext);
 
         mainView = (RecyclerView) view.findViewById(R.id.main_recycler_view);
         final LinearLayoutManager manager = new LinearLayoutManager(getActivity());
@@ -119,13 +93,46 @@ public class RecommendedHotelFragment extends Fragment implements View.OnClickLi
                 totalItemCount = manager.getItemCount();
                 lastVisibleItemPosition = manager.findLastVisibleItemPosition();
                 if(!isLoading && totalItemCount <= lastVisibleItemPosition + visibleThreshold){
-                    loadMoreData();
                     isLoading = true;
+                    //oadMoreData();
                 }
             }
         });
 
         return view;
+    }
+    @Override
+    public void onStart() {
+        super.onStart();
+        utility.asyncInit();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onAdvertisementMessageEvent(AdvertisementMessageEvent event){
+        List<Advertisement> advertisements = event.getAdvertisements();
+        if (advertisements == null || advertisements.size() ==0){
+            return;
+        }
+        adapter.addData(BasicRecyclerViewAdapter.TYPE_ADS, advertisements);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onRecommendGridMessageEvent(RecommendGridMessageEvent event){
+        List<RecommendGrid> recommendGrids = event.getRecommendGrids();
+        if(recommendGrids == null || recommendGrids.size() == 0){
+            return;
+        }
+        if(recommendGrids.size()%2 != 0){
+            recommendGrids.add(null);
+        }
+
+        for(int i=0; i<recommendGrids.size()/2; i++){
+            RecommendGrid recommendGrid[] = new RecommendGrid[2];
+            recommendGrid[0] = recommendGrids.get(i*2);
+            recommendGrid[1] = recommendGrids.get(i*2 + 1);
+            adapter.addData(BasicRecyclerViewAdapter.TYPE_GRID, recommendGrid);
+        }
+
     }
 
     @Override
@@ -133,5 +140,6 @@ public class RecommendedHotelFragment extends Fragment implements View.OnClickLi
         switch (v.getId()){
         }
     }
+
 
 }

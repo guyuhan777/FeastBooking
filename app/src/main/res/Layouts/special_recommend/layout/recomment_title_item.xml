@@ -2,13 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/app_body_margin"
+    android:background="@color/white">
     <TextView
         android:id="@+id/recommend_title"
         android:textSize="@dimen/app_text_title_size"
         android:textStyle="bold"
         android:layout_marginLeft="@dimen/app_body_margin"
-        android:textColor="@color/app_title_color"
+        android:textColor="@color/deep_grey"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/home_page_recommend"/>
