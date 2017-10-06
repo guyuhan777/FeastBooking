@@ -21,7 +21,7 @@ import java.util.List;
 
 public class AdvertisementViewHolder extends BasicViewHolder {
 
-    private RollPagerView rollPagerView;
+    public RollPagerView rollPagerView;
 
     private List<Advertisement> advertisements;
 
@@ -49,7 +49,7 @@ public class AdvertisementViewHolder extends BasicViewHolder {
             Advertisement advertisement = advertisements.get(position);
             WeakReference<ImageView> imageViewWeakReference = new WeakReference<ImageView>(imageView);
             ImageView view = imageViewWeakReference.get();
-            Glide.with(container.getContext()).load(Uri.parse(advertisement.getUrl())).placeholder(R.drawable.ad).into(view);
+            Glide.with(container.getContext()).load(Uri.parse(advertisement.getUrl())).into(view);
             return imageView;
         }
 

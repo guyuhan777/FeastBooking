@@ -44,6 +44,7 @@
             <include layout="@layout/seperateline_horizontal" />
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/filter_line"
             android:layout_below="@id/sl"
             android:paddingBottom="@dimen/app_body_margin"
             android:layout_width="match_parent"

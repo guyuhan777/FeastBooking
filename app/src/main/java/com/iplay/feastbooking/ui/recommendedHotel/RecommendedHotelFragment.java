@@ -3,6 +3,7 @@ package com.iplay.feastbooking.ui.recommendedHotel;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.iplay.feastbooking.R;
 import com.iplay.feastbooking.assistance.WindowAttr;
@@ -17,7 +19,10 @@ import com.iplay.feastbooking.basic.BasicFragment;
 import com.iplay.feastbooking.basic.BasicRecyclerViewAdapter;
 import com.iplay.feastbooking.entity.Advertisement;
 import com.iplay.feastbooking.entity.RecommendGrid;
+import com.iplay.feastbooking.gson.homepage.hotelList.RecommendHotelGO;
 import com.iplay.feastbooking.messageEvent.AdvertisementMessageEvent;
+import com.iplay.feastbooking.messageEvent.HotelListMessageEvent;
+import com.iplay.feastbooking.messageEvent.HotelListNoInternetMessageEvent;
 import com.iplay.feastbooking.messageEvent.RecommendGridMessageEvent;
 import com.iplay.feastbooking.net.utilImpl.recommendHotelUtil.RecommendHotelListUtility;
 
@@ -36,7 +41,11 @@ public class RecommendedHotelFragment extends BasicFragment implements View.OnCl
 
     public static final String TAG = "recommendHotelFragment";
 
-    private boolean isInit = false;
+    private static final int numPerPage = 10;
+
+    private int currentPage = 0;
+
+    private  volatile boolean isInit = false;
 
     private View statusView;
 
@@ -52,19 +61,13 @@ public class RecommendedHotelFragment extends BasicFragment implements View.OnCl
 
     private int lastVisibleItemPosition;
 
-    private boolean isLoading;
+    private volatile boolean isLoading;
 
-    private Handler handler = new Handler();
+    private boolean isAllLoaded = false;
 
     private BasicRecyclerViewAdapter adapter;
 
-    private void setLoaded(){
-        isLoading = false;
-    }
-
-    public void loadMoreData(){
-
-    }
+    private Handler postHandler = new Handler();
 
     @Nullable
     @Override
@@ -90,21 +93,40 @@ public class RecommendedHotelFragment extends BasicFragment implements View.OnCl
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
+                if(isAllLoaded){
+                    return;
+                }
                 totalItemCount = manager.getItemCount();
                 lastVisibleItemPosition = manager.findLastVisibleItemPosition();
                 if(!isLoading && totalItemCount <= lastVisibleItemPosition + visibleThreshold){
-                    isLoading = true;
-                    //oadMoreData();
+                    postHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            loadMoreData();
+                        }
+                    });
                 }
             }
         });
 
         return view;
     }
+
+    private void loadMoreData(){
+        isLoading = true;
+        adapter.addData(BasicRecyclerViewAdapter.TYPE_LOADING,null);
+        utility.loadMore(++currentPage);
+    }
+
     @Override
     public void onStart() {
         super.onStart();
-        utility.asyncInit();
+        if(isInit){
+            return;
+        }else {
+            isInit = true;
+            utility.asyncInit();
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -132,6 +154,47 @@ public class RecommendedHotelFragment extends BasicFragment implements View.OnCl
             recommendGrid[1] = recommendGrids.get(i*2 + 1);
             adapter.addData(BasicRecyclerViewAdapter.TYPE_GRID, recommendGrid);
         }
+    }
+
+    public void onHotelListNoInternetMessageEvent(HotelListNoInternetMessageEvent event){
+        int type = event.getType();
+        if(type == HotelListNoInternetMessageEvent.TYPE_INIT){
+
+        }else if(type == HotelListNoInternetMessageEvent.TYPE_LOAD_MORE){
+            Toast.makeText(mContext,"網絡不給力",Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onHotelListMessageEvent(final HotelListMessageEvent event){
+        int type = event.getType();
+        if(type == HotelListMessageEvent.TYPE_INIT){
+            List<RecommendHotelGO> hotels = event.getHotels();
+            if(hotels == null || hotels.size() == 0){
+                return;
+            }
+            for(int i=0;i<hotels.size();i++ ){
+                adapter.addData(BasicRecyclerViewAdapter.TYPE_HOTEL_INIT,hotels.get(i));
+            }
+        }else if(type == HotelListMessageEvent.TYPE_LOAD){
+            Message msg = new Message();
+            msg.obj = event;
+            adapter.cancelLoading();
+            List<RecommendHotelGO> hotels = event.getHotels();
+            if(hotels == null || hotels.size() == 0){
+                adapter.addData(BasicRecyclerViewAdapter.TYPE_ALL_LOADED,null);
+                isAllLoaded = true;
+            }else {
+                for(int i=0; i<hotels.size(); i++){
+                    adapter.addData(BasicRecyclerViewAdapter.TYPE_HOTEL_LOADMORE,hotels.get(i));
+                }
+                if(hotels.size()<numPerPage ){
+                    adapter.addData(BasicRecyclerViewAdapter.TYPE_ALL_LOADED,null);
+                    isAllLoaded = true;
+                }
+            }
+            isLoading = false;
+        }
 
     }
 
@@ -140,6 +203,4 @@ public class RecommendedHotelFragment extends BasicFragment implements View.OnCl
         switch (v.getId()){
         }
     }
-
-
 }

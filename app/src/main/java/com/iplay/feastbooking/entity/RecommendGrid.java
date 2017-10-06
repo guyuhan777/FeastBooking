@@ -1,7 +1,7 @@
 package com.iplay.feastbooking.entity;
 
 import com.iplay.feastbooking.dao.RecommendGridDao;
-import com.iplay.feastbooking.gson.RecommendGridGO;
+import com.iplay.feastbooking.gson.homepage.RecommendGridGO;
 
 import java.util.ArrayList;
 import java.util.List;

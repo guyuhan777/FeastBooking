@@ -4,6 +4,7 @@ urlSeperator=/
 applyForRegistrationEmail=auth/applyForRegistrationEmail
 totpPost=auth/totp
 register=users
+listHotelsForUser=hotels
 advertisement=advertisements
 recommendations=recommendations
 resource=resources

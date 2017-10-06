@@ -24,8 +24,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.login.RegisterConfirmActivity" android:screenOrientation="portrait">
+
         </activity>
         <activity android:name=".ui.login.RegisterActivity" android:screenOrientation="portrait">
+
+        </activity>
+        <activity android:name=".ui.login.LoginActivity" android:screenOrientation="portrait">
 
         </activity>
     </application>

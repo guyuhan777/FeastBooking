@@ -40,6 +40,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
         <EditText
+            android:textSize="@dimen/app_text_normal"
             android:layout_marginTop="20dp"
             android:id="@+id/user_name"
             android:layout_width="match_parent"
@@ -48,12 +49,14 @@
             android:inputType="text" />
         <EditText
             android:layout_marginTop="20dp"
+            android:textSize="@dimen/app_text_normal"
             android:id="@+id/pasword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword" />
         <EditText
             android:layout_marginTop="20dp"
+            android:textSize="@dimen/app_text_normal"
             android:id="@+id/password_confirm"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -64,7 +67,7 @@
             android:layout_marginTop="40dp"
             android:text="完成"
             android:textColor="@color/white"
-            android:background="@drawable/button1"
+            android:background="@drawable/button_disable"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </LinearLayout>

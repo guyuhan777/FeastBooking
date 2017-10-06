@@ -10,6 +10,6 @@
     <color name="light_grey">#dbdbe1</color>
     <color name="grey">#C0C0C0</color>
     <color name="deep_grey">#808A87</color>
-    <color name="red">#ff0000</color>
+    <color name="deep_red">#B22222</color>
     <color name="pink">#FF82AB</color>
 </resources>

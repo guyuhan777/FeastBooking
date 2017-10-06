@@ -1,7 +1,7 @@
 package com.iplay.feastbooking.entity;
 
 import com.iplay.feastbooking.dao.AdvertisementDao;
-import com.iplay.feastbooking.gson.advertisement.AdvertisementGO;
+import com.iplay.feastbooking.gson.homepage.advertisement.AdvertisementGO;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -18,8 +18,8 @@
             <ImageView
                 android:id="@+id/recommend_image_left_part"
                 android:scaleType="centerCrop"
-                android:layout_width="150dp"
-                android:layout_height="150dp" />
+                android:layout_width="170dp"
+                android:layout_height="170dp" />
         </android.support.v7.widget.CardView>
     </LinearLayout>
     <LinearLayout
@@ -34,8 +34,8 @@
             <ImageView
                 android:id="@+id/recommend_image_right_part"
                 android:scaleType="centerCrop"
-                android:layout_width="150dp"
-                android:layout_height="150dp" />
+                android:layout_width="170dp"
+                android:layout_height="170dp" />
         </android.support.v7.widget.CardView>
     </LinearLayout>
 </LinearLayout>

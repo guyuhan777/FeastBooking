@@ -1,4 +1,4 @@
-package com.iplay.feastbooking.gson;
+package com.iplay.feastbooking.gson.homepage;
 
 /**
  * Created by admin on 2017/10/2.

@@ -1,6 +1,6 @@
 package com.iplay.feastbooking.dao;
 
-import com.iplay.feastbooking.gson.advertisement.AdvertisementGO;
+import com.iplay.feastbooking.gson.homepage.advertisement.AdvertisementGO;
 
 import org.litepal.crud.DataSupport;
 

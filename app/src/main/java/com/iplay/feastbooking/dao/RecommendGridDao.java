@@ -1,8 +1,7 @@
 package com.iplay.feastbooking.dao;
 
-import com.iplay.feastbooking.gson.RecommendGridGO;
+import com.iplay.feastbooking.gson.homepage.RecommendGridGO;
 
-import org.litepal.annotation.Column;
 import org.litepal.crud.DataSupport;
 
 /**
@@ -13,7 +12,6 @@ public class RecommendGridDao extends DataSupport {
 
     private int id;
 
-    @Column(unique = true)
     private int hotelId;
 
     private String filename;
