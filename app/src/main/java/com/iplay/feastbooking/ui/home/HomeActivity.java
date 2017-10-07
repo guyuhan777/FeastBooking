@@ -13,9 +13,12 @@ import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 import com.iplay.feastbooking.R;
 import com.iplay.feastbooking.basic.BasicActivity;
 import com.iplay.feastbooking.dao.UserDao;
+import com.iplay.feastbooking.messageEvent.activityFinish.ActivityFinishMessageEvent;
+import com.iplay.feastbooking.ui.login.LoginActivity;
 import com.iplay.feastbooking.ui.recommendedHotel.RecommendedHotelFragment;
 import com.iplay.feastbooking.ui.self.SelfFragment;
 
+import org.greenrobot.eventbus.EventBus;
 import org.litepal.crud.DataSupport;
 
 import java.util.List;
@@ -94,6 +97,11 @@ public class HomeActivity extends BasicActivity implements BottomNavigationBar.O
     public static void startActivity(Context context){
         Intent intent = new Intent(context, HomeActivity.class);
         context.startActivity(intent);
+        if(context instanceof LoginActivity){
+            ActivityFinishMessageEvent event = new ActivityFinishMessageEvent();
+            event.put(LoginActivity.TAG);
+            EventBus.getDefault().post(event);
+        }
     }
 
     @Override

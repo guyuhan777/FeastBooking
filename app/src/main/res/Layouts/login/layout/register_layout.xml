@@ -41,11 +41,11 @@
             android:layout_height="wrap_content" />
         <EditText
             android:textSize="@dimen/app_text_normal"
+            android:hint="請輸入郵箱"
             android:layout_marginTop="20dp"
             android:id="@+id/email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
             android:inputType="textEmailAddress" />
         <LinearLayout
             android:layout_marginTop="20dp"
@@ -58,6 +58,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1">
                 <EditText
+                    android:hint="請輸入驗證碼"
+
                     android:textSize="@dimen/app_text_normal"
                     android:id="@+id/verify_code_et"
                     android:layout_width="wrap_content"
@@ -71,8 +73,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1">
                 <Button
+                    android:enabled="false"
                     android:textSize="@dimen/app_text_normal"
-                    android:textColor="@color/deep_grey"
+                    android:textColor="@color/grey"
                     android:background="@drawable/button_shape_circle"
                     android:id="@+id/valid_code_btn"
                     android:layout_width="match_parent"

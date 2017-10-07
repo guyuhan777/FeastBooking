@@ -46,7 +46,6 @@
             android:id="@+id/username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
             android:inputType="text" />
         <EditText
             android:hint="請輸入密碼"
@@ -55,7 +54,6 @@
             android:id="@+id/password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
             android:inputType="textPassword" />
         <Button
             android:textSize="@dimen/app_text_title_size"

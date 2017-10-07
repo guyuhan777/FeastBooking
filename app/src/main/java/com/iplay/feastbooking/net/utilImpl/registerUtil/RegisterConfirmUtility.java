@@ -2,7 +2,6 @@ package com.iplay.feastbooking.net.utilImpl.registerUtil;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
@@ -10,14 +9,15 @@ import com.iplay.feastbooking.assistance.ProperTies;
 import com.iplay.feastbooking.dao.UserDao;
 import com.iplay.feastbooking.gson.register.RegisterConfirmRequest;
 import com.iplay.feastbooking.gson.register.RegisterConfirmResponse;
+import com.iplay.feastbooking.messageEvent.register.RegisterConfirmMessageEvent;
+import com.iplay.feastbooking.net.NetProperties;
 import com.iplay.feastbooking.net.message.UtilMessage;
 import com.iplay.feastbooking.ui.home.HomeActivity;
-import com.iplay.feastbooking.ui.login.RegisterConfirmActivity;
 
+import org.greenrobot.eventbus.EventBus;
 import org.litepal.crud.DataSupport;
 
 import java.io.IOException;
-import java.net.SocketTimeoutException;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
@@ -57,67 +57,64 @@ public class RegisterConfirmUtility {
         mContext = context;
     }
 
-    public void register(final RegisterConfirmRequest request, String token, final String mail){
-        OkHttpClient client = new OkHttpClient.Builder().connectTimeout(10, TimeUnit.SECONDS).build();
-        final Gson gson = new Gson();
-        String json = gson.toJson(request);
-        RequestBody body = RequestBody.create(UtilMessage.JSON, json);
-        final Request req = new Request.Builder().url(serverUrl + urlSeperator + registerAPI).header("Authorization",tokenPrefix + " " + token)
-                .post(body).build();
-        final RegisterConfirmActivity activity = (RegisterConfirmActivity) mContext;
-        client.newCall(req).enqueue(new Callback() {
-
-            @Override
-            public void onFailure(Call call, IOException e) {
-                if(e.getCause().equals(SocketTimeoutException.class)){
-                    activity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(activity, "连接超时", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }else{
-                    activity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(activity,"未知错误",Toast.LENGTH_SHORT).show();
-                        }
-                    });
+    public void register(String token, final String mail, final String username, final String password){
+        if(!NetProperties.isNetworkConnected(mContext)){
+            RegisterConfirmMessageEvent event = new RegisterConfirmMessageEvent();
+            event.setType(RegisterConfirmMessageEvent.TYPE_NO_INTERNET);
+            EventBus.getDefault().post(event);
+        }else {
+            OkHttpClient client = new OkHttpClient.Builder().connectTimeout(5, TimeUnit.SECONDS).build();
+            final Gson gson = new Gson();
+            RegisterConfirmRequest registerConfirmRequest = new RegisterConfirmRequest();
+            registerConfirmRequest.password = password;
+            registerConfirmRequest.username = username;
+            String json = gson.toJson(registerConfirmRequest);
+            RequestBody body = RequestBody.create(UtilMessage.JSON, json);
+            Request req = new Request.Builder().url(serverUrl + urlSeperator + registerAPI).header("Authorization", tokenPrefix + " " + token)
+                    .post(body).build();
+            client.newCall(req).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    RegisterConfirmMessageEvent event = new RegisterConfirmMessageEvent();
+                    event.setType(RegisterConfirmMessageEvent.TYPE_CONNECT_TIME_OVER);
+                    EventBus.getDefault().post(event);
                 }
-                activity.setNext_btn_state(ProperTies.TYPE_BTN_ACTIVE);
-            }
 
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                RegisterConfirmResponse confirmResponse = gson.fromJson(response.body().string(),RegisterConfirmResponse.class);
-                if(!confirmResponse.success){
-                    final String reason = (String) confirmResponse.data;
-                    activity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(activity, reason, Toast.LENGTH_SHORT).show();
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    if (!response.isSuccessful()) {
+                        RegisterConfirmMessageEvent event = new RegisterConfirmMessageEvent();
+                        event.setType(RegisterConfirmMessageEvent.TYPE_UNKNOWN_ERROR);
+                        EventBus.getDefault().post(event);
+                    } else {
+                        RegisterConfirmResponse confirmResponse = gson.fromJson(response.body().string(), RegisterConfirmResponse.class);
+                        if (!confirmResponse.success) {
+                            String reason = (String) confirmResponse.data;
+                            RegisterConfirmMessageEvent event = new RegisterConfirmMessageEvent();
+                            event.setType(RegisterConfirmMessageEvent.TYPE_FAILURE);
+                            event.setResult(reason);
+                            EventBus.getDefault().post(event);
+                        } else {
+                            LinkedTreeMap map = (LinkedTreeMap) confirmResponse.data;
+                            String userToken = (String) map.get("token");
+                            int userId = ((Double) map.get("userId")).intValue();
+                            UserDao userDao = new UserDao();
+                            userDao.setUserId(userId);
+                            userDao.setToken(userToken);
+                            userDao.setUsername(username);
+                            userDao.setPassword(password);
+                            userDao.setEmail(mail);
+                            userDao.setLogin(true);
+                            userDao.save();
+                            ContentValues values = new ContentValues();
+                            values.put("isLogin", false);
+                            DataSupport.updateAll(UserDao.class, values, "userId != ?", userId + "");
+                            HomeActivity.startActivity(mContext);
                         }
-                    });
-                }else {
-                    LinkedTreeMap map = (LinkedTreeMap) confirmResponse.data;
-                    String userToken = (String) map.get("token");
-                    int userId =  ((Double)map.get("userId")).intValue();
-                    UserDao userDao = new UserDao();
-                    userDao.setUserId(userId);
-                    userDao.setToken(userToken);
-                    userDao.setUsername(request.username);
-                    userDao.setPassword(request.password);
-                    userDao.setEmail(mail);
-                    userDao.setLogin(true);
-                    userDao.save();
-                    ContentValues values = new ContentValues();
-                    values.put("isLogin",false);
-                    DataSupport.updateAll(UserDao.class, values, "userId != ?", userId + "");
-                    HomeActivity.startActivity(mContext);
+                    }
                 }
-                activity.setNext_btn_state(ProperTies.TYPE_BTN_ACTIVE);
-            }
-        });
+            });
+        }
     }
 
     public static RegisterConfirmUtility getInstance(Context context){

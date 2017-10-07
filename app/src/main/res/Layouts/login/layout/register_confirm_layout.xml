@@ -40,6 +40,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
         <EditText
+            android:hint="請輸入用戶名"
             android:textSize="@dimen/app_text_normal"
             android:layout_marginTop="20dp"
             android:id="@+id/user_name"
@@ -48,6 +49,7 @@
             android:maxLength="20"
             android:inputType="text" />
         <EditText
+            android:hint="請輸入密碼"
             android:layout_marginTop="20dp"
             android:textSize="@dimen/app_text_normal"
             android:id="@+id/pasword"
@@ -55,6 +57,7 @@
             android:layout_height="wrap_content"
             android:inputType="textPassword" />
         <EditText
+            android:hint="請確認密碼"
             android:layout_marginTop="20dp"
             android:textSize="@dimen/app_text_normal"
             android:id="@+id/password_confirm"
@@ -63,6 +66,7 @@
             android:inputType="textPassword" />
         <Button
             android:textSize="@dimen/app_text_title_size"
+            android:enabled="false"
             android:id="@+id/next_btn"
             android:layout_marginTop="40dp"
             android:text="完成"

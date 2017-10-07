@@ -23,12 +23,21 @@ public class UserDao extends DataSupport implements Serializable{
     @Column(unique = true)
     private String username;
 
-    @Column(unique = true)
     private String email;
 
     @Column(defaultValue = "false")
     private boolean isLogin;
 
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    @Column(defaultValue = "USER")
+    private String role;
 
     public int getUserId() {
         return userId;

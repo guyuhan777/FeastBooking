@@ -10,7 +10,7 @@ import org.greenrobot.eventbus.EventBus;
 
 public class BasicFragment extends Fragment {
 
-    protected boolean isRegisteredNeed = false;
+    protected volatile boolean isRegisteredNeed = false;
 
     @Override
     public void onStart() {

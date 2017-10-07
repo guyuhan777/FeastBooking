@@ -1,19 +1,20 @@
 package com.iplay.feastbooking.net.utilImpl.registerUtil;
 
 import android.content.Context;
-import android.os.Handler;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.iplay.feastbooking.assistance.ProperTies;
-import com.iplay.feastbooking.gson.Token;
 import com.iplay.feastbooking.gson.register.TotpConfirm;
+import com.iplay.feastbooking.gson.register.VerifyResponse;
+import com.iplay.feastbooking.messageEvent.register.CodeValidMessageEvent;
+import com.iplay.feastbooking.messageEvent.register.RegisterMessageEvent;
+import com.iplay.feastbooking.net.NetProperties;
 import com.iplay.feastbooking.net.message.UtilMessage;
-import com.iplay.feastbooking.ui.login.RegisterActivity;
 import com.iplay.feastbooking.ui.login.RegisterConfirmActivity;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.IOException;
-import java.net.SocketTimeoutException;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
@@ -40,7 +41,7 @@ public class RegisterValidUtility {
 
     private final String urlSeperator;
 
-    private final String totpPostAPI;
+    private final String verify ;
 
     private final Context mContext;
 
@@ -50,155 +51,86 @@ public class RegisterValidUtility {
         serverUrl = properties.getProperty("serverUrl");
         applyForRegistrationEmailAPI = properties.getProperty("applyForRegistrationEmail");
         urlSeperator = properties.getProperty("urlSeperator");
-        totpPostAPI = properties.getProperty("totpPost");
+        verify = properties.getProperty("verify");
     }
 
     public void applyForRegistrationEmail(String email){
-        OkHttpClient client = new OkHttpClient.Builder().connectTimeout(10, TimeUnit.SECONDS).build();
-        final RegisterActivity registerActivity = (RegisterActivity) mContext;
-
-        final Handler handler = registerActivity.validHandler;
-        handler.sendEmptyMessage(100);
-
-        Request request = new Request.Builder().url(serverUrl + urlSeperator + applyForRegistrationEmailAPI + "?email="+email).build();
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                if(e.getCause().equals(SocketTimeoutException.class)){
-                    registerActivity.runOnUiThread(
-                            new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(mContext,"连接超时",Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                    );
-                }else{
-                    registerActivity.runOnUiThread(
-                            new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(mContext,"未知错误",Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                    );
+        if(!NetProperties.isNetworkConnected(mContext)){
+            CodeValidMessageEvent event = new CodeValidMessageEvent();
+            event.setType(CodeValidMessageEvent.TYPE_NO_INTERNET);
+            EventBus.getDefault().post(event);
+        }else {
+            OkHttpClient client = new OkHttpClient.Builder().connectTimeout(5, TimeUnit.SECONDS).build();
+            Request request = new Request.Builder().url(serverUrl + urlSeperator + applyForRegistrationEmailAPI + "?email=" + email).build();
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    CodeValidMessageEvent event = new CodeValidMessageEvent();
+                    event.setType(CodeValidMessageEvent.TYPE_CONNECT_TIME_OVER);
+                    EventBus.getDefault().post(event);
                 }
-                registerActivity.setValid_btn_state(ProperTies.TYPE_BTN_ACTIVE);
-                handler.sendEmptyMessage(61);
-            }
 
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (!response.isSuccessful()){
-                    registerActivity.setValid_btn_state(ProperTies.TYPE_BTN_ACTIVE);
-                    registerActivity.runOnUiThread(
-                            new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(mContext,"未知错误",Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                    );
-                    handler.sendEmptyMessage(61);
-                }else {
-                    Gson gson = new Gson();
-                    boolean isRegistered = gson.fromJson(response.body().string(),Boolean.class);
-                    if(!isRegistered){
-                        registerActivity.setValid_btn_state(ProperTies.TYPE_BTN_ACTIVE);
-                        registerActivity.runOnUiThread(
-                                new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Toast.makeText(mContext,"邮箱已存在",Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                        );
-                        handler.sendEmptyMessage(61);
-                    }else{
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                for(int i=60; i>=0; i--){
-                                    handler.sendEmptyMessage(i);
-                                    try {
-                                        Thread.sleep(1000);
-                                    } catch (InterruptedException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                                registerActivity.setValid_btn_state(ProperTies.TYPE_BTN_ACTIVE);
-                                handler.sendEmptyMessage(61);
-                            }
-                        }).start();
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    if(!response.isSuccessful()){
+                        CodeValidMessageEvent event = new CodeValidMessageEvent();
+                        event.setType(CodeValidMessageEvent.TYPE_UNKNOWN_ERROR);
+                        EventBus.getDefault().post(event);
+                    }else {
+                        if(response.body().string().equals("false")){
+                            CodeValidMessageEvent event = new CodeValidMessageEvent();
+                            event.setType(CodeValidMessageEvent.TYPE_EMAIL_ALREADY_EXIST);
+                            EventBus.getDefault().post(event);
+                        }else {
+                            CodeValidMessageEvent event = new CodeValidMessageEvent();
+                            event.setType(CodeValidMessageEvent.TYPE_SUCCESS);
+                            EventBus.getDefault().post(event);
+                        }
                     }
                 }
-            }
-        });
-
+            });
+        }
     }
 
-    public void verify(TotpConfirm confirm){
-        OkHttpClient client = new OkHttpClient.Builder().connectTimeout(10, TimeUnit.SECONDS).build();
-        final RegisterActivity registerActivity = (RegisterActivity) mContext;
-        final String mail = confirm.email;
-        final Gson gson = new Gson();
-        String json = gson.toJson(confirm);
-        RequestBody body = RequestBody.create(UtilMessage.JSON, json);
-        Request request = new Request.Builder().url(serverUrl + urlSeperator + totpPostAPI).post(body).build();
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                if(e.getCause().equals(SocketTimeoutException.class)){
-                    registerActivity.runOnUiThread(
-                            new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(mContext,"连接超时",Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                    );
-                }else{
-                    registerActivity.runOnUiThread(
-                            new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(mContext,"未知错误",Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                    );
+    public void verify(final String email, String totp){
+        if(!NetProperties.isNetworkConnected(mContext)){
+            RegisterMessageEvent event = new RegisterMessageEvent();
+            event.setType(RegisterMessageEvent.TYPE_NO_INTERNET);
+            EventBus.getDefault().post(event);
+        }else {
+            TotpConfirm totpConfirm = new TotpConfirm();
+            totpConfirm.email = email;
+            totpConfirm.totp = totp;
+            final Gson gson = new Gson();
+            String json = gson.toJson(totpConfirm);
+            OkHttpClient client = new OkHttpClient.Builder().connectTimeout(5, TimeUnit.SECONDS).build();
+            RequestBody body = RequestBody.create(UtilMessage.JSON, json);
+            Request request = new Request.Builder().url(serverUrl + urlSeperator + verify).post(body).build();
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    RegisterMessageEvent event = new RegisterMessageEvent();
+                    event.setType(RegisterMessageEvent.TYPE_CONNECT_TIME_OUT);
+                    EventBus.getDefault().post(event);
                 }
-                registerActivity.setNext_btn_state(ProperTies.TYPE_BTN_ACTIVE);
-            }
 
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (!response.isSuccessful()){
-                    registerActivity.runOnUiThread(
-                            new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(mContext,"未知错误",Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                    );
-                }else {
-                    Token token = gson.fromJson(response.body().string(),Token.class);
-                    if (!token.totpValid){
-                        registerActivity.runOnUiThread(
-                                new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Toast.makeText(mContext,"验证码错误",Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                        );
-                    }else{
-                        RegisterConfirmActivity.start(mContext, token.token, mail);
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    RegisterMessageEvent event = new RegisterMessageEvent();
+                    if(!response.isSuccessful()){
+                        event.setType(RegisterMessageEvent.TYPE_UNKNOWN_ERROR);
+                    }else {
+                        VerifyResponse verifyResponse = gson.fromJson(response.body().string(),VerifyResponse.class);
+                        if(verifyResponse.totpValid){
+                            RegisterConfirmActivity.start(mContext,verifyResponse.token,email);
+                        }else {
+                            event.setType(RegisterMessageEvent.TYPE_FAILURE);
+                        }
                     }
+                    EventBus.getDefault().post(event);
                 }
-                registerActivity.setNext_btn_state(ProperTies.TYPE_BTN_ACTIVE);
-            }
-        });
+            });
+        }
     }
 
     public static RegisterValidUtility getInstance(Context context){

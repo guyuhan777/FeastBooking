@@ -2,6 +2,9 @@ package com.iplay.feastbooking.ui.login;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -12,19 +15,21 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.iplay.feastbooking.R;
-import com.iplay.feastbooking.assistance.ProperTies;
 import com.iplay.feastbooking.assistance.WindowAttr;
 import com.iplay.feastbooking.basic.BasicActivity;
-import com.iplay.feastbooking.gson.register.RegisterConfirmRequest;
+import com.iplay.feastbooking.messageEvent.activityFinish.ActivityFinishMessageEvent;
 import com.iplay.feastbooking.net.utilImpl.registerUtil.RegisterConfirmUtility;
 
-import java.util.regex.Pattern;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 /**
  * Created by admin on 2017/9/28.
  */
 
-public class RegisterConfirmActivity extends BasicActivity implements View.OnClickListener{
+public class RegisterConfirmActivity extends BasicActivity implements View.OnClickListener,TextWatcher{
+
+    public static final String TAG = "RegisterConfirmActivity";
 
     private View status_bar_fix;
 
@@ -50,15 +55,38 @@ public class RegisterConfirmActivity extends BasicActivity implements View.OnCli
 
     private RegisterConfirmUtility utility;
 
-    public void setNext_btn_state(int next_btn_state) {
-        this.next_btn_state = next_btn_state;
+    private void enableNextButton(){
+        if(isInValid()){
+            return;
+        }
+        next_btn.setEnabled(true);
+        next_btn.setBackground(getResources().getDrawable(R.drawable.button1));
     }
 
-    private int next_btn_state = ProperTies.TYPE_BTN_ACTIVE;
+    private void disableNextButton(){
+        next_btn.setEnabled(false);
+        next_btn.setBackground(getResources().getDrawable(R.drawable.button_disable));
+    }
+
+    private boolean isInValid(){
+        String username = username_et.getText().toString().trim();
+        String password = password_et.getText().toString().trim();
+        String confirmPassword = confirm_password_et.getText().toString().trim();
+        return password.equals("")||confirmPassword.equals("")||username.equals("")||username.matches(userNamePatternStr);
+    }
 
     @Override
     public void setContentView() {
+        isRegistered = true;
         setContentView(R.layout.register_confirm_layout);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onActivityFinishMessageEvent(ActivityFinishMessageEvent event){
+        if(event.isExist(TAG)){
+            Log.d(TAG,"bye bye");
+            finish();
+        }
     }
 
     @Override
@@ -71,8 +99,11 @@ public class RegisterConfirmActivity extends BasicActivity implements View.OnCli
         next_btn = (Button) findViewById(R.id.next_btn);
         next_btn.setOnClickListener(this);
         username_et = (EditText) findViewById(R.id.user_name);
+        username_et.addTextChangedListener(this);
         password_et = (EditText) findViewById(R.id.pasword);
+        password_et.addTextChangedListener(this);
         confirm_password_et = (EditText) findViewById(R.id.password_confirm);
+        password_et.addTextChangedListener(this);
     }
 
     @Override
@@ -110,38 +141,36 @@ public class RegisterConfirmActivity extends BasicActivity implements View.OnCli
                 });
                 break;
             case R.id.next_btn:
+                disableNextButton();
+                String password = password_et.getText().toString().trim();
+                String repeatPassword = confirm_password_et.getText().toString().trim();
                 String user_name = username_et.getText().toString().trim();
-                if(user_name.equals("")){
-                    Toast.makeText(RegisterConfirmActivity.this,"用户名不能为空",Toast.LENGTH_SHORT).show();
-                    return;
-                }else if(Pattern.matches(userNamePatternStr, user_name)){
-                    Toast.makeText(RegisterConfirmActivity.this,"用户名格式错误",Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                String passwd = password_et.getText().toString();
-                if(passwd.equals("")){
-                    Toast.makeText(RegisterConfirmActivity.this,"密码不能为空",Toast.LENGTH_SHORT).show();
-                    return;
+                if(!password.equals(repeatPassword)){
+                    Toast.makeText(this,"重復密碼錯誤",Toast.LENGTH_SHORT).show();
+                    enableNextButton();
                 }else {
-                    String confirmPasswd = confirm_password_et.getText().toString();
-                    if(!confirmPasswd.equals(passwd)){
-                        Toast.makeText(RegisterConfirmActivity.this,"重复密码错误",Toast.LENGTH_SHORT).show();
-                        return;
-                    }else {
-                        if(next_btn_state == ProperTies.TYPE_BTN_WAITING || next_btn_state == ProperTies.TYPE_BTN_DISABLE){
-                            return;
-                        }else {
-                            next_btn_state = ProperTies.TYPE_BTN_WAITING;
-                            final RegisterConfirmRequest request = new RegisterConfirmRequest();
-                            request.password = passwd;
-                            request.username = user_name;
-                            utility.register(request, token,mail);
-                        }
 
-                    }
                 }
                 break;
         }
     }
 
+    @Override
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence s, int start, int before, int count) {
+        if(isInValid()){
+            disableNextButton();
+        }else {
+            enableNextButton();
+        }
+    }
+
+    @Override
+    public void afterTextChanged(Editable s) {
+
+    }
 }

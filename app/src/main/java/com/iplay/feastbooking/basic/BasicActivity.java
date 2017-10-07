@@ -9,11 +9,23 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import org.greenrobot.eventbus.EventBus;
+
 /**
  * Created by admin on 2017/7/11.
  */
 
 public abstract class BasicActivity extends AppCompatActivity {
+
+    protected volatile boolean isRegistered = false;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(isRegistered){
+            EventBus.getDefault().register(this);
+        }
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,6 +60,12 @@ public abstract class BasicActivity extends AppCompatActivity {
             winParams.flags &= ~bits;
         }
         window.setAttributes(winParams);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
     }
 
     public abstract void setContentView();
