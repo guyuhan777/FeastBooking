@@ -1,16 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_marginTop="@dimen/app_body_margin"
-    android:layout_marginLeft="@dimen/app_body_margin"
-    android:layout_marginRight="@dimen/app_body_margin"
+    android:paddingTop="@dimen/app_body_margin"
+    android:paddingLeft="@dimen/app_body_margin"
+    android:paddingRight="@dimen/app_body_margin"
+    android:background="@color/white"
     android:layout_width="match_parent"
-    android:layout_height="130dp"
+    android:layout_height="150dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="5dp"
-        app:cardElevation="3dp">
+        app:cardCornerRadius="6dp"
+        app:contentPadding="1dp"
+        app:cardBackgroundColor="@color/grey">
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="6dp">
         <RelativeLayout
             android:background="@color/white"
             android:layout_width="match_parent"
@@ -77,5 +83,6 @@
                 </LinearLayout>
             </RelativeLayout>
         </RelativeLayout>
+    </android.support.v7.widget.CardView>
     </android.support.v7.widget.CardView>
 </RelativeLayout>

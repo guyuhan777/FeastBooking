@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:gravity="center"
     android:background="@color/white"
-    android:padding="@dimen/app_body_margin"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:padding="@dimen/app_body_margin">
     <TextView
-        android:id="@+id/footer_state_tv"
+        android:layout_gravity="center"
+        android:id="@+id/click_to_load_more_tv"
+        android:textColor="@color/deep_grey"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:textSize="@dimen/app_text_normal"
-        android:text="已顯示全部數據" />
+        android:text="點我加載更多" />
 </LinearLayout>

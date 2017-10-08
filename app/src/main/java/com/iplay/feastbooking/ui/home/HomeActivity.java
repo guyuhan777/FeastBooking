@@ -15,6 +15,8 @@ import com.iplay.feastbooking.basic.BasicActivity;
 import com.iplay.feastbooking.dao.UserDao;
 import com.iplay.feastbooking.messageEvent.activityFinish.ActivityFinishMessageEvent;
 import com.iplay.feastbooking.ui.login.LoginActivity;
+import com.iplay.feastbooking.ui.login.RegisterActivity;
+import com.iplay.feastbooking.ui.login.RegisterConfirmActivity;
 import com.iplay.feastbooking.ui.recommendedHotel.RecommendedHotelFragment;
 import com.iplay.feastbooking.ui.self.SelfFragment;
 
@@ -100,6 +102,11 @@ public class HomeActivity extends BasicActivity implements BottomNavigationBar.O
         if(context instanceof LoginActivity){
             ActivityFinishMessageEvent event = new ActivityFinishMessageEvent();
             event.put(LoginActivity.TAG);
+            EventBus.getDefault().post(event);
+        }else if(context instanceof RegisterConfirmActivity){
+            ActivityFinishMessageEvent event = new ActivityFinishMessageEvent();
+            event.put(RegisterConfirmActivity.TAG);
+            event.put(RegisterActivity.TAG);
             EventBus.getDefault().post(event);
         }
     }

@@ -1,6 +1,6 @@
 package com.iplay.feastbooking.gson.homepage.hotelList;
 
-import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by admin on 2017/10/6.
@@ -16,9 +16,9 @@ public class RecommendHotelGO {
 
     public String pictureUrl;
 
-    public int[] priceRange;
+    public List<Double> priceRange;
 
-    public int[] tableRange;
+    public List<Integer> tableRange;
 
     public String getNumOfComment(){
         if(numOfComment == 0){
@@ -28,12 +28,13 @@ public class RecommendHotelGO {
     }
 
     public String getPriceRange(){
-        return priceRange[0] + "-" + priceRange[1];
+        return priceRange.get(0) + "-" + priceRange.get(0);
     }
 
     public String getTableRange(){
-        return tableRange[0] + "-" + tableRange[1] + "桌";
+        return tableRange.get(0) + "-" + tableRange.get(1) + "桌";
     }
+
 
     @Override
     public String toString() {
@@ -42,8 +43,8 @@ public class RecommendHotelGO {
                 ", name='" + name + '\'' +
                 ", numOfComment=" + numOfComment +
                 ", pictureUrl='" + pictureUrl + '\'' +
-                ", priceRange=" + Arrays.toString(priceRange) +
-                ", tableRange=" + Arrays.toString(tableRange) +
+                ", priceRange=" + priceRange +
+                ", tableRange=" + tableRange +
                 '}';
     }
 }

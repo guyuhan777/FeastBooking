@@ -18,6 +18,7 @@ import com.iplay.feastbooking.R;
 import com.iplay.feastbooking.assistance.WindowAttr;
 import com.iplay.feastbooking.basic.BasicActivity;
 import com.iplay.feastbooking.messageEvent.activityFinish.ActivityFinishMessageEvent;
+import com.iplay.feastbooking.messageEvent.register.RegisterConfirmMessageEvent;
 import com.iplay.feastbooking.net.utilImpl.registerUtil.RegisterConfirmUtility;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -89,6 +90,28 @@ public class RegisterConfirmActivity extends BasicActivity implements View.OnCli
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onRegisterConfirmMessageEvent(RegisterConfirmMessageEvent event){
+        switch (event.getType()){
+            case RegisterConfirmMessageEvent.TYPE_CONNECT_TIME_OVER:
+                Toast.makeText(this,"連接超時",Toast.LENGTH_SHORT).show();
+                enableNextButton();
+                break;
+            case RegisterConfirmMessageEvent.TYPE_NO_INTERNET:
+                Toast.makeText(this,"網絡不給力",Toast.LENGTH_SHORT).show();
+                enableNextButton();
+                break;
+            case RegisterConfirmMessageEvent.TYPE_UNKNOWN_ERROR:
+                Toast.makeText(this,"未知錯誤",Toast.LENGTH_SHORT).show();
+                enableNextButton();
+                break;
+            case RegisterConfirmMessageEvent.TYPE_FAILURE:
+                Toast.makeText(this,event.getResult(),Toast.LENGTH_SHORT).show();
+            default:
+                break;
+        }
+    }
+
     @Override
     public void findViews() {
         status_bar_fix = (View) findViewById(R.id.status_bar_fix_title);
@@ -103,7 +126,7 @@ public class RegisterConfirmActivity extends BasicActivity implements View.OnCli
         password_et = (EditText) findViewById(R.id.pasword);
         password_et.addTextChangedListener(this);
         confirm_password_et = (EditText) findViewById(R.id.password_confirm);
-        password_et.addTextChangedListener(this);
+        confirm_password_et.addTextChangedListener(this);
     }
 
     @Override
@@ -149,7 +172,7 @@ public class RegisterConfirmActivity extends BasicActivity implements View.OnCli
                     Toast.makeText(this,"重復密碼錯誤",Toast.LENGTH_SHORT).show();
                     enableNextButton();
                 }else {
-
+                    utility.register(token,mail,user_name,password);
                 }
                 break;
         }

@@ -60,8 +60,6 @@ public class RecommendHotelListUtility {
 
     private final String listHotelsForUserAPI;
 
-
-
     private RecommendHotelListUtility(Context context){
         mContext = context;
         properties = ProperTies.getProperties(context);
@@ -87,7 +85,7 @@ public class RecommendHotelListUtility {
             event.setAdvertisements(advertisements);
             EventBus.getDefault().post(event);
         }else{
-            OkHttpClient client = new OkHttpClient.Builder().connectTimeout(10, TimeUnit.SECONDS).build();
+            OkHttpClient client = new OkHttpClient.Builder().connectTimeout(5, TimeUnit.SECONDS).build();
             Request request = new Request.Builder().url(serverUrl + urlSeperator + advertisementAPI).build();
             client.newCall(request).enqueue(new Callback() {
                 @Override
@@ -132,7 +130,7 @@ public class RecommendHotelListUtility {
             event.setRecommendGrids(recommendGrids);
             EventBus.getDefault().post(event);
         }else {
-            OkHttpClient client = new OkHttpClient.Builder().connectTimeout(10, TimeUnit.SECONDS).build();
+            OkHttpClient client = new OkHttpClient.Builder().connectTimeout(5, TimeUnit.SECONDS).build();
             final Request request = new Request.Builder().url(serverUrl + urlSeperator + recommendGridAPI).build();
             client.newCall(request).enqueue(new Callback() {
                 @Override
@@ -175,7 +173,7 @@ public class RecommendHotelListUtility {
             messageEvent.setType(HotelListNoInternetMessageEvent.TYPE_INIT);
             EventBus.getDefault().post(messageEvent);
         }else {
-            OkHttpClient client = new OkHttpClient.Builder().connectTimeout(10, TimeUnit.SECONDS).build();
+            OkHttpClient client = new OkHttpClient.Builder().connectTimeout(5, TimeUnit.SECONDS).build();
             final Request request = new Request.Builder().url(serverUrl + urlSeperator + listHotelsForUserAPI + "?page=0").build();
             client.newCall(request).enqueue(new Callback() {
                 @Override
@@ -194,8 +192,8 @@ public class RecommendHotelListUtility {
                     }else{
                         Gson gson = new Gson();
                         Type type = new TypeToken<List<RecommendHotelGO>>(){}.getType();
-                        List<RecommendHotelGO> gos =  gson.fromJson(response.body().string(),type);
-                        Log.d("hotels", gos.toString());
+                        String json = response.body().string();
+                        List<RecommendHotelGO> gos =  gson.fromJson(json,type);
                         HotelListMessageEvent event = new HotelListMessageEvent();
                         event.setType(HotelListMessageEvent.TYPE_INIT);
                         event.setHotels(gos);
@@ -212,7 +210,7 @@ public class RecommendHotelListUtility {
             messageEvent.setType(HotelListNoInternetMessageEvent.TYPE_LOAD_MORE);
             EventBus.getDefault().post(messageEvent);
         }else{
-            OkHttpClient client = new OkHttpClient.Builder().connectTimeout(10, TimeUnit.SECONDS).build();
+            OkHttpClient client = new OkHttpClient.Builder().connectTimeout(3, TimeUnit.SECONDS).build();
             final Request request = new Request.Builder().url(serverUrl + urlSeperator + listHotelsForUserAPI + "?page=" + page).build();
             client.newCall(request).enqueue(new Callback() {
                 @Override
