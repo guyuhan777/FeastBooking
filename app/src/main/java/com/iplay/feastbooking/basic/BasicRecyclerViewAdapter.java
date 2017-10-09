@@ -45,9 +45,7 @@ public class BasicRecyclerViewAdapter extends RecyclerView.Adapter<BasicViewHold
 
     public static final int TYPE_TITLE_ALL = 5;
 
-    public static final int TYPE_HOTEL_INIT = 99;
-
-    public static final int TYPE_HOTEL_LOADMORE = 100;
+    public static final int TYPE_HOTEL = 100;
 
     public static final int TYPE_CLICK_LOAD = 101;
 
@@ -140,7 +138,7 @@ public class BasicRecyclerViewAdapter extends RecyclerView.Adapter<BasicViewHold
                 return allTitleViewHolder;
             case TYPE_PLACE_HOLDER:
                 return new BasicViewHolder(LayoutInflater.from(mContext).inflate(R.layout.placeholder_layout,parent,false));
-            case TYPE_HOTEL_INIT:
+            case TYPE_HOTEL:
                 return new HotelRecyclerItemViewHolder(LayoutInflater.from(mContext).inflate(R.layout.special_recommend_item,parent,false));
             case TYPE_GRID:
                 return new RecommendHotelGridViewHolder(LayoutInflater.from(mContext).inflate(R.layout.special_recommend_bar,parent,false));
@@ -175,7 +173,7 @@ public class BasicRecyclerViewAdapter extends RecyclerView.Adapter<BasicViewHold
                 int heightPx = LengthUnitTranser.dip2px(mContext,heightDp);
                 holder.itemView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,heightPx));
                 break;
-            case TYPE_HOTEL_INIT:
+            case TYPE_HOTEL:
                 if(innerDatas.get(position).data != null){
                     RecommendHotelGO recommendHotelGO = (RecommendHotelGO) innerDatas.get(position).data;
                     HotelRecyclerItemViewHolder hotelRecyclerItemVH = (HotelRecyclerItemViewHolder) holder;
@@ -243,7 +241,7 @@ public class BasicRecyclerViewAdapter extends RecyclerView.Adapter<BasicViewHold
                 innerDatas.add(lastIndexOfSpecialRecommendToInsert, innerData);
                 lastIndexOfSpecialRecommendToInsert++;
             }
-        }else if(type == TYPE_HOTEL_INIT){
+        }else if(type == TYPE_HOTEL){
             if(data == null){
                 return;
             }else {

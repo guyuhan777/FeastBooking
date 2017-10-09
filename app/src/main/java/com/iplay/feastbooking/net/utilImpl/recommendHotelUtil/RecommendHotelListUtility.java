@@ -229,7 +229,7 @@ public class RecommendHotelListUtility {
                         Gson gson = new Gson();
                         Type type = new TypeToken<List<RecommendHotelGO>>(){}.getType();
                         List<RecommendHotelGO> gos =  gson.fromJson(response.body().string(),type);
-                        Log.d("loadMore", gos.toString());
+
                         HotelListMessageEvent event = new HotelListMessageEvent();
                         event.setType(HotelListMessageEvent.TYPE_LOAD);
                         event.setHotels(gos);

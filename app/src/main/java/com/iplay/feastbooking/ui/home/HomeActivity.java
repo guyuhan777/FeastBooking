@@ -37,8 +37,6 @@ public class HomeActivity extends BasicActivity implements BottomNavigationBar.O
 
     public BottomNavigationBar bottom_bar;
 
-    private String token;
-
     private RecommendedHotelFragment recommendedFragment;
 
     private  SelfFragment selfFragment;
@@ -83,11 +81,8 @@ public class HomeActivity extends BasicActivity implements BottomNavigationBar.O
     @Override
     public void getData() {
         List<UserDao> userDaos = DataSupport.where("isLogin = ?","" + 1).find(UserDao.class);
-        if(userDaos.size() != 1){
-            return;
-        }else{
+        if(userDaos.size() == 1){
             Log.d("currentUser",userDaos.get(0).toString());
-            token = userDaos.get(0).getToken();
         }
     }
 
@@ -145,6 +140,7 @@ public class HomeActivity extends BasicActivity implements BottomNavigationBar.O
     @Override
     public void onClick(View v) {
         switch (v.getId()){
+            // todo
         }
     }
 }

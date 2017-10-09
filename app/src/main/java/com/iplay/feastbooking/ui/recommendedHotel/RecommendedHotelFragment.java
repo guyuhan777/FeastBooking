@@ -43,8 +43,6 @@ public class RecommendedHotelFragment extends BasicFragment{
 
     private static final int numPerPage = 10;
 
-    private int currentPage = 0;
-
     private  volatile boolean isInit = false;
 
     private View statusView;
@@ -77,7 +75,7 @@ public class RecommendedHotelFragment extends BasicFragment{
         view = inflater.inflate(R.layout.special_recommend_layout,container,false);
         mContext = getActivity();
 
-        statusView = (View) view.findViewById(R.id.status_bar_fix);
+        statusView = view.findViewById(R.id.status_bar_fix);
         statusView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, WindowAttr.getStatusBarHeight(getActivity())));
 
         adapter = new BasicRecyclerViewAdapter(mContext);
@@ -179,7 +177,7 @@ public class RecommendedHotelFragment extends BasicFragment{
                 return;
             }
             for(int i=0;i<hotels.size();i++ ){
-                adapter.addData(BasicRecyclerViewAdapter.TYPE_HOTEL_INIT,hotels.get(i));
+                adapter.addData(BasicRecyclerViewAdapter.TYPE_HOTEL,hotels.get(i));
             }
             adapter.increasePageNum();
             if(hotels.size()<numPerPage ){
@@ -190,13 +188,13 @@ public class RecommendedHotelFragment extends BasicFragment{
         }else if(type == HotelListMessageEvent.TYPE_LOAD){
             adapter.cancelLoading(true);
             List<RecommendHotelGO> hotels = event.getHotels();
-            Log.d(TAG, hotels.toString());
+            Log.d(TAG,"loadMore" + hotels.toString());
             if(hotels == null || hotels.size() == 0){
                 adapter.addData(BasicRecyclerViewAdapter.TYPE_ALL_LOADED,null);
                 isAllLoaded = true;
             }else {
                 for(int i=0; i<hotels.size(); i++){
-                    adapter.addData(BasicRecyclerViewAdapter.TYPE_HOTEL_LOADMORE,hotels.get(i));
+                    adapter.addData(BasicRecyclerViewAdapter.TYPE_HOTEL,hotels.get(i));
                 }
                 if(hotels.size()<numPerPage ){
                     adapter.addData(BasicRecyclerViewAdapter.TYPE_ALL_LOADED,null);
