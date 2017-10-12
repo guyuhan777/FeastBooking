@@ -5,10 +5,6 @@
     android:layout_height="match_parent">
     <View
         android:layout_height="match_parent"
-        android:layout_width="1px"
-        android:background="#000000" />
-    <View
-        android:layout_height="match_parent"
-        android:layout_width="1px"
-        android:background="#c5c1c1" />
+        android:layout_width="2px"
+        android:background="@color/button_grey" />
 </LinearLayout>

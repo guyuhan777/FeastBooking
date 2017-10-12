@@ -2,23 +2,18 @@ package com.iplay.feastbooking.ui.hotelDetail;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.bumptech.glide.Glide;
 import com.iplay.feastbooking.R;
 import com.iplay.feastbooking.assistance.WindowAttr;
 import com.iplay.feastbooking.basic.BasicActivity;
-import com.iplay.feastbooking.entity.Hotel;
-import com.iplay.feastbooking.factory.HotelFactory;
-import com.iplay.feastbooking.ui.hotelDetail.adapter.HotelDetailAdapter;
+import com.iplay.feastbooking.gson.homepage.hotelList.RecommendHotelGO;
+import com.iplay.feastbooking.net.NetProperties;
 
 /**
  * Created by admin on 2017/9/11.
@@ -26,24 +21,21 @@ import com.iplay.feastbooking.ui.hotelDetail.adapter.HotelDetailAdapter;
 
 public class NewHotelDetailActivity extends BasicActivity implements View.OnClickListener{
 
+    public static final String TAG = "NewHotelDetailActivity";
+
+    public static final String HOTEL_KEY = "HOTEL_KEY";
+
     private View status_bar_fix_tile;
 
-    private HotelDetailAdapter adapter;
-
-    private RecyclerView content_view;
-
-    private Hotel hotel;
+    private RecommendHotelGO hotel;
 
     private LinearLayout title_bar;
 
-    private int currentY;
-
-    private int height = 480;
-
     private ImageView back_iv;
 
-    public static void start(Context startActivity){
+    public static void start(Context startActivity,RecommendHotelGO hotel){
         Intent intent = new Intent(startActivity,NewHotelDetailActivity.class);
+        intent.putExtra(HOTEL_KEY,hotel);
         startActivity.startActivity(intent);
     }
 
@@ -54,7 +46,11 @@ public class NewHotelDetailActivity extends BasicActivity implements View.OnClic
 
     @Override
     public void setContentView() {
-        setContentView(R.layout.new_hotel_detail);
+        if(NetProperties.isNetworkConnected(this)) {
+            setContentView(R.layout.new_hotel_detail);
+        }else {
+            setContentView(R.layout.hotel_no_internet);
+        }
     }
 
     @Override
@@ -64,11 +60,7 @@ public class NewHotelDetailActivity extends BasicActivity implements View.OnClic
         status_bar_fix_tile.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, WindowAttr.getStatusBarHeight(this)));
         back_iv = (ImageView) findViewById(R.id.back_iv);
         back_iv.setOnClickListener(this);
-        Glide.with(this).load(R.drawable.back_2).into(back_iv);
-        content_view = (RecyclerView) findViewById(R.id.hotel_content_recycler_view);
-        adapter = new HotelDetailAdapter(this);
-        adapter.setHotel(hotel);
-        final LinearLayoutManager manager = new LinearLayoutManager(this);
+        /*final LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         content_view.setLayoutManager(manager);
         content_view.setAdapter(adapter);
@@ -84,22 +76,17 @@ public class NewHotelDetailActivity extends BasicActivity implements View.OnClic
                     float scale = (float) currentY/height;
                     float alpha = scale * 255;
                     title_bar.setBackgroundColor(Color.argb((int)alpha,255,130,171));
-                    /*if(currentY >= height * 0.8){
-                        Glide.with(NewHotelDetailActivity.this).load(R.drawable.back_4).into(back_iv);
-                    }else{
-                        Glide.with(NewHotelDetailActivity.this).load(R.drawable.back_2).into(back_iv);
-                    }*/
                 }else{
                     title_bar.setBackgroundColor(Color.argb(255,255,130,171));
                     //Glide.with(NewHotelDetailActivity.this).load(R.drawable.back_4).into(back_iv);
                 }
             }
-        });
+        });*/
     }
 
     @Override
     public void getData() {
-        hotel = HotelFactory.getSampleHotel();
+        hotel = (RecommendHotelGO) getIntent().getSerializableExtra(HOTEL_KEY);
     }
 
     @Override

@@ -23,6 +23,8 @@ public class HotelRecyclerItemViewHolder extends BasicViewHolder {
 
     public TextView remark_num_iv;
 
+    public TextView loc_iv;
+
     public HotelRecyclerItemViewHolder(View itemView) {
         super(itemView);
         hotel_icon_iv = (ImageView) itemView.findViewById(R.id.hotel_icon);
@@ -30,5 +32,7 @@ public class HotelRecyclerItemViewHolder extends BasicViewHolder {
         price_range_iv = (TextView) itemView.findViewById(R.id.price_range_tv);
         table_num_iv = (TextView) itemView.findViewById(R.id.table_num_tv);
         remark_num_iv = (TextView) itemView.findViewById(R.id.remark_tv);
+        loc_iv = (TextView) itemView.findViewById(R.id.loc_tv);
+
     }
 }

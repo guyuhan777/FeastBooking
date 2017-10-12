@@ -1,211 +1,209 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/light_grey">
-    <RelativeLayout
-        android:id="@+id/self_upper_part"
-        android:layout_width="match_parent"
-        android:layout_height="200dp">
-        <ImageView
-            android:id="@+id/self_background_iv"
-            android:src="@drawable/self_background"
-            android:layout_width="match_parent"
-            android:scaleType="centerCrop"
-            android:layout_height="200dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true" />
-        <View
-            android:id="@+id/status_bar_fix"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:background="#00000000" />
-        <ImageView
-            android:layout_below="@id/status_bar_fix"
-            android:layout_marginRight="@dimen/app_body_margin"
-            android:layout_alignParentRight="true"
-            android:src="@drawable/message"
-            android:layout_width="30dp"
-            android:layout_height="30dp" />
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true">
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/user_avatar_civ"
-                android:layout_marginBottom="20dp"
-                android:layout_marginLeft="@dimen/app_body_margin"
-                app:civ_border_width="2dp"
-                app:civ_border_color="@color/white"
-                android:layout_width="70dp"
-                android:layout_height="70dp" />
-            <TextView
-                android:id="@+id/user_name"
-                android:layout_marginLeft="20dp"
-                android:layout_marginTop="15dp"
-                android:layout_toRightOf="@id/user_avatar_civ"
-                android:text="新用户1234"
-                android:textSize="@dimen/app_text_title_size"
-                android:textColor="@color/app_title_color"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-            <ImageView
-                android:id="@+id/self_forwards_iv"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="@dimen/app_body_margin"
-                android:layout_marginTop="10dp"
-                android:src="@drawable/forwards"
-                android:layout_width="30dp"
-                android:layout_height="30dp" />
-        </RelativeLayout>
-    </RelativeLayout>
-    <RelativeLayout
-        android:id="@+id/pay_state"
-        android:background="@color/white"
-        android:layout_below="@id/self_upper_part"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </RelativeLayout>
+    android:layout_height="match_parent">
+
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/pay_state"
-        android:layout_alignParentStart="true">
+        android:layout_height="match_parent">
+
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:background="@color/button_grey"
+            android:orientation="vertical">
+
             <RelativeLayout
-                android:layout_marginTop="20dp"
-                android:background="@color/white"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:layout_margin="@dimen/app_body_margin"
-                    android:layout_centerVertical="true"
-                    android:textColor="@color/app_title_color"
-                    android:layout_width="wrap_content"
-                    android:text="@string/self_tab_order_in_process"
-                    android:textSize="@dimen/app_text_title_size"
-                    android:layout_height="wrap_content" />
+                android:layout_height="@dimen/self_bg_height">
+
                 <ImageView
-                    android:layout_margin="@dimen/app_body_margin"
-                    android:layout_alignParentRight="true"
-                    android:src="@drawable/forwards"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp" />
-                <LinearLayout
-                    android:layout_alignParentBottom="true"
+                    android:id="@+id/self_bg_iv"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <include layout="@layout/seperateline_horizontal" />
-                </LinearLayout>
+                    android:layout_height="@dimen/self_bg_height"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/self_bg" />
+
+                <View
+                    android:id="@+id/status_bar_fix"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp" />
+
+                <ImageView
+                    android:layout_width="@dimen/app_back_size"
+                    android:layout_height="@dimen/app_back_size"
+                    android:layout_alignParentRight="true"
+                    android:layout_below="@id/status_bar_fix"
+                    android:layout_marginRight="@dimen/app_body_margin"
+                    android:layout_marginTop="20dp"
+                    android:src="@drawable/message" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="20dp">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/user_portrait"
+                        android:layout_width="@dimen/portrait_size"
+                        android:layout_height="@dimen/portrait_size"
+                        android:layout_centerVertical="true"
+                        android:layout_margin="@dimen/app_body_margin"
+                        android:scaleType="centerCrop"
+                        app:civ_border_color="@color/white"
+                        app:civ_border_width="3dp" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@id/user_portrait"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/user_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Sato mimi"
+                            android:textColor="@color/app_title_color"
+                            android:textSize="@dimen/app_text_title_size" />
+
+                        <TextView
+                            android:id="@+id/user_id"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="ID: el psy congroo"
+                            android:textSize="@dimen/app_text_normal" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/user_detail_iv"
+                        android:layout_margin="@dimen/app_body_margin"
+                        android:layout_width="@dimen/app_back_size"
+                        android:layout_height="@dimen/app_back_size"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/forwards" />
+                </RelativeLayout>
             </RelativeLayout>
-            <RelativeLayout
-                android:layout_marginTop="20dp"
-                android:background="@color/white"
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:layout_margin="@dimen/app_body_margin"
-                    android:layout_centerVertical="true"
-                    android:textColor="@color/app_title_color"
-                    android:layout_width="wrap_content"
-                    android:text="@string/self_tab_history_order"
-                    android:textSize="@dimen/app_text_title_size"
-                    android:layout_height="wrap_content" />
-                <ImageView
-                    android:layout_margin="@dimen/app_body_margin"
-                    android:layout_alignParentRight="true"
-                    android:src="@drawable/forwards"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp" />
-                <LinearLayout
-                    android:layout_alignParentBottom="true"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <include layout="@layout/seperateline_horizontal" />
-                </LinearLayout>
-            </RelativeLayout>
-            <RelativeLayout
-                android:layout_marginTop="20dp"
+                android:layout_height="wrap_content"
                 android:background="@color/white"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:layout_margin="@dimen/app_body_margin"
-                    android:layout_centerVertical="true"
-                    android:textColor="@color/app_title_color"
-                    android:layout_width="wrap_content"
-                    android:text="@string/self_tab_my_collection"
-                    android:textSize="@dimen/app_text_title_size"
-                    android:layout_height="wrap_content" />
-                <ImageView
-                    android:layout_margin="@dimen/app_body_margin"
-                    android:layout_alignParentRight="true"
-                    android:src="@drawable/forwards"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp" />
+                android:orientation="horizontal"
+                android:padding="5dp">
+
                 <LinearLayout
-                    android:layout_alignParentBottom="true"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <include layout="@layout/seperateline_horizontal" />
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="總返現"
+                        android:textColor="@color/app_title_color"
+                        android:textSize="@dimen/app_text_normal" />
+
+                    <TextView
+                        android:id="@+id/zong_fan_xian_tv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="6000.0"
+                        android:textSize="@dimen/app_text_normal" />
                 </LinearLayout>
-            </RelativeLayout>
-            <RelativeLayout
-                android:layout_marginTop="20dp"
-                android:background="@color/white"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:layout_margin="@dimen/app_body_margin"
-                    android:layout_centerVertical="true"
-                    android:textColor="@color/app_title_color"
-                    android:layout_width="wrap_content"
-                    android:text="@string/self_tab_usual_problem"
-                    android:textSize="@dimen/app_text_title_size"
-                    android:layout_height="wrap_content" />
-                <ImageView
-                    android:layout_margin="@dimen/app_body_margin"
-                    android:layout_alignParentRight="true"
-                    android:src="@drawable/forwards"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp" />
+
                 <LinearLayout
-                    android:layout_alignParentBottom="true"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <include layout="@layout/seperateline_horizontal" />
-                </LinearLayout>
-            </RelativeLayout>
-            <RelativeLayout
-                android:layout_marginTop="20dp"
-                android:background="@color/white"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:layout_margin="@dimen/app_body_margin"
-                    android:layout_centerVertical="true"
-                    android:textColor="@color/app_title_color"
                     android:layout_width="wrap_content"
-                    android:text="@string/self_tab_set"
-                    android:textSize="@dimen/app_text_title_size"
-                    android:layout_height="wrap_content" />
-                <ImageView
-                    android:layout_margin="@dimen/app_body_margin"
-                    android:layout_alignParentRight="true"
-                    android:src="@drawable/forwards"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp" />
-                <LinearLayout
-                    android:layout_alignParentBottom="true"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                    <include layout="@layout/seperateline_horizontal" />
+                    android:layout_height="match_parent">
+
+                    <include layout="@layout/seperateline_vertical" />
                 </LinearLayout>
-            </RelativeLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="处理中返现"
+                        android:textColor="@color/app_title_color"
+                        android:textSize="@dimen/app_text_normal" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="6000.0"
+                        android:textSize="@dimen/app_text_normal" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent">
+
+                    <include layout="@layout/seperateline_vertical" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="处理中返现"
+                        android:textColor="@color/app_title_color"
+                        android:textSize="@dimen/app_text_normal" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="6000.0"
+                        android:textSize="@dimen/app_text_normal" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp">
+                <com.iplay.feastbooking.component.view.bar.FunctionBar
+                    android:id="@+id/order_under_fb"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <com.iplay.feastbooking.component.view.bar.FunctionBar
+                    android:id="@+id/order_history_fb"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <com.iplay.feastbooking.component.view.bar.FunctionBar
+                    android:id="@+id/my_collection_fb"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <com.iplay.feastbooking.component.view.bar.FunctionBar
+                    android:id="@+id/problem_fb"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+                <com.iplay.feastbooking.component.view.bar.FunctionBar
+                    android:id="@+id/setting_fb"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
-</RelativeLayout>
+</LinearLayout>

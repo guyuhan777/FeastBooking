@@ -1,7 +1,6 @@
 package com.iplay.feastbooking.net.utilImpl.recommendHotelUtil;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;

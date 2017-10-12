@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="portrait_size">60dp</dimen>
+    <dimen name="self_bg_height">200dp</dimen>
     <dimen name="header_button_margin">20dp</dimen>
     <dimen name="app_button_radius">5dp</dimen>
     <dimen name="app_title_big_size">30sp</dimen>
@@ -14,6 +16,7 @@
     <dimen name="app_button_font_size">25sp</dimen>
     <dimen name="app_tab_font_size">20sp</dimen>
     <dimen name="app_back_size">25dp</dimen>
+    <dimen name="app_forward_size">20dp</dimen>
     <dimen name="app_cancel_size">30dp</dimen>
     <dimen name="app_recycle_view_text_size">18sp</dimen>
     <dimen name="app_title_margin">20dp</dimen>

@@ -41,8 +41,6 @@ public class RecommendedHotelFragment extends BasicFragment{
 
     public static final String TAG = "recommendHotelFragment";
 
-    private static final int numPerPage = 10;
-
     private  volatile boolean isInit = false;
 
     private View statusView;
@@ -58,8 +56,6 @@ public class RecommendedHotelFragment extends BasicFragment{
     private int totalItemCount;
 
     private int lastVisibleItemPosition;
-
-    private boolean isAllLoaded = false;
 
     private BasicRecyclerViewAdapter adapter;
 
@@ -91,7 +87,7 @@ public class RecommendedHotelFragment extends BasicFragment{
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                if(isAllLoaded || !isInit || !isListInit || adapter.isClickToLoadMoreExist){
+                if(adapter.isAllLoaded() || !isInit || !isListInit || adapter.isClickToLoadMoreExist){
                     return;
                 }
                 totalItemCount = manager.getItemCount();
@@ -158,7 +154,7 @@ public class RecommendedHotelFragment extends BasicFragment{
         }else if(type == HotelListNoInternetMessageEvent.TYPE_LOAD_MORE){
             Log.d(TAG,"load no Internet");
             Toast.makeText(mContext,"網絡不給力",Toast.LENGTH_SHORT).show();
-            adapter.cancelLoading(false);
+            adapter.cancelLoading();
             adapter.addData(BasicRecyclerViewAdapter.TYPE_CLICK_LOAD,null);
             adapter.notifyDataSetChanged();
             adapter.setLoaded();
@@ -173,32 +169,27 @@ public class RecommendedHotelFragment extends BasicFragment{
             List<RecommendHotelGO> hotels = event.getHotels();
             Log.d(TAG, hotels.toString());
             if(hotels == null || hotels.size() == 0){
-                isAllLoaded = true;
                 return;
             }
             for(int i=0;i<hotels.size();i++ ){
                 adapter.addData(BasicRecyclerViewAdapter.TYPE_HOTEL,hotels.get(i));
             }
-            adapter.increasePageNum();
-            if(hotels.size()<numPerPage ){
+            if(adapter.isAllLoaded() ){
                 adapter.addData(BasicRecyclerViewAdapter.TYPE_ALL_LOADED,null);
-                isAllLoaded = true;
             }
             isListInit = true;
         }else if(type == HotelListMessageEvent.TYPE_LOAD){
-            adapter.cancelLoading(true);
+            adapter.cancelLoading();
             List<RecommendHotelGO> hotels = event.getHotels();
             Log.d(TAG,"loadMore" + hotels.toString());
             if(hotels == null || hotels.size() == 0){
                 adapter.addData(BasicRecyclerViewAdapter.TYPE_ALL_LOADED,null);
-                isAllLoaded = true;
             }else {
                 for(int i=0; i<hotels.size(); i++){
                     adapter.addData(BasicRecyclerViewAdapter.TYPE_HOTEL,hotels.get(i));
                 }
-                if(hotels.size()<numPerPage ){
+                if(adapter.isAllLoaded()){
                     adapter.addData(BasicRecyclerViewAdapter.TYPE_ALL_LOADED,null);
-                    isAllLoaded = true;
                 }
             }
             adapter.setLoaded();

@@ -23,6 +23,7 @@ import com.iplay.feastbooking.entity.RecommendGrid;
 import com.iplay.feastbooking.gson.homepage.hotelList.RecommendHotelGO;
 import com.iplay.feastbooking.net.NetProperties;
 import com.iplay.feastbooking.net.utilImpl.recommendHotelUtil.RecommendHotelListUtility;
+import com.iplay.feastbooking.ui.hotelDetail.NewHotelDetailActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,13 +52,13 @@ public class BasicRecyclerViewAdapter extends RecyclerView.Adapter<BasicViewHold
 
     public static final int TYPE_PLACE_HOLDER = 7;
 
+    private static final int numPerPage = 10;
+
     public boolean isClickToLoadMoreExist = false;
 
     private static final int AD_INDEX = 0;
 
     private static final int SP_RECOMMEND_PH_INDEX = 2;
-
-    private int currentPage = 0;
 
     private List<InnerData> innerDatas = new ArrayList<>();
 
@@ -68,18 +69,6 @@ public class BasicRecyclerViewAdapter extends RecyclerView.Adapter<BasicViewHold
     private boolean isLoading = false;
 
     private ClickToLoadMore clickToLoadMore;
-
-    private int getPage(){
-        return currentPage;
-    }
-
-    public void increasePageNum(){
-        currentPage++;
-    }
-
-    private void decreasePageNum(){
-        currentPage--;
-    }
 
     public boolean isLoading(){
         return isLoading;
@@ -92,6 +81,8 @@ public class BasicRecyclerViewAdapter extends RecyclerView.Adapter<BasicViewHold
     public void setLoaded(){
         isLoading = false;
     }
+
+    private int numOfHotels = 0;
 
     public BasicRecyclerViewAdapter(Context context){
         mContext = context;
@@ -157,7 +148,7 @@ public class BasicRecyclerViewAdapter extends RecyclerView.Adapter<BasicViewHold
     }
 
     @Override
-    public void onBindViewHolder(BasicViewHolder holder, int position) {
+    public void onBindViewHolder(BasicViewHolder holder, final int position) {
         int type = getItemViewType(position);
         switch (type){
             case TYPE_ADS:
@@ -182,6 +173,16 @@ public class BasicRecyclerViewAdapter extends RecyclerView.Adapter<BasicViewHold
                     hotelRecyclerItemVH.price_range_iv.setText(recommendHotelGO.getPriceRange());
                     hotelRecyclerItemVH.table_num_iv.setText(recommendHotelGO.getTableRange());
                     hotelRecyclerItemVH.remark_num_iv.setText(recommendHotelGO.getNumOfComment());
+                    hotelRecyclerItemVH.loc_iv.setText(recommendHotelGO.districtOfAddress);
+                    hotelRecyclerItemVH.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if(innerDatas.get(position).data == null){
+                                return;
+                            }
+                            NewHotelDetailActivity.start(mContext,(RecommendHotelGO) innerDatas.get(position).data);
+                        }
+                    });
                 }
                 break;
             case TYPE_CLICK_LOAD:
@@ -218,6 +219,10 @@ public class BasicRecyclerViewAdapter extends RecyclerView.Adapter<BasicViewHold
 
     }
 
+    public boolean isAllLoaded(){
+        return numOfHotels!=0 && numOfHotels%numPerPage!=0;
+    };
+
     @Override
     public int getItemCount() {
         return innerDatas.size();
@@ -245,6 +250,7 @@ public class BasicRecyclerViewAdapter extends RecyclerView.Adapter<BasicViewHold
             if(data == null){
                 return;
             }else {
+                numOfHotels++;
                 innerDatas.add(innerData);
             }
         }else {
@@ -259,14 +265,11 @@ public class BasicRecyclerViewAdapter extends RecyclerView.Adapter<BasicViewHold
         }
         setLoading();
         addData(BasicRecyclerViewAdapter.TYPE_LOADING,null);
-        utility.loadMore(getPage());
-        increasePageNum();
+        int page = numOfHotels/numPerPage;
+        utility.loadMore(page);
     }
 
-    public void cancelLoading(boolean isLoadedSuccess){
-        if(!isLoadedSuccess){
-            decreasePageNum();
-        }
+    public void cancelLoading(){
         InnerData innerData = innerDatas.get(innerDatas.size()-1);
         if(innerData.type == TYPE_LOADING){
             innerDatas.remove(innerDatas.size() - 1);
@@ -294,13 +297,8 @@ public class BasicRecyclerViewAdapter extends RecyclerView.Adapter<BasicViewHold
                     return;
                 }
                 innerDatas.remove(innerDatas.size() - 1);
-                InnerData data = new InnerData();
-                data.type = TYPE_LOADING;
-                innerDatas.add(data);
-                notifyDataSetChanged();
                 isClickToLoadMoreExist = false;
-                utility.loadMore(getPage());
-                setLoading();
+                loadMoreData(utility);
             }
         }
     }
