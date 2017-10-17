@@ -27,7 +27,7 @@
         android:layout_below="@+id/cancel"
         android:layout_alignParentStart="true">
         <TextView
-            android:text="用戶註冊"
+            android:text="用戶登錄"
             android:textSize="@dimen/app_title_big_size"
             android:textColor="@color/deep_grey"
             android:layout_width="match_parent"

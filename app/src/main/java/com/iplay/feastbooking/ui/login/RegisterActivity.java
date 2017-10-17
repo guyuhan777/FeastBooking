@@ -59,6 +59,8 @@ public class RegisterActivity extends BasicActivity implements View.OnClickListe
 
     private TextWatcher validCodeTW = new ValidCodeTextWatcher();
 
+    private Button cancel_btn;
+
     @Override
     public void setContentView() {
         isRegistered = true;
@@ -84,7 +86,8 @@ public class RegisterActivity extends BasicActivity implements View.OnClickListe
         nextButton.setOnClickListener(this);
         code_et = (EditText) findViewById(R.id.verify_code_et);
         code_et.addTextChangedListener(nextButtonTW);
-
+        cancel_btn = (Button) findViewById(R.id.cancel);
+        cancel_btn.setOnClickListener(this);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -217,6 +220,9 @@ public class RegisterActivity extends BasicActivity implements View.OnClickListe
                 valid_code_btn.setText("驗證中");
                 disableValidButton();
                 utility.applyForRegistrationEmail(mail_et.getText().toString().trim());
+                break;
+            case R.id.cancel:
+                finish();
                 break;
         }
     }

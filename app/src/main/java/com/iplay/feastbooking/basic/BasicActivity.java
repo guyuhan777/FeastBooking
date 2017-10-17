@@ -63,7 +63,9 @@ public abstract class BasicActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        EventBus.getDefault().unregister(this);
+        if(isRegistered) {
+            EventBus.getDefault().unregister(this);
+        }
     }
 
     public abstract void setContentView();

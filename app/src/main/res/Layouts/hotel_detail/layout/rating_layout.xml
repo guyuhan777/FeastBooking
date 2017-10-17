@@ -9,7 +9,7 @@
         android:id="@+id/star_1"
         android:layout_width="@dimen/app_rating_icon_size"
         android:layout_height="@dimen/app_rating_icon_size"
-        android:background="@drawable/star_full"
+        android:background="@drawable/star"
         android:scaleType="center" />
 
     <ImageView
@@ -17,7 +17,7 @@
         android:layout_width="@dimen/app_rating_icon_size"
         android:layout_height="@dimen/app_rating_icon_size"
         android:layout_marginLeft="2dp"
-        android:background="@drawable/star_full"
+        android:background="@drawable/star"
         android:scaleType="center" />
 
     <ImageView
@@ -25,7 +25,7 @@
         android:layout_width="@dimen/app_rating_icon_size"
         android:layout_height="@dimen/app_rating_icon_size"
         android:layout_marginLeft="2dp"
-        android:background="@drawable/star_full"
+        android:background="@drawable/star"
         android:scaleType="center" />
 
     <ImageView
@@ -33,7 +33,7 @@
         android:layout_width="@dimen/app_rating_icon_size"
         android:layout_height="@dimen/app_rating_icon_size"
         android:layout_marginLeft="2dp"
-        android:background="@drawable/star_half"
+        android:background="@drawable/star"
         android:scaleType="center" />
 
     <ImageView
@@ -45,7 +45,7 @@
         android:scaleType="center" />
 
     <TextView
-        android:id="@+id/hotel_rate"
+        android:id="@+id/hotel_rate_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"

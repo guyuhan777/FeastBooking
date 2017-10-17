@@ -42,40 +42,93 @@
                 android:text="@string/consult"/>
         </LinearLayout>
     </LinearLayout>
-    <ScrollView
+    <com.iplay.feastbooking.component.view.scrollview.ObservableScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/hotel_sv"
-        android:layout_above="@id/bottom_button_group">
+        android:layout_above="@id/bottom_button_group"
+        android:layout_marginBottom="3dp">
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <com.jude.rollviewpager.RollPagerView
-                android:id="@+id/hotel_icons_roll_pager"
-                android:layout_width="match_parent"
-                android:layout_height="240dp"
-                app:rollviewpager_play_delay="3000" />
-            <TextView
-                android:id="@+id/hotel_name"
-                android:layout_margin="@dimen/app_body_margin"
-                android:textColor="@color/app_title_color"
-                android:textSize="@dimen/app_text_title_size"
+
+            <LinearLayout
+                android:background="@color/white"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="白云酒店"/>
+                android:orientation="vertical">
 
-            <com.iplay.feastbooking.component.view.bar.RatingBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"></com.iplay.feastbooking.component.view.bar.RatingBar>
+                <ImageView
+                    android:id="@+id/single_icon"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/app_main_icon_size"
+                    android:scaleType="centerCrop"
+                    android:visibility="gone" />
+
+                <com.jude.rollviewpager.RollPagerView
+                    android:id="@+id/hotel_icons_roll_pager"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/app_main_icon_size"
+                    app:rollviewpager_play_delay="3000" />
+
+                <TextView
+                    android:id="@+id/hotel_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/app_body_margin"
+                    android:text="白云酒店"
+                    android:textColor="@color/app_title_color"
+                    android:textSize="@dimen/app_text_title_size" />
+
+                <com.iplay.feastbooking.component.view.bar.RatingBar
+                    android:id="@+id/hotel_rate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/hotel_describe"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/app_body_margin" />
+            </LinearLayout>
             <TextView
+                android:layout_marginTop="20dp"
+                android:background="@color/white"
+                android:textColor="@color/app_title_color"
+                android:textSize="@dimen/app_recycle_view_text_size"
+                android:text="宴會廳"
                 android:padding="@dimen/app_body_margin"
-                android:text="@string/hotel_fixed_content"
-                android:id="@+id/hotel_describe"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
+            <View
+                android:id="@+id/hotel_room_placeholder"
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="250dp" />
+            <com.iplay.feastbooking.component.view.gridview.UnScrollableGridView
+                android:visibility="gone"
+                android:id="@+id/hotel_room_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </com.iplay.feastbooking.component.view.gridview.UnScrollableGridView>
+            <TextView
+                android:layout_marginTop="20dp"
+                android:background="@color/white"
+                android:textColor="@color/app_title_color"
+                android:textSize="@dimen/app_recycle_view_text_size"
+                android:text="宴席菜單"
+                android:padding="@dimen/app_body_margin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <com.iplay.feastbooking.component.view.gridview.UnScrollableGridView
+                android:id="@+id/hotel_feast_list"
+                android:numColumns="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </com.iplay.feastbooking.component.view.gridview.UnScrollableGridView>
         </LinearLayout>
-    </ScrollView>
+    </com.iplay.feastbooking.component.view.scrollview.ObservableScrollView>
     <LinearLayout
         android:id="@+id/title_bar"
         android:layout_width="match_parent"

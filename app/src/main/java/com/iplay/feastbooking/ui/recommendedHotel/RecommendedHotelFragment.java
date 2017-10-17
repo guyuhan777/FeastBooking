@@ -20,10 +20,10 @@ import com.iplay.feastbooking.basic.BasicRecyclerViewAdapter;
 import com.iplay.feastbooking.entity.Advertisement;
 import com.iplay.feastbooking.entity.RecommendGrid;
 import com.iplay.feastbooking.gson.homepage.hotelList.RecommendHotelGO;
-import com.iplay.feastbooking.messageEvent.AdvertisementMessageEvent;
-import com.iplay.feastbooking.messageEvent.HotelListMessageEvent;
-import com.iplay.feastbooking.messageEvent.HotelListNoInternetMessageEvent;
-import com.iplay.feastbooking.messageEvent.RecommendGridMessageEvent;
+import com.iplay.feastbooking.messageEvent.home.AdvertisementMessageEvent;
+import com.iplay.feastbooking.messageEvent.home.HotelListMessageEvent;
+import com.iplay.feastbooking.messageEvent.home.HotelListNoInternetMessageEvent;
+import com.iplay.feastbooking.messageEvent.home.RecommendGridMessageEvent;
 import com.iplay.feastbooking.net.utilImpl.recommendHotelUtil.RecommendHotelListUtility;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -66,16 +66,10 @@ public class RecommendedHotelFragment extends BasicFragment{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        isRegisteredNeed = true;
-
         view = inflater.inflate(R.layout.special_recommend_layout,container,false);
-        mContext = getActivity();
 
         statusView = view.findViewById(R.id.status_bar_fix);
         statusView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, WindowAttr.getStatusBarHeight(getActivity())));
-
-        adapter = new BasicRecyclerViewAdapter(mContext);
-        utility = RecommendHotelListUtility.getInstance(mContext);
 
         mainView = (RecyclerView) view.findViewById(R.id.main_recycler_view);
         final LinearLayoutManager manager = new LinearLayoutManager(getActivity());
@@ -107,11 +101,15 @@ public class RecommendedHotelFragment extends BasicFragment{
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        isRegisteredNeed = true;
+        super.onCreate(savedInstanceState);
         if(isInit){
             return;
-        }else {
+        }else{
+            mContext = getActivity();
+            adapter = new BasicRecyclerViewAdapter(mContext);
+            utility = RecommendHotelListUtility.getInstance(mContext);
             isInit = true;
             utility.asyncInit();
         }

@@ -12,10 +12,10 @@ import com.iplay.feastbooking.entity.RecommendGrid;
 import com.iplay.feastbooking.gson.homepage.RecommendGridGO;
 import com.iplay.feastbooking.gson.homepage.advertisement.AdvertisementGO;
 import com.iplay.feastbooking.gson.homepage.hotelList.RecommendHotelGO;
-import com.iplay.feastbooking.messageEvent.AdvertisementMessageEvent;
-import com.iplay.feastbooking.messageEvent.HotelListMessageEvent;
-import com.iplay.feastbooking.messageEvent.HotelListNoInternetMessageEvent;
-import com.iplay.feastbooking.messageEvent.RecommendGridMessageEvent;
+import com.iplay.feastbooking.messageEvent.home.AdvertisementMessageEvent;
+import com.iplay.feastbooking.messageEvent.home.HotelListMessageEvent;
+import com.iplay.feastbooking.messageEvent.home.HotelListNoInternetMessageEvent;
+import com.iplay.feastbooking.messageEvent.home.RecommendGridMessageEvent;
 import com.iplay.feastbooking.net.NetProperties;
 
 import org.greenrobot.eventbus.EventBus;

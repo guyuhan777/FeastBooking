@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <com.ashokvarma.bottomnavigation.BottomNavigationBar
         android:id="@+id/home_bnb"
         android:layout_width="match_parent"
@@ -14,4 +15,34 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"></LinearLayout>
+    <RelativeLayout
+        android:id="@+id/login_hint"
+        android:clickable="true"
+        android:layout_above="@+id/home_bnb"
+        android:layout_width="match_parent"
+        android:layout_height="60dp">
+        <ImageView
+            android:id="@+id/hint_bg_iv"
+            android:scaleType="centerCrop"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <TextView
+            android:id="@+id/hint_cancel"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/app_body_margin"
+            android:textSize="30sp"
+            android:text="×"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/click_to_log_in"
+            android:layout_toRightOf="@id/hint_cancel"
+            android:layout_centerVertical="true"
+            android:padding="@dimen/app_body_margin"
+            android:layout_marginLeft="@dimen/app_body_margin"
+            android:textSize="@dimen/app_text_normal"
+            android:text="您尚未登錄，點我登陸"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
 </RelativeLayout>

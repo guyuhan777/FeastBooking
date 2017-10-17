@@ -9,6 +9,7 @@
     android:paddingBottom="2dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <android.support.v7.widget.CardView
+        android:id="@+id/hotel_room_root"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardCornerRadius="6dp"
@@ -33,6 +34,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
                     <TextView
+                        android:id="@+id/hotel_room_name"
                         android:layout_marginLeft="5dp"
                         android:layout_marginTop="3dp"
                         android:textSize="@dimen/app_recycle_view_text_size"
@@ -51,6 +53,7 @@
                             android:textColor="@color/grey"
                             android:text="面積"/>
                         <TextView
+                            android:id="@+id/hotel_room_area"
                             android:textSize="@dimen/app_text_normal"
                             android:layout_marginLeft="3dp"
                             android:layout_width="wrap_content"
@@ -71,6 +74,7 @@
                         android:layout_marginLeft="5dp"
                         android:layout_marginTop="3dp">
                         <TextView
+                            android:id="@+id/table_start"
                             android:textSize="@dimen/app_text_normal"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -84,6 +88,7 @@
                             android:textColor="@color/grey"
                             android:text="-" />
                         <TextView
+                            android:id="@+id/table_end"
                             android:textSize="@dimen/app_text_normal"
                             android:layout_marginLeft="3dp"
                             android:layout_width="wrap_content"
@@ -110,6 +115,7 @@
                             android:textColor="@color/grey"
                             android:text="最低消費"/>
                         <TextView
+                            android:id="@+id/min_cost"
                             android:textSize="@dimen/app_text_normal"
                             android:layout_marginLeft="3dp"
                             android:layout_width="wrap_content"

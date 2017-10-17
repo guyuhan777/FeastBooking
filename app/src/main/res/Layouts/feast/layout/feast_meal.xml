@@ -1,30 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal"
+    android:orientation="vertical"
+    android:gravity="center"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1">
         <TextView
-            android:id="@+id/left_meal"
+            android:gravity="center"
+            android:id="@+id/meal_name"
             android:layout_margin="@dimen/app_body_margin"
             android:textSize="@dimen/app_recycle_view_text_size"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="鸿运乳猪拼盘"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1">
-        <TextView
-            android:id="@+id/right_meal"
-            android:layout_margin="@dimen/app_body_margin"
-            android:textSize="@dimen/app_recycle_view_text_size"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="高汤灼竹节虾"/>
-    </LinearLayout>
+            android:layout_height="wrap_content" />
 </LinearLayout>

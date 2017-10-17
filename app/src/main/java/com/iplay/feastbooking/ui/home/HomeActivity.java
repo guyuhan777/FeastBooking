@@ -5,14 +5,17 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
+import com.bumptech.glide.Glide;
 import com.iplay.feastbooking.R;
+import com.iplay.feastbooking.assistance.LoginUserHolder;
 import com.iplay.feastbooking.basic.BasicActivity;
-import com.iplay.feastbooking.dao.UserDao;
 import com.iplay.feastbooking.messageEvent.activityFinish.ActivityFinishMessageEvent;
 import com.iplay.feastbooking.ui.login.LoginActivity;
 import com.iplay.feastbooking.ui.login.RegisterActivity;
@@ -21,9 +24,6 @@ import com.iplay.feastbooking.ui.recommendedHotel.RecommendedHotelFragment;
 import com.iplay.feastbooking.ui.self.SelfFragment;
 
 import org.greenrobot.eventbus.EventBus;
-import org.litepal.crud.DataSupport;
-
-import java.util.List;
 
 /**
  * Created by admin on 2017/7/14.
@@ -42,6 +42,12 @@ public class HomeActivity extends BasicActivity implements BottomNavigationBar.O
     private  SelfFragment selfFragment;
 
     private Fragment currentFragment;
+
+    private RelativeLayout login_hint;
+
+    private TextView hint_cancel_tv;
+
+    private TextView hint_log_in_tv;
 
     public void switchFragment(Fragment targetFragment){
         if(currentFragment == targetFragment){
@@ -76,19 +82,24 @@ public class HomeActivity extends BasicActivity implements BottomNavigationBar.O
                 .setFirstSelectedPosition(0).initialise();
         bottom_bar.setTabSelectedListener(this);
         bottom_bar.selectTab(0);
+        login_hint = (RelativeLayout) findViewById(R.id.login_hint);
+        Glide.with(this).load(R.drawable.self_bg).into((ImageView) findViewById(R.id.hint_bg_iv));
+        hint_cancel_tv = (TextView) findViewById(R.id.hint_cancel);
+        hint_cancel_tv.setOnClickListener(this);
+        hint_log_in_tv = (TextView) findViewById(R.id.click_to_log_in);
+        hint_log_in_tv.setOnClickListener(this);
     }
 
     @Override
     public void getData() {
-        List<UserDao> userDaos = DataSupport.where("isLogin = ?","" + 1).find(UserDao.class);
-        if(userDaos.size() == 1){
-            Log.d("currentUser",userDaos.get(0).toString());
-        }
+
     }
 
     @Override
     public void showContent() {
-
+        if(LoginUserHolder.getInstance().getCurrentUser() != null){
+            login_hint.setVisibility(View.GONE);
+        }
     }
 
     public static void startActivity(Context context){
@@ -118,10 +129,15 @@ public class HomeActivity extends BasicActivity implements BottomNavigationBar.O
                 switchFragment(recommendedFragment);
                 break;
             case 1:
-                if (selfFragment == null){
-                    selfFragment = new SelfFragment();
+                if(LoginUserHolder.getInstance().getCurrentUser() == null){
+                    LoginActivity.startActivity(this);
+                    overridePendingTransition(R.anim.bottom2top,R.anim.hold);
+                }else {
+                    if (selfFragment == null) {
+                        selfFragment = new SelfFragment();
+                    }
+                    switchFragment(selfFragment);
                 }
-                switchFragment(selfFragment);
                 break;
         }
         transaction.commit();
@@ -140,7 +156,15 @@ public class HomeActivity extends BasicActivity implements BottomNavigationBar.O
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            // todo
+            case R.id.hint_cancel:
+                login_hint.setVisibility(View.GONE);
+                break;
+            case R.id.click_to_log_in:
+                LoginActivity.startActivity(this);
+                overridePendingTransition(R.anim.bottom2top,R.anim.hold);
+                break;
+            default:
+                break;
         }
     }
 }

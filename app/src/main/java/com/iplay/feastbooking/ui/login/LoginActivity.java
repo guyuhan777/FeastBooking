@@ -1,6 +1,7 @@
 package com.iplay.feastbooking.ui.login;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Editable;
@@ -17,8 +18,8 @@ import android.widget.Toast;
 import com.iplay.feastbooking.R;
 import com.iplay.feastbooking.assistance.WindowAttr;
 import com.iplay.feastbooking.basic.BasicActivity;
-import com.iplay.feastbooking.messageEvent.LoginMessageEvent;
-import com.iplay.feastbooking.messageEvent.NoInternetMessageEvent;
+import com.iplay.feastbooking.messageEvent.home.LoginMessageEvent;
+import com.iplay.feastbooking.messageEvent.home.NoInternetMessageEvent;
 import com.iplay.feastbooking.messageEvent.activityFinish.ActivityFinishMessageEvent;
 import com.iplay.feastbooking.net.utilImpl.loginUtil.LoginUtility;
 import com.iplay.feastbooking.ui.home.HomeActivity;
@@ -72,6 +73,11 @@ public class LoginActivity extends BasicActivity implements View.OnClickListener
         findViewById(R.id.login_layout_root).setOnClickListener(this);
     }
 
+    public static void startActivity(Context context){
+        Intent intent = new Intent(context,LoginActivity.class);
+        context.startActivity(intent);
+    }
+
     @Override
     public void getData() {
         utility = LoginUtility.getInstance(this);
@@ -123,6 +129,10 @@ public class LoginActivity extends BasicActivity implements View.OnClickListener
                 String password = password_et.getText().toString();
                 disableButton();
                 utility.login(username,password);
+                break;
+            case R.id.cancel:
+                finish();
+                overridePendingTransition(R.anim.hold,R.anim.top2bottom);
                 break;
         }
     }

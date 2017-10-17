@@ -8,8 +8,8 @@ import com.iplay.feastbooking.assistance.ProperTies;
 import com.iplay.feastbooking.dao.UserDao;
 import com.iplay.feastbooking.gson.login.LoginRequest;
 import com.iplay.feastbooking.gson.login.LoginResponse;
-import com.iplay.feastbooking.messageEvent.LoginMessageEvent;
-import com.iplay.feastbooking.messageEvent.NoInternetMessageEvent;
+import com.iplay.feastbooking.messageEvent.home.LoginMessageEvent;
+import com.iplay.feastbooking.messageEvent.home.NoInternetMessageEvent;
 import com.iplay.feastbooking.net.NetProperties;
 import com.iplay.feastbooking.net.message.UtilMessage;
 
@@ -95,16 +95,15 @@ public class LoginUtility {
         LoginResponse.User user = response.user;
         if(user != null){
             UserDao userDao = DataSupport.where("userId = ?", user.id + "").findFirst(UserDao.class);
-            if(userDao == null){
+            if(userDao == null) {
                 userDao = new UserDao();
                 userDao.setUserId(user.id);
+                userDao.setUsername(username);
+                userDao.setPassword(password);
+                userDao.setToken(response.token);
+                userDao.setLogin(true);
+                userDao.save();
             }
-            userDao.setUsername(username);
-            userDao.setPassword(password);
-            userDao.setToken(response.token);
-            userDao.setLogin(true);
-            userDao.save();
-
             ContentValues values = new ContentValues();
             values.put("isLogin",false);
             DataSupport.updateAll(UserDao.class, values, "userId != ?", user.id + "");

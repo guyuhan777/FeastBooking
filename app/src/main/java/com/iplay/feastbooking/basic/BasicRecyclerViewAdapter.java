@@ -168,7 +168,11 @@ public class BasicRecyclerViewAdapter extends RecyclerView.Adapter<BasicViewHold
                 if(innerDatas.get(position).data != null){
                     RecommendHotelGO recommendHotelGO = (RecommendHotelGO) innerDatas.get(position).data;
                     HotelRecyclerItemViewHolder hotelRecyclerItemVH = (HotelRecyclerItemViewHolder) holder;
-                    Glide.with(mContext).load(recommendHotelGO.pictureUrl).placeholder(R.drawable.ks).into(hotelRecyclerItemVH.hotel_icon_iv);
+                    if(recommendHotelGO.pictureUrl == null || recommendHotelGO.pictureUrl.equals("")){
+                        Glide.with(mContext).load(R.drawable.placeholder).into(hotelRecyclerItemVH.hotel_icon_iv);
+                    }else {
+                        Glide.with(mContext).load(recommendHotelGO.pictureUrl).placeholder(R.drawable.loading_reco).into(hotelRecyclerItemVH.hotel_icon_iv);
+                    }
                     hotelRecyclerItemVH.hotel_name_iv.setText(recommendHotelGO.name);
                     hotelRecyclerItemVH.price_range_iv.setText(recommendHotelGO.getPriceRange());
                     hotelRecyclerItemVH.table_num_iv.setText(recommendHotelGO.getTableRange());
@@ -206,11 +210,11 @@ public class BasicRecyclerViewAdapter extends RecyclerView.Adapter<BasicViewHold
                 ImageView leftPart = recommendHotelGridViewHolder.leftView;
                 ImageView rightPart = recommendHotelGridViewHolder.rightView;
 
-                Glide.with(mContext).load(recommendGrid[0].getUrl()).into(leftPart);
+                Glide.with(mContext).load(recommendGrid[0].getUrl()).placeholder(R.drawable.loading_reco).into(leftPart);
                 if(recommendGrid[1] == null){
                     return;
                 }else {
-                    Glide.with(mContext).load(recommendGrid[1].getUrl()).into(rightPart);
+                    Glide.with(mContext).load(recommendGrid[1].getUrl()).placeholder(R.drawable.loading_reco).into(rightPart);
                 }
                 break;
             default:
@@ -235,6 +239,8 @@ public class BasicRecyclerViewAdapter extends RecyclerView.Adapter<BasicViewHold
         if(type == TYPE_ADS){
             innerDatas.remove(AD_INDEX);
             innerDatas.add(AD_INDEX,innerData);
+            notifyItemChanged(AD_INDEX);
+            return;
         }else if(type == TYPE_GRID){
             if(innerDatas.get(SP_RECOMMEND_PH_INDEX).type == TYPE_PLACE_HOLDER){
                 innerDatas.remove(SP_RECOMMEND_PH_INDEX);
@@ -244,19 +250,30 @@ public class BasicRecyclerViewAdapter extends RecyclerView.Adapter<BasicViewHold
                 return;
             }else {
                 innerDatas.add(lastIndexOfSpecialRecommendToInsert, innerData);
+                if(lastIndexOfSpecialRecommendToInsert == SP_RECOMMEND_PH_INDEX){
+                    notifyItemChanged(SP_RECOMMEND_PH_INDEX);
+                }else{
+                    notifyItemInserted(lastIndexOfSpecialRecommendToInsert);
+                }
                 lastIndexOfSpecialRecommendToInsert++;
+                return;
             }
         }else if(type == TYPE_HOTEL){
             if(data == null){
                 return;
             }else {
                 numOfHotels++;
+                int addIndex = innerDatas.size();
                 innerDatas.add(innerData);
+                notifyItemChanged(addIndex);
+                return;
             }
         }else {
+            int addIndex = innerDatas.size();
             innerDatas.add(innerData);
+            notifyItemChanged(addIndex);
+            return;
         }
-        notifyDataSetChanged();
     }
 
     public void loadMoreData(RecommendHotelListUtility utility){
@@ -272,8 +289,8 @@ public class BasicRecyclerViewAdapter extends RecyclerView.Adapter<BasicViewHold
     public void cancelLoading(){
         InnerData innerData = innerDatas.get(innerDatas.size()-1);
         if(innerData.type == TYPE_LOADING){
-            innerDatas.remove(innerDatas.size() - 1);
-            notifyDataSetChanged();
+            int lastIndex = innerDatas.size() - 1;
+            innerDatas.remove(lastIndex);
         }
     }
 
@@ -296,7 +313,8 @@ public class BasicRecyclerViewAdapter extends RecyclerView.Adapter<BasicViewHold
                     Toast.makeText(mContext,"網絡不給力",Toast.LENGTH_SHORT).show();
                     return;
                 }
-                innerDatas.remove(innerDatas.size() - 1);
+                int lastIndex = innerDatas.size() - 1;
+                innerDatas.remove(lastIndex);
                 isClickToLoadMoreExist = false;
                 loadMoreData(utility);
             }

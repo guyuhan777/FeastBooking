@@ -1,6 +1,8 @@
 package com.iplay.feastbooking.basic;
 
 import android.app.Fragment;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -12,17 +14,18 @@ public class BasicFragment extends Fragment {
 
     protected volatile boolean isRegisteredNeed = false;
 
+
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         if(isRegisteredNeed) {
             EventBus.getDefault().register(this);
         }
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onDestroy() {
+        super.onDestroy();
         if(isRegisteredNeed){
             EventBus.getDefault().unregister(this);
         }
