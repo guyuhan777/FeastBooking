@@ -7,12 +7,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.iplay.feastbooking.R;
+import com.iplay.feastbooking.assistance.LoginUserHolder;
 import com.iplay.feastbooking.assistance.WindowAttr;
 import com.iplay.feastbooking.basic.BasicFragment;
 import com.iplay.feastbooking.component.view.bar.FunctionBar;
+import com.iplay.feastbooking.dao.UserDao;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -20,7 +23,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * Created by admin on 2017/7/17.
  */
 
-public class SelfFragment extends BasicFragment {
+public class SelfFragment extends BasicFragment implements View.OnClickListener{
 
     public static final String TAG = "SelfFragment";
 
@@ -70,6 +73,25 @@ public class SelfFragment extends BasicFragment {
         functionBars[SETTING_INDEX] = (FunctionBar) view.findViewById(R.id.setting_fb);
         functionBars[SETTING_INDEX].function_name_tv.setText("設置");
 
+        UserDao currentUser;
+        if((currentUser = LoginUserHolder.getInstance().getCurrentUser())!=null){
+            ((TextView) view.findViewById(R.id.user_name)).setText(currentUser.getUsername());
+            ((TextView) view.findViewById(R.id.user_id)).setText("ID: " + currentUser.getUserId());
+        }
+
+        view.findViewById(R.id.self_detail_rl).setOnClickListener(this);
+
         return view;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.self_detail_rl:
+                SelfInfoActivity.start(mContext);
+                break;
+            default:
+                break;
+        }
     }
 }

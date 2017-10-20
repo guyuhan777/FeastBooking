@@ -34,6 +34,11 @@ public abstract class BasicActivity extends AppCompatActivity {
         init();
     }
 
+    @Override
+    public void finish() {
+        super.finish();
+    }
+
     public void init(){
         setContentView();
         /*if(Build.VERSION.SDK_INT >= 21){

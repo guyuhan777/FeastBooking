@@ -40,6 +40,7 @@
                     android:src="@drawable/message" />
 
                 <RelativeLayout
+                    android:id="@+id/self_detail_rl"
                     android:layout_width="match_parent"
                     android:layout_height="80dp"
                     android:layout_alignParentBottom="true"
@@ -74,7 +75,6 @@
                             android:id="@+id/user_id"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="ID: el psy congroo"
                             android:textSize="@dimen/app_text_normal" />
                     </LinearLayout>
 

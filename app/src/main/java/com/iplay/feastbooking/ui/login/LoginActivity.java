@@ -18,9 +18,9 @@ import android.widget.Toast;
 import com.iplay.feastbooking.R;
 import com.iplay.feastbooking.assistance.WindowAttr;
 import com.iplay.feastbooking.basic.BasicActivity;
+import com.iplay.feastbooking.messageEvent.activityFinish.ActivityFinishMessageEvent;
 import com.iplay.feastbooking.messageEvent.home.LoginMessageEvent;
 import com.iplay.feastbooking.messageEvent.home.NoInternetMessageEvent;
-import com.iplay.feastbooking.messageEvent.activityFinish.ActivityFinishMessageEvent;
 import com.iplay.feastbooking.net.utilImpl.loginUtil.LoginUtility;
 import com.iplay.feastbooking.ui.home.HomeActivity;
 
@@ -70,6 +70,7 @@ public class LoginActivity extends BasicActivity implements View.OnClickListener
         cancel_btn.setOnClickListener(this);
         next_btn = (Button) findViewById(R.id.next_btn);
         next_btn.setOnClickListener(this);
+        findViewById(R.id.register_now).setOnClickListener(this);
         findViewById(R.id.login_layout_root).setOnClickListener(this);
     }
 
@@ -105,7 +106,7 @@ public class LoginActivity extends BasicActivity implements View.OnClickListener
             Toast.makeText(this,"用戶名或密碼錯誤",Toast.LENGTH_SHORT).show();
             enableButton();
         }else if(event.getType() == LoginMessageEvent.TYPE_SUCCESS){
-            HomeActivity.startActivity(this);
+            HomeActivity.startHomeActivity(this);
         }
     }
 
@@ -130,9 +131,14 @@ public class LoginActivity extends BasicActivity implements View.OnClickListener
                 disableButton();
                 utility.login(username,password);
                 break;
+            case R.id.register_now:
+                RegisterActivity.start(this);
+                break;
             case R.id.cancel:
                 finish();
                 overridePendingTransition(R.anim.hold,R.anim.top2bottom);
+                break;
+            default:
                 break;
         }
     }

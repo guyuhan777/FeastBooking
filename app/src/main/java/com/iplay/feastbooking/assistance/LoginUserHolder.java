@@ -16,22 +16,23 @@ public class LoginUserHolder {
 
     private volatile UserDao currentUser;
 
-    private volatile boolean isInit = false;
-
     private LoginUserHolder(){
 
     }
 
     public synchronized UserDao getCurrentUser(){
-        if(!isInit && currentUser == null){
+        if(currentUser == null){
             List<UserDao> userDaos = DataSupport.where("isLogin = ?","" + 1).find(UserDao.class);
             if(userDaos.size() == 1){
                 currentUser = userDaos.get(0);
             }
-            isInit = true;
         }
         return currentUser;
     };
+
+    public synchronized void removeCurrentUser(){
+        currentUser = null;
+    }
 
     public static LoginUserHolder getInstance(){
         if(instance == null){

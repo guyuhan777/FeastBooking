@@ -36,7 +36,6 @@
                 android:layout_weight="6">
                 <TextView
                     android:id="@+id/room_name"
-                    android:textStyle="bold"
                     android:layout_centerInParent="true"
                     android:textSize="@dimen/app_text_title_size"
                     android:textColor="@color/app_title_color"

@@ -1,5 +1,7 @@
 package com.iplay.feastbooking.ui.login;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.widget.ImageView;
@@ -29,6 +31,11 @@ public class WelcomeActivity extends BasicActivity {
     @Override
     public void setContentView() {
         setContentView(R.layout.welcome_layout);
+    }
+
+
+    public static void start(Context context){
+        context.startActivity(new Intent(context,WelcomeActivity.class));
     }
 
     @Override

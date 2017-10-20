@@ -5,6 +5,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -34,6 +35,8 @@ public class HomeActivity extends BasicActivity implements BottomNavigationBar.O
     private static final String TAG = "HomeActivity";
 
     public static final String KEY_USER = "user_key";
+
+    public static final String STATE_KEY = "state_key";
 
     public BottomNavigationBar bottom_bar;
 
@@ -99,7 +102,36 @@ public class HomeActivity extends BasicActivity implements BottomNavigationBar.O
     public void showContent() {
         if(LoginUserHolder.getInstance().getCurrentUser() != null){
             login_hint.setVisibility(View.GONE);
+        }else {
+            login_hint.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        if(intent.getBooleanExtra(STATE_KEY,false)){
+            bottom_bar.selectTab(0);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if(LoginUserHolder.getInstance().getCurrentUser() != null){
+            login_hint.setVisibility(View.GONE);
+        }else {
+            login_hint.setVisibility(View.VISIBLE);
+        }
+        Log.d(TAG,"RESUME");
+    }
+
+    public static void startHomeActivity(Context context){
+        Intent intent = new Intent(context,HomeActivity.class);
+        intent.putExtra(STATE_KEY,true);
+        context.startActivity(intent);
     }
 
     public static void startActivity(Context context){

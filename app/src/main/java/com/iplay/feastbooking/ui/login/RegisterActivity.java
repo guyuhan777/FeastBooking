@@ -1,6 +1,7 @@
 package com.iplay.feastbooking.ui.login;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
@@ -59,7 +60,9 @@ public class RegisterActivity extends BasicActivity implements View.OnClickListe
 
     private TextWatcher validCodeTW = new ValidCodeTextWatcher();
 
-    private Button cancel_btn;
+    public static void start(Context context){
+        context.startActivity(new Intent(context,RegisterActivity.class));
+    }
 
     @Override
     public void setContentView() {
@@ -86,8 +89,8 @@ public class RegisterActivity extends BasicActivity implements View.OnClickListe
         nextButton.setOnClickListener(this);
         code_et = (EditText) findViewById(R.id.verify_code_et);
         code_et.addTextChangedListener(nextButtonTW);
-        cancel_btn = (Button) findViewById(R.id.cancel);
-        cancel_btn.setOnClickListener(this);
+        findViewById(R.id.cancel).setOnClickListener(this);
+        findViewById(R.id.login_now).setOnClickListener(this);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -220,6 +223,9 @@ public class RegisterActivity extends BasicActivity implements View.OnClickListe
                 valid_code_btn.setText("驗證中");
                 disableValidButton();
                 utility.applyForRegistrationEmail(mail_et.getText().toString().trim());
+                break;
+            case R.id.login_now:
+                LoginActivity.startActivity(this);
                 break;
             case R.id.cancel:
                 finish();
