@@ -87,6 +87,7 @@ public class RecommendedHotelFragment extends BasicFragment{
                 totalItemCount = manager.getItemCount();
                 lastVisibleItemPosition = manager.findLastVisibleItemPosition();
                 if(!adapter.isLoading() && totalItemCount <= lastVisibleItemPosition + visibleThreshold){
+                    adapter.setLoading();
                     postHandler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -96,9 +97,11 @@ public class RecommendedHotelFragment extends BasicFragment{
                 }
             }
         });
-
         return view;
     }
+
+
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -150,7 +153,6 @@ public class RecommendedHotelFragment extends BasicFragment{
             adapter.addData(BasicRecyclerViewAdapter.TYPE_CLICK_LOAD,null);
             adapter.notifyDataSetChanged();
         }else if(type == HotelListNoInternetMessageEvent.TYPE_LOAD_MORE){
-            Log.d(TAG,"load no Internet");
             Toast.makeText(mContext,"網絡不給力",Toast.LENGTH_SHORT).show();
             adapter.cancelLoading();
             adapter.addData(BasicRecyclerViewAdapter.TYPE_CLICK_LOAD,null);

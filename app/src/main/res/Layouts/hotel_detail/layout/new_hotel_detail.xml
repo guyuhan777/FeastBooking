@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <LinearLayout
+        android:baselineAligned="false"
         android:id="@+id/bottom_button_group"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
@@ -28,6 +29,7 @@
                 android:layout_height="wrap_content" />
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/consult_btn"
             android:layout_width="0dp"
             android:layout_weight="7"
             android:layout_height="wrap_content"
@@ -77,7 +79,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/app_body_margin"
-                    android:text="白云酒店"
                     android:textColor="@color/app_title_color"
                     android:textSize="@dimen/app_text_title_size" />
 
@@ -86,11 +87,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
-                <TextView
+                <cn.carbs.android.expandabletextview.library.ExpandableTextView
                     android:id="@+id/hotel_describe"
-                    android:layout_width="match_parent"
+                    android:lineSpacingExtra="5dp"
+                    android:layout_margin="@dimen/app_body_margin"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/app_body_margin" />
+                    app:etv_ToExpandHint="展开"
+                    app:etv_ToShrinkHint="收起"/>
             </LinearLayout>
             <TextView
                 android:layout_marginTop="20dp"

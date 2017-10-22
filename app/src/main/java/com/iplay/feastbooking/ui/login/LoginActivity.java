@@ -47,6 +47,10 @@ public class LoginActivity extends BasicActivity implements View.OnClickListener
 
     private LoginUtility utility;
 
+    private boolean isOnBack = false;
+
+    private static final String ONBACK_KEY = "ONBACK";
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         isRegistered = true;
@@ -74,6 +78,13 @@ public class LoginActivity extends BasicActivity implements View.OnClickListener
         findViewById(R.id.login_layout_root).setOnClickListener(this);
     }
 
+
+    public static void startOnBackActivity(Context context){
+        Intent intent = new Intent(context,LoginActivity.class);
+        intent.putExtra(ONBACK_KEY,true);
+        context.startActivity(intent);
+    }
+
     public static void startActivity(Context context){
         Intent intent = new Intent(context,LoginActivity.class);
         context.startActivity(intent);
@@ -82,6 +93,7 @@ public class LoginActivity extends BasicActivity implements View.OnClickListener
     @Override
     public void getData() {
         utility = LoginUtility.getInstance(this);
+        isOnBack = getIntent().getBooleanExtra(ONBACK_KEY, false);
     }
 
     @Override
@@ -106,7 +118,14 @@ public class LoginActivity extends BasicActivity implements View.OnClickListener
             Toast.makeText(this,"用戶名或密碼錯誤",Toast.LENGTH_SHORT).show();
             enableButton();
         }else if(event.getType() == LoginMessageEvent.TYPE_SUCCESS){
-            HomeActivity.startHomeActivity(this);
+            if(!isOnBack){
+                HomeActivity.startHomeActivity(this);
+                overridePendingTransition(R.anim.hold,R.anim.top2bottom);
+            }else {
+                finish();
+                overridePendingTransition(R.anim.hold,R.anim.top2bottom);
+            }
+
         }
     }
 

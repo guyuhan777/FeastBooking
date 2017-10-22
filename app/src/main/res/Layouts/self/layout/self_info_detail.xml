@@ -36,7 +36,7 @@
         android:layout_below="@id/up_part"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <include layout="@layout/seperateline_horizontal" />
+        <include layout="@layout/title_sepertae_horizontal" />
     </LinearLayout>
     <RelativeLayout
         android:background="@color/white"

@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.iplay.feastbooking.R;
+import com.iplay.feastbooking.assistance.LoginUserHolder;
 import com.iplay.feastbooking.assistance.WindowAttr;
 import com.iplay.feastbooking.basic.BasicActivity;
 import com.iplay.feastbooking.component.view.bar.RatingBar;
@@ -24,8 +25,10 @@ import com.iplay.feastbooking.gson.hotelDetail.HotelDetail;
 import com.iplay.feastbooking.messageEvent.hotelDetail.HotelDetailMessageEvent;
 import com.iplay.feastbooking.net.NetProperties;
 import com.iplay.feastbooking.net.utilImpl.hotelDetail.HotelDetailUtility;
+import com.iplay.feastbooking.ui.consult.ConsultActivity;
 import com.iplay.feastbooking.ui.hotelDetail.adapter.HotelFeastGridAdapter;
 import com.iplay.feastbooking.ui.hotelDetail.adapter.HotelRoomGridAdapter;
+import com.iplay.feastbooking.ui.login.LoginActivity;
 import com.jude.rollviewpager.RollPagerView;
 import com.jude.rollviewpager.adapter.LoopPagerAdapter;
 
@@ -33,6 +36,8 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.lang.ref.WeakReference;
+
+import cn.carbs.android.expandabletextview.library.ExpandableTextView;
 
 /**
  * Created by admin on 2017/9/11.
@@ -62,7 +67,7 @@ public class NewHotelDetailActivity extends BasicActivity implements View.OnClic
 
     private TextView hotel_name_tv;
 
-    private TextView hotel_describe;
+    private ExpandableTextView hotel_describe;
 
     private RatingBar ratingBar;
 
@@ -107,10 +112,11 @@ public class NewHotelDetailActivity extends BasicActivity implements View.OnClic
         back_iv = (ImageView) findViewById(R.id.back_iv);
         back_iv.setOnClickListener(this);
         if(isNetOn){
+            findViewById(R.id.consult_btn).setOnClickListener(this);
             hotel_sv = (ObservableScrollView) findViewById(R.id.hotel_sv);
             hotel_icon_pager = (RollPagerView) findViewById(R.id.hotel_icons_roll_pager);
             hotel_name_tv = (TextView) findViewById(R.id.hotel_name);
-            hotel_describe = (TextView) findViewById(R.id.hotel_describe);
+            hotel_describe = (ExpandableTextView) findViewById(R.id.hotel_describe);
             ratingBar = (RatingBar) findViewById(R.id.hotel_rate);
             single_pic_iv = (ImageView) findViewById(R.id.single_icon);
             hotel_room_ph = (View) findViewById(R.id.hotel_room_placeholder);
@@ -187,6 +193,19 @@ public class NewHotelDetailActivity extends BasicActivity implements View.OnClic
                         onBackPressed();
                     }
                 });
+                break;
+            case R.id.consult_btn:
+                if(LoginUserHolder.getInstance().getCurrentUser() == null){
+                    LoginActivity.startOnBackActivity(this);
+                    overridePendingTransition(R.anim.bottom2top,R.anim.hold);
+                }else {
+                    if(hotelDetail != null) {
+                        ConsultActivity.start(this, hotelDetail);
+                    }
+                }
+                break;
+            default:
+                break;
         }
     }
 

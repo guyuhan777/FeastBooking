@@ -5,10 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
         <TextView
-            android:gravity="center"
             android:id="@+id/meal_name"
             android:layout_margin="@dimen/app_body_margin"
-            android:textSize="@dimen/app_recycle_view_text_size"
+            android:textSize="@dimen/app_text_normal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 </LinearLayout>

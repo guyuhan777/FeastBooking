@@ -1,5 +1,6 @@
 package com.iplay.feastbooking.gson.hotelDetail;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
@@ -7,7 +8,7 @@ import java.util.List;
  * Created by admin on 2017/10/13.
  */
 
-public class HotelDetail {
+public class HotelDetail implements Serializable{
 
     public Address address;
 
@@ -54,7 +55,7 @@ public class HotelDetail {
                 '}';
     }
 
-    public static class Address{
+    public static class Address implements Serializable{
         public String city;
 
         public String district;

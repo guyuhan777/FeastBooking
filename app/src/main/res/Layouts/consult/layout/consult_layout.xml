@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:clickable="true"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:id="@+id/root_view"
+    android:background="@color/button_grey"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:id="@+id/up_part"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <View
+            android:id="@+id/status_bar_fix"
+            android:layout_width="match_parent"
+            android:layout_height="0dp" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/app_body_margin">
+            <ImageView
+                android:id="@+id/back_iv"
+                android:layout_width="@dimen/app_back_size"
+                android:layout_height="@dimen/app_back_size"
+                android:src="@drawable/back_4" />
+
+            <TextView
+                android:id="@+id/hotel_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:textColor="@color/app_title_color"
+                android:textSize="@dimen/app_text_title_size" />
+        </RelativeLayout>
+        <include layout="@layout/title_sepertae_horizontal" />
+    </LinearLayout>
+    <LinearLayout
+        android:background="@color/white"
+        android:id="@+id/bottom_button_group"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingBottom="@dimen/app_body_margin"
+        android:paddingTop="@dimen/app_body_margin">
+        <Button
+            android:enabled="false"
+            android:textSize="@dimen/app_text_title_size"
+            android:id="@+id/next_btn"
+            android:textColor="@color/white"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/next"
+            android:background="@drawable/button_disable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_above="@id/bottom_button_group"
+        android:layout_below="@id/up_part"
+        android:id="@+id/consult_sv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical">
+            <LinearLayout
+                android:padding="@dimen/app_body_margin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="6">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="宴會廳"
+                        android:textColor="@color/app_title_color"
+                        android:textSize="@dimen/app_recycle_view_text_size" />
+                </LinearLayout>
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="4">
+                    <Spinner
+                        android:id="@+id/banquet_halls_spinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                    </Spinner>
+                </LinearLayout>
+            </LinearLayout>
+            <include layout="@layout/seperateline_horizontal" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="@dimen/app_body_margin">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="6">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="數量"
+                        android:textColor="@color/app_title_color"
+                        android:textSize="@dimen/app_recycle_view_text_size" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="4">
+                    <EditText
+                        android:id="@+id/table_num_et"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:hint="擺酒臺數"
+                        android:inputType="numberSigned"
+                        android:textColorHint="@color/button_grey"
+                        android:textSize="@dimen/app_recycle_view_text_size" />
+                </LinearLayout>
+            </LinearLayout>
+            <include layout="@layout/seperateline_horizontal" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="@dimen/app_body_margin">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="6">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="推介人"
+                        android:textColor="@color/app_title_color"
+                        android:textSize="@dimen/app_recycle_view_text_size" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="4">
+                    <EditText
+                        android:id="@+id/recommender_et"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:hint="推介人姓名/ID"
+                        android:inputType="text"
+                        android:textColorHint="@color/button_grey"
+                        android:textSize="@dimen/app_recycle_view_text_size" />
+                </LinearLayout>
+            </LinearLayout>
+            <include layout="@layout/seperateline_horizontal" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="@dimen/app_body_margin">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="6">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="聯系人"
+                        android:textColor="@color/app_title_color"
+                        android:textSize="@dimen/app_recycle_view_text_size" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="4">
+                    <EditText
+                        android:id="@+id/linker_et"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:hint="聯系人姓名"
+                        android:inputType="text"
+                        android:textColorHint="@color/button_grey"
+                        android:textSize="@dimen/app_recycle_view_text_size" />
+                </LinearLayout>
+            </LinearLayout>
+            <include layout="@layout/seperateline_horizontal" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="@dimen/app_body_margin">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="6">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="聯系方式"
+                        android:textColor="@color/app_title_color"
+                        android:textSize="@dimen/app_recycle_view_text_size" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="4">
+                    <EditText
+                        android:id="@+id/linker_way_et"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:hint="聯系方式"
+                        android:inputType="text"
+                        android:textColorHint="@color/button_grey"
+                        android:textSize="@dimen/app_recycle_view_text_size" />
+                </LinearLayout>
+            </LinearLayout>
+            <include layout="@layout/seperateline_horizontal" />
+
+            <LinearLayout
+                android:padding="@dimen/app_body_margin"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_weight="4"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/dates_tv"
+                        android:layout_centerVertical="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="候選日期"
+                        android:textColor="@color/app_title_color"
+                        android:textSize="@dimen/app_recycle_view_text_size" />
+                    <ImageView
+                        android:layout_marginLeft="20dp"
+                        android:src="@drawable/add_date"
+                        android:id="@+id/add_date_iv"
+                        android:layout_centerVertical="true"
+                        android:layout_width="@dimen/app_back_small"
+                        android:layout_height="@dimen/app_back_small" />
+                </LinearLayout>
+
+            </LinearLayout>
+            <include layout="@layout/seperateline_horizontal" />
+            <com.iplay.feastbooking.component.view.gridview.UnScrollableGridView
+                android:id="@+id/dates_list_sv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:numColumns="1">
+            </com.iplay.feastbooking.component.view.gridview.UnScrollableGridView>
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/app_body_margin"
+    android:paddingRight="@dimen/app_body_margin"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <LinearLayout
+        android:paddingTop="@dimen/app_body_margin"
+        android:paddingBottom="@dimen/app_body_margin"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_weight="4"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+        <RelativeLayout
+            android:layout_weight="6"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/date_tv"
+                android:textSize="@dimen/app_text_normal"
+                android:textColor="@color/app_title_color"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <ImageView
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:id="@+id/cancel_iv"
+                android:src="@drawable/cancel"
+                android:layout_width="@dimen/app_rating_icon_size"
+                android:layout_height="@dimen/app_rating_icon_size" />
+        </RelativeLayout>
+    </LinearLayout>
+    <include layout="@layout/seperateline_horizontal" />
+</LinearLayout>

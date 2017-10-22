@@ -61,6 +61,7 @@
         android:paddingTop="@dimen/app_body_margin">
         <Button
             android:textSize="@dimen/app_text_title_size"
+            android:id="@id/consult_btn"
             android:textColor="@color/white"
             android:layout_gravity="center_horizontal"
             android:text="@string/consult"

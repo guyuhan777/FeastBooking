@@ -13,15 +13,19 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.iplay.feastbooking.R;
+import com.iplay.feastbooking.assistance.LoginUserHolder;
 import com.iplay.feastbooking.assistance.WindowAttr;
 import com.iplay.feastbooking.basic.BasicActivity;
 import com.iplay.feastbooking.component.view.gridview.UnScrollableGridView;
 import com.iplay.feastbooking.gson.hotelDetail.BanquetHall;
+import com.iplay.feastbooking.gson.hotelDetail.HotelDetail;
 import com.iplay.feastbooking.gson.room.BanquetHallDetail;
 import com.iplay.feastbooking.messageEvent.banquetHall.BanquetHallMessageEvent;
 import com.iplay.feastbooking.net.NetProperties;
 import com.iplay.feastbooking.net.utilImpl.banquetHall.BanquetHallUtility;
+import com.iplay.feastbooking.ui.consult.ConsultActivity;
 import com.iplay.feastbooking.ui.hotelRoom.adapter.RoomConfigAdapter;
+import com.iplay.feastbooking.ui.login.LoginActivity;
 import com.jude.rollviewpager.RollPagerView;
 import com.jude.rollviewpager.adapter.LoopPagerAdapter;
 
@@ -29,6 +33,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 
 
 /**
@@ -80,6 +85,7 @@ public class HotelRoomActivity extends BasicActivity implements View.OnClickList
         back_iv = (ImageView) findViewById(R.id.back_iv);
         back_iv.setOnClickListener(this);
         if(isNetOn){
+            findViewById(R.id.consult_btn).setOnClickListener(this);
             room_sv = (ScrollView) findViewById(R.id.room_sv);
             room_name = (TextView) findViewById(R.id.room_name);
             area = (TextView) findViewById(R.id.area);
@@ -153,6 +159,17 @@ public class HotelRoomActivity extends BasicActivity implements View.OnClickList
                         onBackPressed();
                     }
                 });
+                break;
+            case R.id.consult_btn:
+                if(LoginUserHolder.getInstance().getCurrentUser() == null){
+                    LoginActivity.startOnBackActivity(this);
+                    overridePendingTransition(R.anim.bottom2top,R.anim.hold);
+                }else{
+                    HotelDetail hotelDetail = new HotelDetail();
+                    hotelDetail.banquetHalls = new ArrayList<>();
+                    hotelDetail.banquetHalls.add(banquetHall);
+                    ConsultActivity.start(this,hotelDetail);
+                }
                 break;
             default:
                 break;

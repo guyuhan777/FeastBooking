@@ -74,7 +74,7 @@ public class BasicRecyclerViewAdapter extends RecyclerView.Adapter<BasicViewHold
         return isLoading;
     }
 
-    private void setLoading(){
+    public void setLoading(){
         isLoading = true;
     }
 
@@ -232,7 +232,7 @@ public class BasicRecyclerViewAdapter extends RecyclerView.Adapter<BasicViewHold
         return innerDatas.size();
     }
 
-    public void addData(int type, Object data){
+    public synchronized void addData(int type, Object data){
         InnerData innerData = new InnerData();
         innerData.type = type;
         innerData.data = data;
@@ -276,7 +276,7 @@ public class BasicRecyclerViewAdapter extends RecyclerView.Adapter<BasicViewHold
         }
     }
 
-    public void loadMoreData(RecommendHotelListUtility utility){
+    public synchronized void loadMoreData(RecommendHotelListUtility utility){
         if(utility == null){
             return;
         }
@@ -286,7 +286,7 @@ public class BasicRecyclerViewAdapter extends RecyclerView.Adapter<BasicViewHold
         utility.loadMore(page);
     }
 
-    public void cancelLoading(){
+    public synchronized void cancelLoading(){
         InnerData innerData = innerDatas.get(innerDatas.size()-1);
         if(innerData.type == TYPE_LOADING){
             int lastIndex = innerDatas.size() - 1;
