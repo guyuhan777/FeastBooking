@@ -1,7 +1,7 @@
 package com.iplay.feastbooking.ui.recommendedHotel.adapter;
 
+import android.app.Activity;
 import android.content.Context;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -17,6 +17,7 @@ import com.iplay.feastbooking.ui.recommendedHotel.data.ClickToLoadMoreHomeData;
 import com.iplay.feastbooking.ui.recommendedHotel.data.HotelHomeData;
 import com.iplay.feastbooking.ui.recommendedHotel.data.PlaceHolderHomeData;
 import com.iplay.feastbooking.ui.recommendedHotel.data.RecommendHotelHomeData;
+import com.iplay.feastbooking.ui.recommendedHotel.data.TitleHomeData;
 import com.iplay.feastbooking.ui.recommendedHotel.data.UnderLoadingHomeData;
 import com.iplay.feastbooking.ui.recommendedHotel.data.basic.BasicHomeData;
 import com.iplay.feastbooking.ui.recommendedHotel.delegates.AdvertisementAdapterDelegate;
@@ -70,7 +71,7 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter {
 
     private AdapterDelegatesManager<List<BasicHomeData>> delegatesManager;
 
-    public HomeRecyclerViewAdapter(AppCompatActivity activity) {
+    public HomeRecyclerViewAdapter(Activity activity) {
         delegatesManager = new AdapterDelegatesManager<>();
         delegatesManager.addDelegate(TYPE_ADS, new AdvertisementAdapterDelegate(activity));
         delegatesManager.addDelegate(TYPE_ALL_LOADED, new AllLoadedAdapterDelegate(activity));
@@ -80,6 +81,25 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter {
         delegatesManager.addDelegate(TYPE_TITLE, new TitleAdapterDelegate(activity));
         delegatesManager.addDelegate(TYPE_UNDER_LOADING, new UnderLoadingAdapterDelegate(activity));
         delegatesManager.addDelegate(TYPE_CLICK_TO_LOAD_MORE, new ClickToLoadMoreAdapterDelegate(activity, this));
+        init();
+    }
+
+    private void init(){
+        PlaceHolderHomeData adPhData = new PlaceHolderHomeData();
+        adPhData.setHeight(250);
+        items.add(adPhData);
+
+        TitleHomeData titleRecommend = new TitleHomeData();
+        titleRecommend.setTitle("特别推介");
+        items.add(titleRecommend);
+
+        PlaceHolderHomeData rhPhData = new PlaceHolderHomeData();
+        rhPhData.setHeight(600);
+        items.add(rhPhData);
+
+        TitleHomeData titleAll = new TitleHomeData();
+        titleRecommend.setTitle("所有酒楼");
+        items.add(titleRecommend);
     }
 
     @Override

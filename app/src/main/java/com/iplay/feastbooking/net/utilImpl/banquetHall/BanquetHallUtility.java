@@ -47,11 +47,10 @@ public class BanquetHallUtility {
 
     public void initBanquetHall(int id){
         OkHttpClient client = new OkHttpClient.Builder().connectTimeout(3, TimeUnit.SECONDS).build();
-        final Request request = new Request.Builder().url(serverUrl + urlSeperator + findBanquetHallByIdAPI + id).build();
+        Request request = new Request.Builder().url(serverUrl + urlSeperator + findBanquetHallByIdAPI + id).build();
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-
             }
 
             @Override

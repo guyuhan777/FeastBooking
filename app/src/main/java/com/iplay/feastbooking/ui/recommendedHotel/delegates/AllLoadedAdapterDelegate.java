@@ -1,7 +1,7 @@
 package com.iplay.feastbooking.ui.recommendedHotel.delegates;
 
+import android.app.Activity;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +22,7 @@ public class AllLoadedAdapterDelegate extends AdapterDelegate<List<BasicHomeData
 
     private LayoutInflater inflater;
 
-    public AllLoadedAdapterDelegate(AppCompatActivity activity){
+    public AllLoadedAdapterDelegate(Activity activity){
         inflater = LayoutInflater.from(activity);
     }
 

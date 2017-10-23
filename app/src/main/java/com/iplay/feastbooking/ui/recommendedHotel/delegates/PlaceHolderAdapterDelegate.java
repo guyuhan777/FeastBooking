@@ -1,8 +1,8 @@
 package com.iplay.feastbooking.ui.recommendedHotel.delegates;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +27,7 @@ public class PlaceHolderAdapterDelegate extends AdapterDelegate<List<BasicHomeDa
 
     private WeakReference<Context> contextWeakReference;
 
-    public PlaceHolderAdapterDelegate(AppCompatActivity activity){
+    public PlaceHolderAdapterDelegate(Activity activity){
         inflater = LayoutInflater.from(activity);
         contextWeakReference = new WeakReference<Context>(activity);
     }

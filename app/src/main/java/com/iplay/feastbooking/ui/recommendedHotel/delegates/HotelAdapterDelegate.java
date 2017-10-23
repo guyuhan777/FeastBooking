@@ -1,8 +1,8 @@
 package com.iplay.feastbooking.ui.recommendedHotel.delegates;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +13,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.hannesdorfmann.adapterdelegates3.AdapterDelegate;
 import com.iplay.feastbooking.R;
-import com.iplay.feastbooking.component.view.viewHolder.HotelRecyclerItemViewHolder;
 import com.iplay.feastbooking.gson.homepage.hotelList.RecommendHotelGO;
 import com.iplay.feastbooking.ui.hotelDetail.NewHotelDetailActivity;
 import com.iplay.feastbooking.ui.recommendedHotel.data.HotelHomeData;
@@ -32,7 +31,7 @@ public class HotelAdapterDelegate extends AdapterDelegate<List<BasicHomeData>> {
 
     private WeakReference<Context> contextWeakReference;
 
-    public HotelAdapterDelegate(AppCompatActivity activity){
+    public HotelAdapterDelegate(Activity activity){
         inflater = LayoutInflater.from(activity);
         contextWeakReference = new WeakReference<Context>(activity);
     }
@@ -81,7 +80,7 @@ public class HotelAdapterDelegate extends AdapterDelegate<List<BasicHomeData>> {
 
         @Override
         public void onClick(View v) {
-            if(go != null && contextWeakReference.get() == null) {
+            if(go != null && contextWeakReference.get() != null) {
                 NewHotelDetailActivity.start(contextWeakReference.get(),go);
             }
         }

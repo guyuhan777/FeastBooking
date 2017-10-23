@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.iplay.feastbooking.R;
+import com.iplay.feastbooking.assistance.DateFormatter;
 import com.iplay.feastbooking.assistance.WindowAttr;
 import com.iplay.feastbooking.basic.BasicActivity;
 import com.iplay.feastbooking.component.view.gridview.UnScrollableGridView;
@@ -170,7 +171,16 @@ public class ConsultActivity extends BasicActivity implements View.OnClickListen
         consultVO.recommender = recommender_et.getText().toString().trim();
         consultVO.phone = linker_way_et.getText().toString().trim();
         consultVO.tables = Integer.parseInt(table_num_et.getText().toString().trim());
-
+        String dates = "";
+        for (int i=0;i<flexDates.size();i++){
+            List<Date> flexDate = flexDates.get(i);
+            if(flexDate.size() == 1){
+                dates += DateFormatter.formatDate(flexDate.get(0)) +";";
+            }else if(flexDate.size() >= 2){
+                dates += DateFormatter.formatDate(flexDate.get(0)) + "-" + DateFormatter.formatDate(flexDate.get(1)) + ";";
+            }
+        }
+        consultVO.candidateDates = dates;
         return consultVO;
     }
 
