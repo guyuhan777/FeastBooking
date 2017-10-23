@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="recommend_hotel_grid_size">170dp</dimen>
+    <dimen name="hint_icon_whole_page">220dp</dimen>
     <dimen name="app_back_small">20dp</dimen>
     <dimen name="portrait_size">60dp</dimen>
     <dimen name="self_bg_height">200dp</dimen>

@@ -12,3 +12,4 @@ findFeastsById=feasts/
 findBanquetHallById=banquet_halls/
 resource=resources
 verify=auth/totp
+postOrder=orders

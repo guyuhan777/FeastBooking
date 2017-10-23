@@ -18,15 +18,23 @@ public class ProperTies {
 
     public static final int TYPE_BTN_DISABLE = 3;
 
+    private static volatile Properties instance;
+
     public static Properties getProperties(Context context){
-        Properties properties = new Properties();
-        try {
-            InputStream in = context.getAssets().open("appConfig");
-            properties.load(in);
-        } catch (IOException e) {
-            e.printStackTrace();
+        if(instance == null){
+            synchronized (ProperTies.class){
+                if(instance == null){
+                    instance = new Properties();
+                    try {
+                        InputStream in = context.getApplicationContext().getAssets().open("appConfig");
+                        instance.load(in);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
         }
-        return properties;
+        return instance;
     }
 
 }

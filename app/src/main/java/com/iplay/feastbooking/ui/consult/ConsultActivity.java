@@ -21,8 +21,11 @@ import com.iplay.feastbooking.R;
 import com.iplay.feastbooking.assistance.WindowAttr;
 import com.iplay.feastbooking.basic.BasicActivity;
 import com.iplay.feastbooking.component.view.gridview.UnScrollableGridView;
+import com.iplay.feastbooking.gson.consult.ConsultVO;
 import com.iplay.feastbooking.gson.hotelDetail.BanquetHall;
 import com.iplay.feastbooking.gson.hotelDetail.HotelDetail;
+import com.iplay.feastbooking.messageEvent.consult.ConsultOrderMessageEvent;
+import com.iplay.feastbooking.net.utilImpl.consult.ConsultUtility;
 import com.iplay.feastbooking.ui.consult.adapter.DatesListAdapter;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -62,6 +65,8 @@ public class ConsultActivity extends BasicActivity implements View.OnClickListen
 
     private EditText table_num_et, recommender_et, linker_et, linker_way_et;
 
+    private ConsultUtility utility;
+
     @Override
     public void setContentView() {
         setContentView(R.layout.consult_layout);
@@ -71,6 +76,7 @@ public class ConsultActivity extends BasicActivity implements View.OnClickListen
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         isRegistered = true;
         super.onCreate(savedInstanceState);
+        utility = ConsultUtility.getInstance(this);
     }
 
     private void enableButton(){
@@ -85,7 +91,7 @@ public class ConsultActivity extends BasicActivity implements View.OnClickListen
 
     @Override
     public void findViews() {
-        ((View) findViewById(R.id.status_bar_fix)).setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, WindowAttr.getStatusBarHeight(this)));
+        findViewById(R.id.status_bar_fix).setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, WindowAttr.getStatusBarHeight(this)));
         findViewById(R.id.back_iv).setOnClickListener(this);
         findViewById(R.id.root_view).setOnClickListener(this);
         findViewById(R.id.add_date_iv).setOnClickListener(this);
@@ -108,7 +114,7 @@ public class ConsultActivity extends BasicActivity implements View.OnClickListen
             hotel_name.setText(hotelDetail.name);
         }
         banquetHallSpinner = (Spinner) findViewById(R.id.banquet_halls_spinner);
-        ArrayAdapter<String> adapter=new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, generateBanquetsList());
+        ArrayAdapter<String> adapter=new ArrayAdapter<>(this,android.R.layout.simple_spinner_item, generateBanquetsList());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         banquetHallSpinner.setAdapter(adapter);
         dates_list = (UnScrollableGridView) findViewById(R.id.dates_list_sv);
@@ -133,6 +139,20 @@ public class ConsultActivity extends BasicActivity implements View.OnClickListen
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onConsultOrderMessageEvent(ConsultOrderMessageEvent event){
+        if(event.getType() == ConsultOrderMessageEvent.TYPE_FAILURE){
+            Toast.makeText(this,event.getFailureReason(),Toast.LENGTH_SHORT).show();
+        }else if(event.getType() == ConsultOrderMessageEvent.TYPE_SUCCESS){
+            if(!event.getResult().success){
+                Toast.makeText(this,"推介人不存在",Toast.LENGTH_SHORT).show();
+            }else {
+                ConsultSuccessActivity.start(this);
+                overridePendingTransition(R.anim.bottom2top, R.anim.hold);
+            }
+        }
+    }
+
     @Override
     public void getData() {
         hotelDetail = (HotelDetail) getIntent().getSerializableExtra(HOTEL_KEY);
@@ -141,6 +161,17 @@ public class ConsultActivity extends BasicActivity implements View.OnClickListen
     @Override
     public void showContent() {
 
+    }
+
+    private ConsultVO generateConsultVO(){
+        ConsultVO consultVO = new ConsultVO();
+        consultVO.banquetHallId = hotelDetail.banquetHalls.get(banquetHallSpinner.getSelectedItemPosition()).id;
+        consultVO.contact = linker_et.getText().toString().trim();
+        consultVO.recommender = recommender_et.getText().toString().trim();
+        consultVO.phone = linker_way_et.getText().toString().trim();
+        consultVO.tables = Integer.parseInt(table_num_et.getText().toString().trim());
+
+        return consultVO;
     }
 
     public static void start(Context context, HotelDetail hotelDetail){
@@ -161,7 +192,12 @@ public class ConsultActivity extends BasicActivity implements View.OnClickListen
                 });
                 break;
             case R.id.next_btn:
-
+                if(flexDates.size() == 0){
+                    Toast.makeText(this,"請選擇候選日期",Toast.LENGTH_SHORT).show();
+                    return;
+                }else{
+                    utility.createConsultOrder(generateConsultVO());
+                }
                 break;
             case R.id.root_view:
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);

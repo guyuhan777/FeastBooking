@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white">
+    <View
+        android:id="@+id/status_bar_fix"
+        android:layout_width="match_parent"
+        android:layout_height="0dp" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/app_body_margin">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="提交成功"
+            android:textColor="@color/app_title_color"
+            android:textSize="@dimen/app_text_title_size" />
+        <TextView
+            android:id="@+id/finish_tv"
+            android:layout_alignParentEnd="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="完成"
+            android:textColor="@color/pink"
+            android:textSize="@dimen/app_text_title_size" />
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <include layout="@layout/title_sepertae_horizontal" />
+    </LinearLayout>
+    <ImageView
+        android:layout_marginTop="50dp"
+        android:src="@drawable/success"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="@dimen/hint_icon_whole_page"
+        android:layout_height="@dimen/hint_icon_whole_page" />
+    <TextView
+        android:textSize="30sp"
+        android:gravity="center"
+        android:text="馬上為您辦理"
+        android:textColor="@color/app_title_color"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:textSize="@dimen/app_text_title_size"
+        android:gravity="center"
+        android:text="經理人將在24小時內與您聯系"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>
