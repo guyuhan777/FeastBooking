@@ -30,9 +30,9 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:id="@+id/cancel_iv"
-                android:src="@drawable/cancel"
-                android:layout_width="@dimen/app_rating_icon_size"
-                android:layout_height="@dimen/app_rating_icon_size" />
+                android:src="@drawable/delete"
+                android:layout_width="@dimen/app_back_small"
+                android:layout_height="@dimen/app_back_small" />
         </RelativeLayout>
     </LinearLayout>
     <include layout="@layout/seperateline_horizontal" />
