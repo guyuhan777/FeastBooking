@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Created by admin on 2017/10/13.
+ * Created by Guyuhan on 2017/10/13.
  */
 
 public class HotelDetail implements Serializable{
@@ -61,6 +61,10 @@ public class HotelDetail implements Serializable{
         public String district;
 
         public String street;
+
+        public String getFormatString(){
+          return city + " " + district + " " + street;
+        };
     }
 
 }

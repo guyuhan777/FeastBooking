@@ -30,21 +30,19 @@
                     android:layout_width="@dimen/app_room_icon_size"
                     android:layout_height="@dimen/app_room_icon_size" />
                 <LinearLayout
+                    android:paddingLeft="@dimen/app_body_margin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
                     <TextView
                         android:id="@+id/hotel_room_name"
-                        android:layout_marginLeft="5dp"
                         android:layout_marginTop="3dp"
                         android:textSize="@dimen/app_recycle_view_text_size"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="雨果廳"/>
+                        android:layout_height="wrap_content" />
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
                         android:layout_marginTop="3dp">
                         <TextView
                             android:textSize="@dimen/app_text_normal"
@@ -58,8 +56,7 @@
                             android:layout_marginLeft="3dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/grey"
-                            android:text="400.0"/>
+                            android:textColor="@color/grey" />
                         <TextView
                             android:textSize="@dimen/app_text_normal"
                             android:layout_marginLeft="3dp"
@@ -71,15 +68,13 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
                         android:layout_marginTop="3dp">
                         <TextView
                             android:id="@+id/table_start"
                             android:textSize="@dimen/app_text_normal"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/grey"
-                            android:text="10"/>
+                            android:textColor="@color/grey" />
                         <TextView
                             android:textSize="@dimen/app_text_normal"
                             android:layout_marginLeft="3dp"
@@ -106,7 +101,6 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
                         android:layout_marginTop="3dp">
                         <TextView
                             android:textSize="@dimen/app_text_normal"
@@ -120,8 +114,7 @@
                             android:layout_marginLeft="3dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/grey"
-                            android:text="$7000.0" />
+                            android:textColor="@color/grey" />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>

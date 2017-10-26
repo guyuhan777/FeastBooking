@@ -33,7 +33,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@id/forwards"
-            android:text="4388.0/桌"
             android:textSize="@dimen/app_recycle_view_text_size" />
     </RelativeLayout>
 </LinearLayout>

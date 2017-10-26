@@ -17,7 +17,7 @@
             android:layout_height="0dp"
             android:background="#00000000" />
         <ImageView
-            android:id="@+id/back_iv"
+            android:id="@+id/back_sm"
             android:layout_margin="5dp"
             android:background="@drawable/back_4"
             android:layout_width="@dimen/app_back_size"

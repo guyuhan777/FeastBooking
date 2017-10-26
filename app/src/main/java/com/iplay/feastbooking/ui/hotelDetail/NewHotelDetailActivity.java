@@ -83,6 +83,10 @@ public class NewHotelDetailActivity extends BasicActivity implements View.OnClic
 
     private int color_change_height = 200;
 
+    private TextView tel_tv;
+
+    private TextView address_tv;
+
     public static void start(Context startActivity,RecommendHotelGO hotel){
         Intent intent = new Intent(startActivity,NewHotelDetailActivity.class);
         intent.putExtra(HOTEL_KEY,hotel);
@@ -116,6 +120,8 @@ public class NewHotelDetailActivity extends BasicActivity implements View.OnClic
             hotel_sv = (ObservableScrollView) findViewById(R.id.hotel_sv);
             hotel_icon_pager = (RollPagerView) findViewById(R.id.hotel_icons_roll_pager);
             hotel_name_tv = (TextView) findViewById(R.id.hotel_name);
+            tel_tv = (TextView) findViewById(R.id.tel_tv);
+            address_tv = (TextView) findViewById(R.id.address_tv);
             hotel_describe = (ExpandableTextView) findViewById(R.id.hotel_describe);
             ratingBar = (RatingBar) findViewById(R.id.hotel_rate);
             single_pic_iv = (ImageView) findViewById(R.id.single_icon);
@@ -145,6 +151,11 @@ public class NewHotelDetailActivity extends BasicActivity implements View.OnClic
         hotel_name_tv.setText(hotelDetail.name);
         hotel_describe.setText(hotelDetail.description);
         ratingBar.setRate(hotelDetail.rating);
+        tel_tv.setText(hotelDetail.telephone);
+        if(hotelDetail.address != null){
+            address_tv.setText(hotelDetail.address.getFormatString());
+        }
+
         if(hotelDetail.pictureUrls == null || hotelDetail.pictureUrls.size() == 0){
             hotel_icon_pager.setVisibility(View.GONE);
             single_pic_iv.setVisibility(View.VISIBLE);

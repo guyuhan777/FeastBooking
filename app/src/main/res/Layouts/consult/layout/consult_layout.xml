@@ -25,7 +25,7 @@
                 android:id="@+id/back_iv"
                 android:layout_width="@dimen/app_back_size"
                 android:layout_height="@dimen/app_back_size"
-                android:src="@drawable/back_4" />
+                android:src="@drawable/back_sm" />
 
             <TextView
                 android:id="@+id/hotel_name"

@@ -25,7 +25,7 @@
                 <ImageView
                     android:id="@+id/back_iv"
                     android:layout_margin="5dp"
-                    android:background="@drawable/back_4"
+                    android:background="@drawable/back_sm"
                     android:layout_width="@dimen/app_back_size"
                     android:layout_height="@dimen/app_back_size" />
             </RelativeLayout>
