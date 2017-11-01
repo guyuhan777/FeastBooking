@@ -139,7 +139,6 @@ public class HotelRoomActivity extends BasicActivity implements View.OnClickList
 
     @Override
     public void showContent() {
-        Log.d(TAG,"showContent");
         utility.initBanquetHall(banquetHall.id);
     }
 

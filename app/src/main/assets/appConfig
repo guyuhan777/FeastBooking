@@ -13,3 +13,4 @@ findBanquetHallById=banquet_halls/
 resource=resources
 verify=auth/totp
 postOrder=orders
+getOrderList=user/orders

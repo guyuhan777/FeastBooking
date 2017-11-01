@@ -16,6 +16,7 @@ import com.iplay.feastbooking.assistance.WindowAttr;
 import com.iplay.feastbooking.basic.BasicFragment;
 import com.iplay.feastbooking.component.view.bar.FunctionBar;
 import com.iplay.feastbooking.dao.UserDao;
+import com.iplay.feastbooking.ui.order.OrderListActivity;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -60,6 +61,7 @@ public class SelfFragment extends BasicFragment implements View.OnClickListener{
         Glide.with(mContext).load(R.drawable.ks).into(avatar);
 
         functionBars[ORDER_UNDER_INDEX] = (FunctionBar) view.findViewById(R.id.order_under_fb);
+        functionBars[ORDER_UNDER_INDEX].setOnClickListener(this);
 
         functionBars[ORDER_HISTORY_INDEX] = (FunctionBar) view.findViewById(R.id.order_history_fb);
         functionBars[ORDER_HISTORY_INDEX].function_name_tv.setText("歷史訂單");
@@ -89,6 +91,11 @@ public class SelfFragment extends BasicFragment implements View.OnClickListener{
         switch (v.getId()){
             case R.id.self_detail_rl:
                 SelfInfoActivity.start(mContext);
+                break;
+            case R.id.order_under_fb:
+                functionBars[ORDER_UNDER_INDEX].disable();
+                OrderListActivity.start(mContext);
+                functionBars[ORDER_UNDER_INDEX].enable();
                 break;
             default:
                 break;

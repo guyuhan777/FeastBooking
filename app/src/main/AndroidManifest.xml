@@ -44,6 +44,7 @@
         <activity android:name=".ui.self.SelfInfoActivity" android:screenOrientation="portrait"/>
         <activity android:name=".ui.consult.ConsultActivity" />
         <activity android:name=".ui.consult.ConsultSuccessActivity" />
+        <activity android:name=".ui.order.OrderListActivity" />
     </application>
 
 </manifest>

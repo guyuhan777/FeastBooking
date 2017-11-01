@@ -74,8 +74,6 @@ public class ConsultUtility {
         }
 
         token = tokenPrefix + " " +  token;
-        Log.d("token", token);
-        Log.d("vo", consultVO.toString());
         OkHttpClient client = new OkHttpClient.Builder().connectTimeout(3, TimeUnit.SECONDS).build();
         final Gson gson = new Gson();
         String json = gson.toJson(consultVO);
