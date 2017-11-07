@@ -26,8 +26,6 @@ import okhttp3.Response;
 public class HotelDetailUtility {
     private static volatile HotelDetailUtility utility;
 
-    private Context mContext;
-
     private final Properties properties;
 
     private final String serverUrl;
@@ -37,7 +35,6 @@ public class HotelDetailUtility {
     private final String getHotelByIdAPI;
 
     private HotelDetailUtility(Context context){
-        mContext = context;
         properties = ProperTies.getProperties(context);
         urlSeperator = properties.getProperty("urlSeperator");
         serverUrl = properties.getProperty("serverUrl");

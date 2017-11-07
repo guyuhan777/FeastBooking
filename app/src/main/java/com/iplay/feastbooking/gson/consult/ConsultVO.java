@@ -20,6 +20,8 @@ public class ConsultVO implements Serializable {
 
     public int tables;
 
+    public int totp;
+
     @Override
     public String toString() {
         return "ConsultVO{" +

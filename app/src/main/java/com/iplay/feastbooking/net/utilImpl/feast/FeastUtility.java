@@ -26,8 +26,6 @@ import okhttp3.Response;
 public class FeastUtility {
     private static volatile FeastUtility utility;
 
-    private Context mContext;
-
     private final Properties properties;
 
     private final String serverUrl;
@@ -37,7 +35,6 @@ public class FeastUtility {
     private final String findFeastsByIdAPI;
 
     private FeastUtility(Context context){
-        mContext = context;
         properties = ProperTies.getProperties(context);
         urlSeperator = properties.getProperty("urlSeperator");
         serverUrl = properties.getProperty("serverUrl");

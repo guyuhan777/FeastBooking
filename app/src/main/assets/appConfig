@@ -14,3 +14,4 @@ resource=resources
 verify=auth/totp
 postOrder=orders
 getOrderList=user/orders
+consultTotp=totp

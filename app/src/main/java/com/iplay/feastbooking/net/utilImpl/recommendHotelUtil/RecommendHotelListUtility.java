@@ -41,8 +41,6 @@ public class RecommendHotelListUtility {
 
     private static volatile RecommendHotelListUtility utility;
 
-    private Context mContext;
-
     private final Properties properties;
 
     private final String serverUrl;
@@ -60,7 +58,6 @@ public class RecommendHotelListUtility {
     private final String listHotelsForUserAPI;
 
     private RecommendHotelListUtility(Context context){
-        mContext = context;
         properties = ProperTies.getProperties(context);
         serverUrl = properties.getProperty("serverUrl");
         advertisementAPI = properties.getProperty("advertisement");
@@ -71,14 +68,14 @@ public class RecommendHotelListUtility {
         basicPath = serverUrl + urlSeperator + resourcePath + urlSeperator;
     }
 
-    public void asyncInit(){
-        asyncInitAdvertisements();
-        asyncInitSpecialRecommend();
-        asyncInitAllHotel();
+    public void asyncInit(Context context){
+        asyncInitAdvertisements(context);
+        asyncInitSpecialRecommend(context);
+        asyncInitAllHotel(context);
     }
 
-    private void asyncInitAdvertisements(){
-        if(!NetProperties.isNetworkConnected(mContext)){
+    private void asyncInitAdvertisements(Context context){
+        if(!NetProperties.isNetworkConnected(context)){
             List<Advertisement> advertisements = Advertisement.transFromDOs(getAdvertisementsWithoutNetwork(), serverUrl + urlSeperator + resourcePath , urlSeperator);
             AdvertisementMessageEvent event = new AdvertisementMessageEvent();
             event.setAdvertisements(advertisements);
@@ -122,8 +119,8 @@ public class RecommendHotelListUtility {
         }
     }
 
-    private void asyncInitSpecialRecommend(){
-        if(!NetProperties.isNetworkConnected(mContext)){
+    private void asyncInitSpecialRecommend(Context context){
+        if(!NetProperties.isNetworkConnected(context)){
             List<RecommendGrid> recommendGrids = RecommendGrid.transFromDOs(getRecommendGridsWithoutNetWork(),serverUrl + urlSeperator + resourcePath , urlSeperator);
             RecommendGridMessageEvent event = new RecommendGridMessageEvent();
             event.setRecommendGrids(recommendGrids);
@@ -166,8 +163,8 @@ public class RecommendHotelListUtility {
         }
     }
 
-    private void asyncInitAllHotel(){
-        if(!NetProperties.isNetworkConnected(mContext)){
+    private void asyncInitAllHotel(Context context){
+        if(!NetProperties.isNetworkConnected(context)){
             HotelListNoInternetMessageEvent messageEvent = new HotelListNoInternetMessageEvent();
             messageEvent.setType(HotelListNoInternetMessageEvent.TYPE_INIT);
             EventBus.getDefault().post(messageEvent);
@@ -203,8 +200,8 @@ public class RecommendHotelListUtility {
         }
     }
 
-    public void loadMore(int page){
-        if(!NetProperties.isNetworkConnected(mContext)){
+    public void loadMore(int page, Context context){
+        if(!NetProperties.isNetworkConnected(context)){
             HotelListNoInternetMessageEvent messageEvent = new HotelListNoInternetMessageEvent();
             messageEvent.setType(HotelListNoInternetMessageEvent.TYPE_LOAD_MORE);
             EventBus.getDefault().post(messageEvent);
@@ -252,7 +249,9 @@ public class RecommendHotelListUtility {
     public static RecommendHotelListUtility getInstance(Context context){
         if(utility == null){
             synchronized (RecommendHotelListUtility.class){
-                utility = new RecommendHotelListUtility(context);
+                if(utility == null) {
+                    utility = new RecommendHotelListUtility(context);
+                }
             }
         }
         return utility;

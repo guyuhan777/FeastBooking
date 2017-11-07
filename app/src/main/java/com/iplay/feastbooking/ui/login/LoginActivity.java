@@ -148,7 +148,7 @@ public class LoginActivity extends BasicActivity implements View.OnClickListener
                 String username = userName_et.getText().toString();
                 String password = password_et.getText().toString();
                 disableButton();
-                utility.login(username,password);
+                utility.login(username, password, this);
                 break;
             case R.id.register_now:
                 RegisterActivity.start(this);

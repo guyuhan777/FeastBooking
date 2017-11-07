@@ -172,7 +172,7 @@ public class RegisterConfirmActivity extends BasicActivity implements View.OnCli
                     Toast.makeText(this,"重復密碼錯誤",Toast.LENGTH_SHORT).show();
                     enableNextButton();
                 }else {
-                    utility.register(token,mail,user_name,password);
+                    utility.register(token, mail, user_name, password, this);
                 }
                 break;
         }

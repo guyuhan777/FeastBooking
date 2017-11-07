@@ -43,10 +43,7 @@ public class RegisterValidUtility {
 
     private final String verify ;
 
-    private final Context mContext;
-
     private RegisterValidUtility(Context context){
-        mContext = context;
         properties = ProperTies.getProperties(context);
         serverUrl = properties.getProperty("serverUrl");
         applyForRegistrationEmailAPI = properties.getProperty("applyForRegistrationEmail");
@@ -54,8 +51,8 @@ public class RegisterValidUtility {
         verify = properties.getProperty("verify");
     }
 
-    public void applyForRegistrationEmail(String email){
-        if(!NetProperties.isNetworkConnected(mContext)){
+    public void applyForRegistrationEmail(String email, Context context){
+        if(!NetProperties.isNetworkConnected(context)){
             CodeValidMessageEvent event = new CodeValidMessageEvent();
             event.setType(CodeValidMessageEvent.TYPE_NO_INTERNET);
             EventBus.getDefault().post(event);
@@ -92,8 +89,8 @@ public class RegisterValidUtility {
         }
     }
 
-    public void verify(final String email, String totp){
-        if(!NetProperties.isNetworkConnected(mContext)){
+    public void verify(final String email, String totp, final Context context){
+        if(!NetProperties.isNetworkConnected(context)){
             RegisterMessageEvent event = new RegisterMessageEvent();
             event.setType(RegisterMessageEvent.TYPE_NO_INTERNET);
             EventBus.getDefault().post(event);
@@ -122,7 +119,7 @@ public class RegisterValidUtility {
                     }else {
                         VerifyResponse verifyResponse = gson.fromJson(response.body().string(),VerifyResponse.class);
                         if(verifyResponse.totpValid){
-                            RegisterConfirmActivity.start(mContext,verifyResponse.token,email);
+                            RegisterConfirmActivity.start(context,verifyResponse.token,email);
                         }else {
                             event.setType(RegisterMessageEvent.TYPE_FAILURE);
                         }

@@ -35,8 +35,6 @@ public class LoginUtility {
 
     private static volatile LoginUtility utility;
 
-    private Context mContext;
-
     private final Properties properties;
 
     private final String serverUrl;
@@ -46,15 +44,14 @@ public class LoginUtility {
     private final String loginAPI;
 
     private LoginUtility(Context context){
-        mContext = context;
         properties = ProperTies.getProperties(context);
         serverUrl = properties.getProperty("serverUrl");
         urlSeperator = properties.getProperty("urlSeperator");
         loginAPI = properties.getProperty("createAuthenticationToken");
     }
 
-    public void login(final String username, final String password){
-        if(!NetProperties.isNetworkConnected(mContext)){
+    public void login(final String username, final String password, Context context){
+        if(!NetProperties.isNetworkConnected(context)){
             NoInternetMessageEvent event = new NoInternetMessageEvent();
             event.setType(NoInternetMessageEvent.TYPE_LOGIN);
             EventBus.getDefault().post(event);

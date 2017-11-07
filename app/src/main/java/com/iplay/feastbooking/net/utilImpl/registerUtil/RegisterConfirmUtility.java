@@ -46,19 +46,16 @@ public class RegisterConfirmUtility {
 
     private final String tokenPrefix;
 
-    private final Context mContext;
-
     private RegisterConfirmUtility(Context context){
         properties = ProperTies.getProperties(context);
         serverUrl = properties.getProperty("serverUrl");
         urlSeperator = properties.getProperty("urlSeperator");
         registerAPI = properties.getProperty("register");
         tokenPrefix = properties.getProperty("tokenPrefix");
-        mContext = context;
     }
 
-    public void register(String token, final String mail, final String username, final String password){
-        if(!NetProperties.isNetworkConnected(mContext)){
+    public void register(String token, final String mail, final String username, final String password, final Context context){
+        if(!NetProperties.isNetworkConnected(context)){
             RegisterConfirmMessageEvent event = new RegisterConfirmMessageEvent();
             event.setType(RegisterConfirmMessageEvent.TYPE_NO_INTERNET);
             EventBus.getDefault().post(event);
@@ -109,7 +106,7 @@ public class RegisterConfirmUtility {
                             ContentValues values = new ContentValues();
                             values.put("isLogin", false);
                             DataSupport.updateAll(UserDao.class, values, "userId != ?", userId + "");
-                            HomeActivity.startActivity(mContext);
+                            HomeActivity.startActivity(context);
                         }
                     }
                 }

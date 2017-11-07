@@ -28,8 +28,6 @@ public class OrderListUtility {
 
     private static volatile OrderListUtility utility;
 
-    private Context mContext;
-
     private final Properties properties;
 
     private final String serverUrl;
@@ -41,7 +39,6 @@ public class OrderListUtility {
     private final String tokenPrefix;
 
     private OrderListUtility(Context context){
-        mContext = context;
         properties = ProperTies.getProperties(context);
         serverUrl = properties.getProperty("serverUrl");
         urlSeperator = properties.getProperty("urlSeperator");
@@ -51,8 +48,8 @@ public class OrderListUtility {
 
     public static OrderListUtility getInstance(Context context){
         if(utility == null){
-            synchronized (OrderListUtility.class){
-                utility = new OrderListUtility(context);
+            synchronized (OrderListUtility.class) {
+                if (utility == null) utility = new OrderListUtility(context);
             }
         }
         return utility;
@@ -66,7 +63,9 @@ public class OrderListUtility {
         }
         token = tokenPrefix + " " +  token;
 
-        final Request request = new Request.Builder().url(serverUrl + urlSeperator + getOrderListAPI + "?status=UNFINISHED&page=" + page).header("Authorization", token).build();
+        Request request = new Request.Builder().
+                url(serverUrl + urlSeperator + getOrderListAPI + "?status=UNFINISHED&page=" + page).
+                header("Authorization", token).build();
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {

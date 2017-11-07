@@ -217,12 +217,12 @@ public class RegisterActivity extends BasicActivity implements View.OnClickListe
             case next_btn:
                 String validCode = code_et.getText().toString().trim();
                 String email = mail_et.getText().toString().trim();
-                utility.verify(email,validCode);
+                utility.verify(email, validCode, this);
                 break;
             case R.id.valid_code_btn:
                 valid_code_btn.setText("驗證中");
                 disableValidButton();
-                utility.applyForRegistrationEmail(mail_et.getText().toString().trim());
+                utility.applyForRegistrationEmail(mail_et.getText().toString().trim(), this);
                 break;
             case R.id.login_now:
                 LoginActivity.startActivity(this);

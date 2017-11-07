@@ -119,7 +119,7 @@ public class RecommendedHotelFragment extends BasicFragment{
             adapter = new HomeRecyclerViewAdapter(getActivity());
             utility = RecommendHotelListUtility.getInstance(mContext);
             isInit = true;
-            utility.asyncInit();
+            utility.asyncInit(mContext);
         }
     }
 

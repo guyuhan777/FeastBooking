@@ -3,6 +3,8 @@ package com.iplay.feastbooking.ui.consult;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -26,6 +28,7 @@ import com.iplay.feastbooking.gson.consult.ConsultVO;
 import com.iplay.feastbooking.gson.hotelDetail.BanquetHall;
 import com.iplay.feastbooking.gson.hotelDetail.HotelDetail;
 import com.iplay.feastbooking.messageEvent.consult.ConsultOrderMessageEvent;
+import com.iplay.feastbooking.messageEvent.register.CodeValidMessageEvent;
 import com.iplay.feastbooking.net.utilImpl.consult.ConsultUtility;
 import com.iplay.feastbooking.ui.consult.adapter.DatesListAdapter;
 
@@ -35,6 +38,8 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import static com.iplay.feastbooking.R.id.valid_code_btn;
 
 /**
  * Created by admin on 2017/10/21.
@@ -46,6 +51,8 @@ public class ConsultActivity extends BasicActivity implements View.OnClickListen
 
     private static final String HOTEL_KEY = "HOTEL_KEY";
 
+    private Button code_valid_button;
+
     private HotelDetail hotelDetail;
 
     private Spinner banquetHallSpinner;
@@ -53,6 +60,10 @@ public class ConsultActivity extends BasicActivity implements View.OnClickListen
     private TimerPickerDialog dialog;
 
     private List<List<Date>> flexDates = new ArrayList<>();
+
+    private int defaultSeconds = 60;
+
+    private int remainSeconds;
 
     private static final int flexDatesCapacity = 5;
 
@@ -64,9 +75,11 @@ public class ConsultActivity extends BasicActivity implements View.OnClickListen
 
     private Button next_btn;
 
-    private EditText table_num_et, recommender_et, linker_et, linker_way_et;
+    private EditText table_num_et, recommender_et, linker_et, linker_way_et, code_valid_et;
 
     private ConsultUtility utility;
+
+    private TimerHandler timerHandler = new TimerHandler();
 
     @Override
     public void setContentView() {
@@ -97,6 +110,9 @@ public class ConsultActivity extends BasicActivity implements View.OnClickListen
         findViewById(R.id.root_view).setOnClickListener(this);
         findViewById(R.id.add_date_iv).setOnClickListener(this);
 
+        code_valid_button = (Button) findViewById(R.id.valid_code_btn);
+        code_valid_button.setOnClickListener(this);
+
         next_btn = (Button) findViewById(R.id.next_btn);
         next_btn.setOnClickListener(this);
 
@@ -104,11 +120,13 @@ public class ConsultActivity extends BasicActivity implements View.OnClickListen
         linker_et = (EditText) findViewById(R.id.linker_et);
         linker_way_et = (EditText) findViewById(R.id.linker_way_et);
         recommender_et = (EditText) findViewById(R.id.recommender_et);
+        code_valid_et = (EditText) findViewById(R.id.valid_code_et);
 
         table_num_et.addTextChangedListener(this);
         linker_way_et.addTextChangedListener(this);
         linker_et.addTextChangedListener(this);
         recommender_et.addTextChangedListener(this);
+        code_valid_et.addTextChangedListener(this);
 
         if(hotelDetail.name != null){
             hotel_name = (TextView) findViewById(R.id.hotel_name);
@@ -171,6 +189,7 @@ public class ConsultActivity extends BasicActivity implements View.OnClickListen
         consultVO.recommender = recommender_et.getText().toString().trim();
         consultVO.phone = linker_way_et.getText().toString().trim();
         consultVO.tables = Integer.parseInt(table_num_et.getText().toString().trim());
+        consultVO.totp = Integer.parseInt(code_valid_et.getText().toString().trim());
         String dates = "";
         for (int i=0;i<flexDates.size();i++){
             List<Date> flexDate = flexDates.get(i);
@@ -190,9 +209,62 @@ public class ConsultActivity extends BasicActivity implements View.OnClickListen
         context.startActivity(intent);
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onCodeValidMessageEvent(CodeValidMessageEvent event){
+        switch (event.getType()){
+            case CodeValidMessageEvent.TYPE_CONNECT_TIME_OVER:
+                Toast.makeText(this,"連接超時",Toast.LENGTH_SHORT).show();
+                enableValidButton();
+                break;
+            case CodeValidMessageEvent.TYPE_NO_INTERNET:
+                Toast.makeText(this,"網絡不給力",Toast.LENGTH_SHORT).show();
+                enableValidButton();
+                break;
+            case CodeValidMessageEvent.TYPE_UNKNOWN_ERROR:
+                Toast.makeText(this,"未知錯誤",Toast.LENGTH_SHORT).show();
+                enableValidButton();
+                break;
+            case CodeValidMessageEvent.TYPE_SUCCESS:
+                remainSeconds = defaultSeconds;
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        for(int i=0; i<defaultSeconds; i++){
+                            timerHandler.sendEmptyMessage(TimerHandler.TYPE_TIMER);
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }).start();
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void enableValidButton(){
+        code_valid_button.setText(getResources().getString(R.string.huo_qu_yzm));
+        code_valid_button.setEnabled(true);
+        code_valid_button.setTextColor(getResources().getColor(R.color.deep_grey));
+
+    }
+
+    private void disableValidButton(){
+        code_valid_button.setEnabled(false);
+        code_valid_button.setTextColor(getResources().getColor(R.color.grey));
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()){
+            case valid_code_btn:
+                disableValidButton();
+                code_valid_button.setText("請稍候");
+                utility.requireForConsultTotp(this);
+                break;
             case R.id.back_iv:
                 runOnUiThread(new Runnable() {
                     @Override
@@ -229,7 +301,7 @@ public class ConsultActivity extends BasicActivity implements View.OnClickListen
     }
 
     private boolean isEditTextInValid(){
-        return isETempty(recommender_et) || isETempty(linker_et) || isETempty(linker_way_et) || isETempty(table_num_et);
+        return isETempty(recommender_et) || isETempty(linker_et) || isETempty(linker_way_et) || isETempty(table_num_et) || isETempty(code_valid_et);
     }
 
     private boolean isETempty(EditText editText){
@@ -253,5 +325,22 @@ public class ConsultActivity extends BasicActivity implements View.OnClickListen
     @Override
     public void afterTextChanged(Editable s) {
 
+    }
+
+    private class TimerHandler extends Handler {
+
+        private static final int TYPE_TIMER = 1;
+
+        @Override
+        public void handleMessage(Message msg) {
+            if(msg.what == TYPE_TIMER){
+                remainSeconds--;
+                code_valid_button.setText("重新發送(" + remainSeconds + ")");
+            }
+            if(remainSeconds == 0){
+                enableValidButton();
+                remainSeconds = defaultSeconds;
+            }
+        }
     }
 }

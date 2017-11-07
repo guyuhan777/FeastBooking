@@ -46,7 +46,7 @@
         android:layout_height="wrap_content">
         <TextView
             android:textSize="@dimen/app_text_title_size"
-            android:textColor="@color/app_title_color"
+            android:textColor="@color/deep_red"
             android:text="退出登錄"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"

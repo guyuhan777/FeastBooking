@@ -244,6 +244,55 @@
             <include layout="@layout/seperateline_horizontal" />
 
             <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="@dimen/app_body_margin">
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="3">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="驗證碼"
+                        android:textColor="@color/app_title_color"
+                        android:textSize="@dimen/app_recycle_view_text_size" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="4">
+                    <EditText
+                        android:id="@+id/valid_code_et"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:hint="驗證碼"
+                        android:inputType="number"
+                        android:textColorHint="@color/button_grey"
+                        android:textSize="@dimen/app_recycle_view_text_size" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="3">
+                    <Button
+                        android:textSize="@dimen/app_text_normal"
+                        android:textColor="@color/grey"
+                        android:background="@drawable/button_shape_circle"
+                        android:id="@+id/valid_code_btn"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:text="@string/huo_qu_yzm" />
+                </LinearLayout>
+            </LinearLayout>
+            <include layout="@layout/seperateline_horizontal" />
+
+            <LinearLayout
                 android:padding="@dimen/app_body_margin"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"

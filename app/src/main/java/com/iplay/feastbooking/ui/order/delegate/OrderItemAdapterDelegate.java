@@ -1,18 +1,22 @@
 package com.iplay.feastbooking.ui.order.delegate;
 
 import android.app.Activity;
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hannesdorfmann.adapterdelegates3.AdapterDelegate;
 import com.iplay.feastbooking.R;
 import com.iplay.feastbooking.gson.order.OrderListItem;
+import com.iplay.feastbooking.ui.order.OrderDetailActivity;
 import com.iplay.feastbooking.ui.order.data.OrderItemData;
 import com.iplay.feastbooking.ui.order.data.basic.OrderBasicData;
 import com.iplay.feastbooking.ui.timeline.data.TimeLineNode;
@@ -55,14 +59,52 @@ public class OrderItemAdapterDelegate extends AdapterDelegate<List<OrderBasicDat
         if (content == null){
             return;
         }
+
         OrderItemViewHolder orderItemVH = (OrderItemViewHolder) holder;
-        orderItemVH.banquet_halls_tv.setText(content.banquetHall);
-        orderItemVH.table_num_tv.setText(content.tables+"桌");
-        orderItemVH.order_date_tv.setText((content.date == null || content.date.equals(""))? "暫無日期" : content.date);
+        if(content.getContact()){
+            orderItemVH.table_num_tv.setText(content.tables + "桌");
+            orderItemVH.order_date_tv.setText((content.date == null || content.date.equals(""))? "暫無日期" : content.date);
+        }else{
+            orderItemVH.order_date_tv.setTextColor(activityWF.get().getResources().getColor(R.color.pink));
+            if(content.isManager()){
+                if(!content.isRecommander()){
+                    orderItemVH.order_date_tv.setText("經理人");
+                }else {
+                    orderItemVH.order_date_tv.setText("經理人/推介人");
+                }
+            }else{
+                orderItemVH.order_date_tv.setText("推介人");
+                orderItemVH.forwards_iv.setVisibility(View.GONE);
+            }
+        }
+        Log.d("data", content.toString());
+        orderItemVH.customer_name_tv.setText(content.contact);
         orderItemVH.hotel_name_tv.setText(content.hotel);
+        orderItemVH.banquet_halls_tv.setText(content.banquetHall);
         LinearLayoutManager manager = new LinearLayoutManager(activityWF.get(), LinearLayoutManager.HORIZONTAL, false);
         orderItemVH.time_line_rv.setLayoutManager(manager);
         orderItemVH.time_line_rv.setAdapter(new OrderTimeLineAdapter(content.orderStatus));
+        orderItemVH.root_view_ll.setOnClickListener(new OrderItemOnclickListener(data, activityWF.get()));
+    }
+
+    private static class OrderItemOnclickListener implements View.OnClickListener{
+
+        private final OrderItemData orderItemData;
+
+        private final Context context;
+
+        OrderItemOnclickListener(OrderItemData orderItemData, Context context){
+            this.orderItemData = orderItemData;
+            this.context = context;
+        }
+
+        @Override
+        public void onClick(View v) {
+            OrderListItem.Content content = orderItemData.getContent();
+            if(content!=null && (content.getContact() || content.isManager())){
+                OrderDetailActivity.start(context, orderItemData.getContent());
+            }
+        }
     }
 
     private static class OrderTimeLineAdapter extends RecyclerView.Adapter{
@@ -165,6 +207,10 @@ public class OrderItemAdapterDelegate extends AdapterDelegate<List<OrderBasicDat
 
         private RecyclerView time_line_rv;
 
+        private LinearLayout root_view_ll;
+
+        private TextView customer_name_tv;
+
         OrderItemViewHolder(View itemView) {
             super(itemView);
             banquet_halls_tv = (TextView) itemView.findViewById(R.id.banquet_halls_tv);
@@ -173,6 +219,8 @@ public class OrderItemAdapterDelegate extends AdapterDelegate<List<OrderBasicDat
             table_num_tv = (TextView) itemView.findViewById(R.id.table_num_tv);
             forwards_iv = (ImageView) itemView.findViewById(R.id.forwards_iv);
             time_line_rv = (RecyclerView) itemView.findViewById(R.id.time_line_rv);
+            customer_name_tv = (TextView) itemView.findViewById(R.id.customer_name_tv);
+            root_view_ll = (LinearLayout) itemView.findViewById(R.id.order_list_item_root_view);
         }
     }
 }

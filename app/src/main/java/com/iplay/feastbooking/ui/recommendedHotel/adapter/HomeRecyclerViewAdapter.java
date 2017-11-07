@@ -71,7 +71,10 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter {
 
     private AdapterDelegatesManager<List<BasicHomeData>> delegatesManager;
 
+    private WeakReference<Context> contextWeakReference;
+
     public HomeRecyclerViewAdapter(Activity activity) {
+        contextWeakReference = new WeakReference<Context>(activity);
         delegatesManager = new AdapterDelegatesManager<>();
         delegatesManager.addDelegate(TYPE_ADS, new AdvertisementAdapterDelegate(activity));
         delegatesManager.addDelegate(TYPE_ALL_LOADED, new AllLoadedAdapterDelegate(activity));
@@ -178,7 +181,7 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter {
         setLoading();
         addData(new UnderLoadingHomeData());
         int page = numOfHotels/numPerPage;
-        utility.loadMore(page);
+        utility.loadMore(page,contextWeakReference.get());
     }
 
     public boolean isLoading(){

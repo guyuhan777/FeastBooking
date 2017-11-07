@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <View
+        android:id="@+id/status_bar_fix_title"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/white" />
+    <RelativeLayout
+        android:background="@color/white"
+        android:padding="@dimen/app_body_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_centerVertical="true"
+            android:src="@drawable/back_sm"
+            android:id="@+id/back_iv"
+            android:layout_width="@dimen/app_back_size"
+            android:layout_height="@dimen/app_back_size" />
+        <TextView
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:textColor="@color/app_title_color"
+            android:textSize="@dimen/app_text_title_size"
+            android:id="@+id/title_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+    <include layout="@layout/title_sepertae_horizontal" />
+    <RelativeLayout
+        android:id="@+id/order_detail_loading_rl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/load_tv"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:textSize="@dimen/app_text_normal"
+            android:text="正在努力加載中"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+        <ProgressBar
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/load_tv"
+            android:layout_marginLeft="5dp"
+            android:id="@+id/refresh_progress_bar"
+            android:layout_width="@dimen/app_text_normal"
+            android:layout_height="@dimen/app_text_normal" />
+    </RelativeLayout>
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/order_detail_no_internet_ll"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/state_tv"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:textSize="@dimen/app_text_title_size"
+            android:text="@string/no_internet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <ScrollView
+        android:id="@+id/order_detail_sv"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <RelativeLayout
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:padding="@dimen/app_body_margin">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="咨詢單編號"
+                    android:textSize="@dimen/app_recycle_view_text_size" />
+                <TextView
+                    android:layout_alignParentEnd="true"
+                    android:id="@+id/order_number_tv"
+                    android:textSize="@dimen/app_recycle_view_text_size"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </RelativeLayout>
+            <include layout="@layout/seperateline_horizontal" />
+            <RelativeLayout
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:padding="@dimen/app_body_margin">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="訂單狀態"
+                    android:textSize="@dimen/app_recycle_view_text_size" />
+                <TextView
+                    android:layout_alignParentEnd="true"
+                    android:id="@+id/order_status_tv"
+                    android:textSize="@dimen/app_recycle_view_text_size"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </RelativeLayout>
+            <include layout="@layout/seperateline_horizontal" />
+            <RelativeLayout
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:padding="@dimen/app_body_margin">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="宴會廳"
+                    android:textSize="@dimen/app_recycle_view_text_size" />
+                <TextView
+                    android:layout_alignParentEnd="true"
+                    android:id="@+id/banquet_halls_tv"
+                    android:textSize="@dimen/app_recycle_view_text_size"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </RelativeLayout>
+            <include layout="@layout/seperateline_horizontal" />
+            <RelativeLayout
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:padding="@dimen/app_body_margin">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="擺酒桌數"
+                    android:textSize="@dimen/app_recycle_view_text_size" />
+                <TextView
+                    android:layout_alignParentEnd="true"
+                    android:id="@+id/table_num_tv"
+                    android:textSize="@dimen/app_recycle_view_text_size"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </RelativeLayout>
+            <include layout="@layout/seperateline_horizontal" />
+            <RelativeLayout
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:padding="@dimen/app_body_margin">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="聯系人"
+                    android:textSize="@dimen/app_recycle_view_text_size" />
+                <TextView
+                    android:layout_alignParentEnd="true"
+                    android:id="@+id/link_man_tv"
+                    android:textSize="@dimen/app_recycle_view_text_size"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </RelativeLayout>
+            <include layout="@layout/seperateline_horizontal" />
+            <RelativeLayout
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:padding="@dimen/app_body_margin">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="聯系電話"
+                    android:textSize="@dimen/app_recycle_view_text_size" />
+                <TextView
+                    android:layout_alignParentEnd="true"
+                    android:id="@+id/tel_tv"
+                    android:textSize="@dimen/app_recycle_view_text_size"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </RelativeLayout>
+            <include layout="@layout/seperateline_horizontal" />
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_marginTop="20dp"
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="@dimen/app_body_margin"
+                android:paddingRight="@dimen/app_body_margin"
+                android:paddingTop="@dimen/app_body_margin">
+                <TextView
+                    android:layout_marginBottom="@dimen/app_body_margin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="候選日期"
+                    android:textSize="@dimen/app_recycle_view_text_size" />
+                <include layout="@layout/seperateline_horizontal" />
+                <com.iplay.feastbooking.component.view.gridview.UnScrollableGridView
+                    android:id="@+id/candidate_gv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"></com.iplay.feastbooking.component.view.gridview.UnScrollableGridView>
+            </LinearLayout>
+            <include layout="@layout/seperateline_horizontal" />
+            <RelativeLayout
+                android:layout_marginTop="20dp"
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="@dimen/app_body_margin">
+                <TextView
+                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="擺酒日期"
+                    android:textSize="@dimen/app_recycle_view_text_size" />
+                <ImageView
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentEnd="true"
+                    android:id="@+id/forwards_iv"
+                    android:src="@drawable/forwards"
+                    android:layout_width="@dimen/app_forward_size"
+                    android:layout_height="@dimen/app_forward_size" />
+                <TextView
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="5dp"
+                    android:id="@+id/feasting_date_tv"
+                    android:layout_toLeftOf="@id/forwards_iv"
+                    android:text="設置"
+                    android:textSize="@dimen/app_recycle_view_text_size"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </RelativeLayout>
+            <include layout="@layout/seperateline_horizontal" />
+            <RelativeLayout
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="@dimen/app_body_margin">
+                <TextView
+                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="推介人"
+                    android:textSize="@dimen/app_recycle_view_text_size" />
+                <ImageView
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentEnd="true"
+                    android:id="@+id/forwards_recommender_iv"
+                    android:src="@drawable/forwards"
+                    android:layout_width="@dimen/app_forward_size"
+                    android:layout_height="@dimen/app_forward_size" />
+                <TextView
+                    android:layout_centerVertical="true"
+                    android:id="@+id/recommender_tv"
+                    android:layout_marginRight="5dp"
+                    android:layout_toLeftOf="@id/forwards_recommender_iv"
+                    android:textSize="@dimen/app_recycle_view_text_size"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </RelativeLayout>
+            <include layout="@layout/seperateline_horizontal" />
+            <RelativeLayout
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="@dimen/app_body_margin">
+                <TextView
+                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="經理人"
+                    android:textSize="@dimen/app_recycle_view_text_size" />
+                <ImageView
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentEnd="true"
+                    android:id="@+id/forwards_manager_iv"
+                    android:src="@drawable/forwards"
+                    android:layout_width="@dimen/app_forward_size"
+                    android:layout_height="@dimen/app_forward_size" />
+                <TextView
+                    android:layout_centerVertical="true"
+                    android:id="@+id/manager_tv"
+                    android:text="設置"
+                    android:layout_marginRight="5dp"
+                    android:layout_toLeftOf="@id/forwards_manager_iv"
+                    android:textSize="@dimen/app_recycle_view_text_size"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </RelativeLayout>
+            <include layout="@layout/seperateline_horizontal" />
+            <RelativeLayout
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="@dimen/app_body_margin">
+                <TextView
+                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="訂單合同"
+                    android:textSize="@dimen/app_recycle_view_text_size" />
+                <ImageView
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentEnd="true"
+                    android:id="@+id/forwards_contract_iv"
+                    android:src="@drawable/forwards"
+                    android:layout_width="@dimen/app_forward_size"
+                    android:layout_height="@dimen/app_forward_size" />
+            </RelativeLayout>
+            <include layout="@layout/seperateline_horizontal" />
+            <RelativeLayout
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="@dimen/app_body_margin">
+                <TextView
+                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="支付憑證"
+                    android:textSize="@dimen/app_recycle_view_text_size" />
+                <ImageView
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentEnd="true"
+                    android:id="@+id/forwards_evidence_iv"
+                    android:src="@drawable/forwards"
+                    android:layout_width="@dimen/app_forward_size"
+                    android:layout_height="@dimen/app_forward_size" />
+            </RelativeLayout>
+            <include layout="@layout/seperateline_horizontal" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
