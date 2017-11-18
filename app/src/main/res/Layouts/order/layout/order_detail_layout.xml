@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/white"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -217,6 +218,7 @@
             </LinearLayout>
             <include layout="@layout/seperateline_horizontal" />
             <RelativeLayout
+                android:id="@+id/change_feastDate_bar"
                 android:layout_marginTop="20dp"
                 android:background="@color/white"
                 android:layout_width="match_parent"
@@ -231,7 +233,7 @@
                 <ImageView
                     android:layout_centerVertical="true"
                     android:layout_alignParentEnd="true"
-                    android:id="@+id/forwards_iv"
+                    android:id="@+id/feastDate_forwards_iv"
                     android:src="@drawable/forwards"
                     android:layout_width="@dimen/app_forward_size"
                     android:layout_height="@dimen/app_forward_size" />
@@ -239,7 +241,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="5dp"
                     android:id="@+id/feasting_date_tv"
-                    android:layout_toLeftOf="@id/forwards_iv"
+                    android:layout_toLeftOf="@id/feastDate_forwards_iv"
                     android:text="設置"
                     android:textSize="@dimen/app_recycle_view_text_size"
                     android:layout_width="wrap_content"
@@ -247,6 +249,7 @@
             </RelativeLayout>
             <include layout="@layout/seperateline_horizontal" />
             <RelativeLayout
+                android:id="@+id/change_recommender_bar"
                 android:background="@color/white"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -275,6 +278,7 @@
             </RelativeLayout>
             <include layout="@layout/seperateline_horizontal" />
             <RelativeLayout
+                android:id="@+id/change_manager_bar"
                 android:background="@color/white"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -295,7 +299,6 @@
                 <TextView
                     android:layout_centerVertical="true"
                     android:id="@+id/manager_tv"
-                    android:text="設置"
                     android:layout_marginRight="5dp"
                     android:layout_toLeftOf="@id/forwards_manager_iv"
                     android:textSize="@dimen/app_recycle_view_text_size"
@@ -304,6 +307,7 @@
             </RelativeLayout>
             <include layout="@layout/seperateline_horizontal" />
             <RelativeLayout
+                android:id="@+id/contract_detail_bar"
                 android:background="@color/white"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

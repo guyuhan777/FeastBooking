@@ -2,13 +2,14 @@ package com.iplay.feastbooking.gson.orderDetail;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by Guyuhan on 2017/11/5.
  */
 
-public class OrderDetail {
+public class OrderDetail implements Serializable {
 
     public String banquetHall;
 
@@ -72,7 +73,7 @@ public class OrderDetail {
                 '}';
     }
 
-    public static class OrderContract{
+    public static class OrderContract implements Serializable{
         public String approvalStatus;
 
         public List<String> files;
@@ -89,7 +90,7 @@ public class OrderDetail {
         }
     }
 
-    public static class OrderPayment{
+    public static class OrderPayment implements Serializable{
         public int amountPaid;
 
         public String approvalStatus;

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/photo_bottom_sheet"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:behavior_hideable="true"
+    app:layout_behavior="@string/bottom_sheet_behavior">
+    <include layout="@layout/seperateline_horizontal" />
+    <TextView
+        android:id="@+id/choose_from_album_tv"
+        android:textColor="@color/blue_hint"
+        android:padding="@dimen/app_body_margin"
+        android:gravity="center"
+        android:textSize="@dimen/app_recycle_view_text_size"
+        android:text="從相冊中選擇/拍照"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <include layout="@layout/seperateline_horizontal" />
+    <TextView
+        android:id="@+id/cancel_choose_tv"
+        android:textColor="@color/blue_hint"
+        android:padding="@dimen/app_body_margin"
+        android:gravity="center"
+        android:textSize="@dimen/app_recycle_view_text_size"
+        android:text="取消"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>

@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -18,7 +17,6 @@ import android.widget.Toast;
 import com.iplay.feastbooking.R;
 import com.iplay.feastbooking.assistance.WindowAttr;
 import com.iplay.feastbooking.basic.BasicActivity;
-import com.iplay.feastbooking.messageEvent.activityFinish.ActivityFinishMessageEvent;
 import com.iplay.feastbooking.messageEvent.register.CodeValidMessageEvent;
 import com.iplay.feastbooking.messageEvent.register.RegisterMessageEvent;
 import com.iplay.feastbooking.net.utilImpl.registerUtil.RegisterValidUtility;
@@ -91,14 +89,6 @@ public class RegisterActivity extends BasicActivity implements View.OnClickListe
         code_et.addTextChangedListener(nextButtonTW);
         findViewById(R.id.cancel).setOnClickListener(this);
         findViewById(R.id.login_now).setOnClickListener(this);
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onActivityFinishMessageEvent(ActivityFinishMessageEvent event){
-        if(event.isExist(TAG)){
-            Log.d(TAG,"bye bye");
-            finish();
-        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

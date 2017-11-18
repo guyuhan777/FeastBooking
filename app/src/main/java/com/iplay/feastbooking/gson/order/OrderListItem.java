@@ -1,5 +1,7 @@
 package com.iplay.feastbooking.gson.order;
 
+import com.iplay.feastbooking.entity.IdentityMatrix;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -29,13 +31,11 @@ public class OrderListItem {
 
         public int tables;
 
-        private boolean isCustomer = false;
-        private boolean isRecommander = false;
-        private boolean isManager = false;
-        private boolean isInit = false;
+        private IdentityMatrix identityMatrix;
 
-        public synchronized boolean getContact(){
-            if(!isInit && roleInOrder != null){
+        public synchronized IdentityMatrix getIdentityMatrix(){
+            boolean isCustomer = false, isRecommander = false, isManager = false;
+            if(identityMatrix == null){
                 for(int i = 0; i< roleInOrder.size(); i++){
                     if(roleInOrder.get(i).equals("CUSTOMER")){
                         isCustomer = true;
@@ -47,45 +47,9 @@ public class OrderListItem {
                         isManager = true;
                     }
                 }
+                identityMatrix = new IdentityMatrix(isCustomer, isManager, isRecommander);
             }
-            isInit = true;
-            return isCustomer;
-        }
-
-        public synchronized boolean isRecommander(){
-            if(!isInit && roleInOrder != null){
-                for(int i = 0; i< roleInOrder.size(); i++){
-                    if(roleInOrder.get(i).equals("CUSTOMER")){
-                        isCustomer = true;
-                    }
-                    if(roleInOrder.get(i).equals("RECOMMENDER")){
-                        isRecommander = true;
-                    }
-                    if(roleInOrder.get(i).equals("MANAGER")){
-                        isManager = true;
-                    }
-                }
-            }
-            isInit = true;
-            return isRecommander;
-        }
-
-        public synchronized boolean isManager(){
-            if(!isInit && roleInOrder != null){
-                for(int i = 0; i< roleInOrder.size(); i++){
-                    if(roleInOrder.get(i).equals("CUSTOMER")){
-                        isCustomer = true;
-                    }
-                    if(roleInOrder.get(i).equals("RECOMMENDER")){
-                        isRecommander = true;
-                    }
-                    if(roleInOrder.get(i).equals("MANAGER")){
-                        isManager = true;
-                    }
-                }
-            }
-            isInit = true;
-            return isManager;
+            return identityMatrix;
         }
 
         @Override

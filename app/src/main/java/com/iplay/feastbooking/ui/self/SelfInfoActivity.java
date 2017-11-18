@@ -65,7 +65,7 @@ public class SelfInfoActivity extends BasicActivity implements View.OnClickListe
             case R.id.log_out_btn:
                 DataSupport.deleteAll(UserDao.class,"isLogin = ?","" + 1);
                 LoginUserHolder.getInstance().removeCurrentUser();
-                HomeActivity.startHomeActivity(this);
+                HomeActivity.startActivity(this);
                 finish();
                 break;
             default:

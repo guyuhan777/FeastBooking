@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -17,7 +16,6 @@ import android.widget.Toast;
 import com.iplay.feastbooking.R;
 import com.iplay.feastbooking.assistance.WindowAttr;
 import com.iplay.feastbooking.basic.BasicActivity;
-import com.iplay.feastbooking.messageEvent.activityFinish.ActivityFinishMessageEvent;
 import com.iplay.feastbooking.messageEvent.register.RegisterConfirmMessageEvent;
 import com.iplay.feastbooking.net.utilImpl.registerUtil.RegisterConfirmUtility;
 
@@ -82,13 +80,6 @@ public class RegisterConfirmActivity extends BasicActivity implements View.OnCli
         setContentView(R.layout.register_confirm_layout);
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onActivityFinishMessageEvent(ActivityFinishMessageEvent event){
-        if(event.isExist(TAG)){
-            Log.d(TAG,"bye bye");
-            finish();
-        }
-    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onRegisterConfirmMessageEvent(RegisterConfirmMessageEvent event){

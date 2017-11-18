@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -18,7 +17,6 @@ import android.widget.Toast;
 import com.iplay.feastbooking.R;
 import com.iplay.feastbooking.assistance.WindowAttr;
 import com.iplay.feastbooking.basic.BasicActivity;
-import com.iplay.feastbooking.messageEvent.activityFinish.ActivityFinishMessageEvent;
 import com.iplay.feastbooking.messageEvent.home.LoginMessageEvent;
 import com.iplay.feastbooking.messageEvent.home.NoInternetMessageEvent;
 import com.iplay.feastbooking.net.utilImpl.loginUtil.LoginUtility;
@@ -119,21 +117,13 @@ public class LoginActivity extends BasicActivity implements View.OnClickListener
             enableButton();
         }else if(event.getType() == LoginMessageEvent.TYPE_SUCCESS){
             if(!isOnBack){
-                HomeActivity.startHomeActivity(this);
+                HomeActivity.startActivity(this);
                 overridePendingTransition(R.anim.hold,R.anim.top2bottom);
             }else {
                 finish();
                 overridePendingTransition(R.anim.hold,R.anim.top2bottom);
             }
 
-        }
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onActivityFinishMessageEvent(ActivityFinishMessageEvent event){
-        if(event.isExist(TAG)){
-            Log.d(TAG,"bye bye");
-            finish();
         }
     }
 

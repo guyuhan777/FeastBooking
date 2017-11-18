@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.hannesdorfmann.adapterdelegates3.AdapterDelegate;
 import com.iplay.feastbooking.R;
+import com.iplay.feastbooking.entity.IdentityMatrix;
 import com.iplay.feastbooking.gson.order.OrderListItem;
 import com.iplay.feastbooking.ui.order.OrderDetailActivity;
 import com.iplay.feastbooking.ui.order.data.OrderItemData;
@@ -56,18 +57,19 @@ public class OrderItemAdapterDelegate extends AdapterDelegate<List<OrderBasicDat
     protected void onBindViewHolder(@NonNull List<OrderBasicData> items, int position, @NonNull RecyclerView.ViewHolder holder, @NonNull List<Object> payloads) {
         OrderItemData data = (OrderItemData) items.get(position);
         OrderListItem.Content content = data.getContent();
-        if (content == null){
+        IdentityMatrix identityMatrix;
+        if (content == null || (identityMatrix=content.getIdentityMatrix()) == null){
             return;
         }
 
         OrderItemViewHolder orderItemVH = (OrderItemViewHolder) holder;
-        if(content.getContact()){
+        if(identityMatrix.isCustomer()){
             orderItemVH.table_num_tv.setText(content.tables + "桌");
             orderItemVH.order_date_tv.setText((content.date == null || content.date.equals(""))? "暫無日期" : content.date);
         }else{
             orderItemVH.order_date_tv.setTextColor(activityWF.get().getResources().getColor(R.color.pink));
-            if(content.isManager()){
-                if(!content.isRecommander()){
+            if(identityMatrix.isManager()){
+                if(!identityMatrix.isRecommender()){
                     orderItemVH.order_date_tv.setText("經理人");
                 }else {
                     orderItemVH.order_date_tv.setText("經理人/推介人");
@@ -101,7 +103,9 @@ public class OrderItemAdapterDelegate extends AdapterDelegate<List<OrderBasicDat
         @Override
         public void onClick(View v) {
             OrderListItem.Content content = orderItemData.getContent();
-            if(content!=null && (content.getContact() || content.isManager())){
+            IdentityMatrix identityMatrix;
+            if (content != null && (identityMatrix = content.getIdentityMatrix()) != null
+                    && (identityMatrix.isCustomer() || identityMatrix.isManager())) {
                 OrderDetailActivity.start(context, orderItemData.getContent());
             }
         }

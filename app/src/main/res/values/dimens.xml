@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="bottom_menu_height">150dp</dimen>
+    <dimen name="photo_width">90dp</dimen>
+    <dimen name="photo_height">100dp</dimen>
     <dimen name="recommend_hotel_grid_size">170dp</dimen>
     <dimen name="hint_icon_whole_page">200dp</dimen>
     <dimen name="app_back_small">20dp</dimen>

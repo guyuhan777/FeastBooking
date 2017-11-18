@@ -21,6 +21,7 @@ android {
     sourceSets{
         main{
             res.srcDirs = [
+                    'src/main/res/layouts/contract',
                     'src/main/res/layouts/order',
                     'src/main/res/layouts/consult',
                     'src/main/res/layouts/login',
@@ -50,6 +51,12 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'me.iwf.photopicker:PhotoPicker:0.9.5@aar'
+    compile 'com.nineoldandroids:library:2.4.0'
+    compile 'com.android.support:design:25.3.1'
+    compile 'com.nineoldandroids:library:2.4.0'
+    compile 'com.makeramen:roundedimageview:2.3.0'
     compile 'com.hannesdorfmann:adapterdelegates3:3.0.1'
     compile 'com.squareup:android-times-square:1.6.5@aar'
     compile 'org.greenrobot:eventbus:3.0.0'

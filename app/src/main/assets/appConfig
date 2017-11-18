@@ -15,3 +15,6 @@ verify=auth/totp
 postOrder=orders
 getOrderList=user/orders
 consultTotp=totp
+uploadContractSuffix=contract
+changeManager=manager
+changeFeastingDate=feasting_date

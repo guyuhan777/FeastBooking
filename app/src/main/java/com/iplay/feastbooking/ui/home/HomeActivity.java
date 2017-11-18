@@ -5,7 +5,6 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -17,14 +16,9 @@ import com.bumptech.glide.Glide;
 import com.iplay.feastbooking.R;
 import com.iplay.feastbooking.assistance.LoginUserHolder;
 import com.iplay.feastbooking.basic.BasicActivity;
-import com.iplay.feastbooking.messageEvent.activityFinish.ActivityFinishMessageEvent;
 import com.iplay.feastbooking.ui.login.LoginActivity;
-import com.iplay.feastbooking.ui.login.RegisterActivity;
-import com.iplay.feastbooking.ui.login.RegisterConfirmActivity;
 import com.iplay.feastbooking.ui.recommendedHotel.RecommendedHotelFragment;
 import com.iplay.feastbooking.ui.self.SelfFragment;
-
-import org.greenrobot.eventbus.EventBus;
 
 /**
  * Created by admin on 2017/7/14.
@@ -36,9 +30,9 @@ public class HomeActivity extends BasicActivity implements BottomNavigationBar.O
 
     public static final String KEY_USER = "user_key";
 
-    public static final String STATE_KEY = "state_key";
-
     public BottomNavigationBar bottom_bar;
+
+    private static final String KEY_NOT_RECREATE =  "KEY_NOT_RECREATE";
 
     private RecommendedHotelFragment recommendedFragment;
 
@@ -108,15 +102,6 @@ public class HomeActivity extends BasicActivity implements BottomNavigationBar.O
     }
 
     @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        setIntent(intent);
-        if(intent.getBooleanExtra(STATE_KEY,false)){
-            bottom_bar.selectTab(0);
-        }
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
 
@@ -125,28 +110,28 @@ public class HomeActivity extends BasicActivity implements BottomNavigationBar.O
         }else {
             login_hint.setVisibility(View.VISIBLE);
         }
-        Log.d(TAG,"RESUME");
+        //Log.d(TAG,"RESUME");
     }
 
-    public static void startHomeActivity(Context context){
-        Intent intent = new Intent(context,HomeActivity.class);
-        intent.putExtra(STATE_KEY,true);
-        context.startActivity(intent);
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        if(intent.getBooleanExtra(KEY_NOT_RECREATE, false)){
+            bottom_bar.selectTab(0);
+        }
     }
 
     public static void startActivity(Context context){
         Intent intent = new Intent(context, HomeActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
-        if(context instanceof LoginActivity){
-            ActivityFinishMessageEvent event = new ActivityFinishMessageEvent();
-            event.put(LoginActivity.TAG);
-            EventBus.getDefault().post(event);
-        }else if(context instanceof RegisterConfirmActivity){
-            ActivityFinishMessageEvent event = new ActivityFinishMessageEvent();
-            event.put(RegisterConfirmActivity.TAG);
-            event.put(RegisterActivity.TAG);
-            EventBus.getDefault().post(event);
-        }
+    }
+
+    public static void startHomeActivity(Context context){
+        Intent intent = new Intent(context, HomeActivity.class);
+        intent.putExtra(KEY_NOT_RECREATE, true);
+        context.startActivity(intent);
     }
 
     @Override

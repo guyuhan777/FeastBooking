@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -16,15 +17,19 @@ import com.iplay.feastbooking.R;
 import com.iplay.feastbooking.assistance.WindowAttr;
 import com.iplay.feastbooking.basic.BasicActivity;
 import com.iplay.feastbooking.component.view.gridview.UnScrollableGridView;
+import com.iplay.feastbooking.entity.IdentityMatrix;
 import com.iplay.feastbooking.gson.order.OrderListItem;
 import com.iplay.feastbooking.gson.orderDetail.OrderDetail;
 import com.iplay.feastbooking.messageEvent.orderdetail.OrderDetailMessageEvent;
 import com.iplay.feastbooking.net.NetProperties;
 import com.iplay.feastbooking.net.utilImpl.orderdetail.OrderDetailUtility;
+import com.iplay.feastbooking.ui.contract.ContractManagementActivity;
 import com.iplay.feastbooking.ui.order.adapter.OrderCandidateDateBarAdapter;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.ArrayList;
 
 /**
  * Created by Guyuhan on 2017/11/4.
@@ -36,7 +41,11 @@ public class OrderDetailActivity extends BasicActivity implements View.OnClickLi
 
     private static final String contentKey = "ContentKey";
 
+    private static final String orderIdKey = "orderIdKey";
+
     private OrderListItem.Content content;
+
+    private OrderDetail detail;
 
     private RelativeLayout order_detail_loading_rl;
 
@@ -47,6 +56,8 @@ public class OrderDetailActivity extends BasicActivity implements View.OnClickLi
     private ScrollView order_detail_sv;
 
     private OrderDetailUtility utility;
+
+    private int orderId;
 
     private TextView state_tv;
 
@@ -70,6 +81,22 @@ public class OrderDetailActivity extends BasicActivity implements View.OnClickLi
 
     private TextView banquetHall_tv;
 
+    private RelativeLayout contract_detail_bar;
+
+    private RelativeLayout change_feastDate_bar;
+
+    private ImageView feastDate_forwards_iv;
+
+    private RelativeLayout change_manager_bar;
+
+    private ImageView forwards_manager_iv;
+
+    private RelativeLayout change_recommender_bar;
+
+    private ImageView forwards_recommender_iv;
+
+    private TextView title_tv;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         isRegistered = true;
@@ -92,7 +119,8 @@ public class OrderDetailActivity extends BasicActivity implements View.OnClickLi
         View status_bar_fix = (View) findViewById(R.id.status_bar_fix_title);
         status_bar_fix.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, WindowAttr.getStatusBarHeight(this)));
         findViewById(R.id.back_iv).setOnClickListener(this);
-        ((TextView) findViewById(R.id.title_tv)).setText(content.hotel);
+        title_tv = (TextView) findViewById(R.id.title_tv);
+        title_tv.setText(content.hotel);
         order_detail_loading_rl = (RelativeLayout) findViewById(R.id.order_detail_loading_rl);
         order_detail_failure_state_ll = (LinearLayout) findViewById(R.id.order_detail_no_internet_ll);
         order_detail_sv = (ScrollView) findViewById(R.id.order_detail_sv);
@@ -108,6 +136,35 @@ public class OrderDetailActivity extends BasicActivity implements View.OnClickLi
         recommender_tv = (TextView) findViewById(R.id.recommender_tv);
         manager_tv = (TextView) findViewById(R.id.manager_tv);
         candidate_gv = (UnScrollableGridView) findViewById(R.id.candidate_gv);
+        contract_detail_bar = (RelativeLayout) findViewById(R.id.contract_detail_bar);
+        contract_detail_bar.setOnClickListener(this);
+
+        change_feastDate_bar = (RelativeLayout) findViewById(R.id.change_feastDate_bar);
+        change_feastDate_bar.setOnClickListener(this);
+        feastDate_forwards_iv = (ImageView) findViewById(R.id.feastDate_forwards_iv);
+
+        change_manager_bar = (RelativeLayout) findViewById(R.id.change_manager_bar);
+        change_manager_bar.setOnClickListener(this);
+        forwards_manager_iv = (ImageView) findViewById(R.id.forwards_manager_iv);
+
+        change_recommender_bar = (RelativeLayout) findViewById(R.id.change_recommender_bar);
+        change_recommender_bar.setOnClickListener(this);
+        forwards_recommender_iv = (ImageView) findViewById(R.id.forwards_recommender_iv);
+
+        setAccessibleByPrivilege(content.getIdentityMatrix());
+    }
+
+    private void setAccessibleByPrivilege(IdentityMatrix identityMatrix){
+        if(identityMatrix != null){
+            boolean isEnable = identityMatrix.isCustomer();
+            int visibleState = identityMatrix.isCustomer()? View.VISIBLE : View.INVISIBLE;
+            change_feastDate_bar.setEnabled(isEnable);
+            feastDate_forwards_iv.setVisibility(visibleState);
+            /*change_recommender_bar.setEnabled(isEnable);
+            forwards_recommender_iv.setVisibility(visibleState);*/
+            change_manager_bar.setEnabled(isEnable);
+            forwards_manager_iv.setVisibility(visibleState);
+        }
     }
 
     @Override
@@ -119,13 +176,24 @@ public class OrderDetailActivity extends BasicActivity implements View.OnClickLi
 
     @Override
     public void showContent() {
+        reload(content.id);
+    }
+
+    private void reload(int orderId){
         if(!NetProperties.isNetworkConnected(this)){
+            order_detail_sv.setVisibility(View.GONE);
             order_detail_loading_rl.setVisibility(View.GONE);
             order_detail_failure_state_ll.setVisibility(View.VISIBLE);
         }else {
             pb.setIndeterminate(true);
-            utility.initOrderDetail(content.id, this);
+            utility.initOrderDetail(orderId, this);
         }
+    }
+
+    public static void reload(Context context, int orderId){
+        Intent intent = new Intent(context, OrderDetailActivity.class);
+        intent.putExtra(orderIdKey, orderId);
+        context.startActivity(intent);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -135,8 +203,26 @@ public class OrderDetailActivity extends BasicActivity implements View.OnClickLi
             order_detail_failure_state_ll.setVisibility(View.VISIBLE);
             state_tv.setText(event.getFailureResult());
         }else if (event.getType() == OrderDetailMessageEvent.TYPE_SUCCESS){
+            detail = event.getOrderDetail();
             order_detail_sv.setVisibility(View.VISIBLE);
-            initComponent(event.getOrderDetail());
+            IdentityMatrix identityMatrix = content.getIdentityMatrix();
+            if(identityMatrix != null
+                    && !identityMatrix.isCustomer()
+                    && !identityMatrix.isManager()){
+                findViewById(R.id.forwards_contract_iv).setVisibility(View.INVISIBLE);
+                contract_detail_bar.setEnabled(false);
+            }
+            initComponent(detail);
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        orderId = intent.getIntExtra(orderIdKey, -1);
+        if(orderId != -1){
+            reload(orderId);
         }
     }
 
@@ -174,6 +260,19 @@ public class OrderDetailActivity extends BasicActivity implements View.OnClickLi
                         onBackPressed();
                     }
                 });
+                break;
+            case R.id.contract_detail_bar:
+                OrderDetail.OrderContract contract = detail.orderContract;
+                ArrayList<String> files = new ArrayList<>();
+                if(contract != null && contract.files != null){
+                    for(int i=0; i<contract.files.size(); i++){
+                        files.add(contract.files.get(i));
+                    }
+                }
+                ContractManagementActivity.start(this, detail.id,  files, content.getIdentityMatrix());
+                break;
+            case R.id.change_manager_bar:
+                ChangeManagerActivity.start(this, detail);
                 break;
         }
     }

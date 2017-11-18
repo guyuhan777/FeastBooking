@@ -6,8 +6,10 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.iplay.feastbooking.assistance.LoginUserHolder;
 import com.iplay.feastbooking.assistance.ProperTies;
+import com.iplay.feastbooking.gson.orderDetail.OrderChangeResult;
 import com.iplay.feastbooking.gson.orderDetail.OrderDetail;
 import com.iplay.feastbooking.messageEvent.order.OrderListMessageEvent;
+import com.iplay.feastbooking.messageEvent.orderdetail.OrderDetailChangeMessageEvent;
 import com.iplay.feastbooking.messageEvent.orderdetail.OrderDetailMessageEvent;
 import com.iplay.feastbooking.net.NetProperties;
 
@@ -40,12 +42,18 @@ public class OrderDetailUtility {
 
     private final String tokenPrefix;
 
+    private final String changeManager;
+
+    private final String changeRecommender;
+
     private OrderDetailUtility(Context context){
         properties = ProperTies.getProperties(context);
         serverUrl = properties.getProperty("serverUrl");
         urlSeperator = properties.getProperty("urlSeperator");
         findOrderByIdAPI = properties.getProperty("postOrder");
         tokenPrefix = properties.getProperty("tokenPrefix");
+        changeManager = properties.getProperty("changeManager");
+        changeRecommender = properties.getProperty("changeRecommender");
     }
 
     public static OrderDetailUtility getInstance(Context context){
@@ -57,6 +65,58 @@ public class OrderDetailUtility {
             }
         }
         return utility;
+    }
+
+    public void changeManager(Context context, String username, int orderId){
+        if(!NetProperties.isNetworkConnected(context)){
+            OrderDetailChangeMessageEvent messageEvent = new OrderDetailChangeMessageEvent(
+                    OrderDetailChangeMessageEvent.TYPE.TYPE_FAILURE, "網絡不給力");
+            EventBus.getDefault().post(messageEvent);
+        }else{
+            OkHttpClient client = new OkHttpClient.Builder().connectTimeout(5, TimeUnit.SECONDS).build();
+            String token = LoginUserHolder.getInstance().getCurrentUser().getToken();
+            if(token == null || token.equals("")){
+                return;
+            }
+            token = tokenPrefix + " " +  token;
+            Request request = new Request.Builder().
+                    url(serverUrl + urlSeperator
+                            + findOrderByIdAPI + urlSeperator
+                            + orderId + urlSeperator + changeManager + "?username=" + username).
+                    header("Authorization", token).build();
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    OrderDetailChangeMessageEvent messageEvent = new OrderDetailChangeMessageEvent(
+                            OrderDetailChangeMessageEvent.TYPE.TYPE_FAILURE, "網絡不給力");
+                    EventBus.getDefault().post(messageEvent);
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    OrderDetailChangeMessageEvent messageEvent = new OrderDetailChangeMessageEvent();
+                    if(!response.isSuccessful()){
+                        messageEvent.setType(OrderDetailChangeMessageEvent.TYPE.TYPE_FAILURE);
+                        int code = response.code();
+                        if(code == 404){
+                            messageEvent.setFailureResult("訂單不存在");
+                        }else {
+                            messageEvent.setFailureResult("未知錯誤");
+                        }
+                    }else {
+                        Gson gson = new Gson();
+                        OrderChangeResult result = gson.fromJson(response.body().string(), OrderChangeResult.class);
+                        if(result.success){
+                            messageEvent.setType(OrderDetailChangeMessageEvent.TYPE.TYPE_SUCCESS);
+                        }else {
+                            messageEvent.setType(OrderDetailChangeMessageEvent.TYPE.TYPE_FAILURE);
+                            messageEvent.setFailureResult(result.data);
+                        }
+                    }
+                    EventBus.getDefault().post(messageEvent);
+                }
+            });
+        }
     }
 
     public void initOrderDetail(int id, Context context){
@@ -80,7 +140,7 @@ public class OrderDetailUtility {
                 public void onFailure(Call call, IOException e) {
                     OrderDetailMessageEvent messageEvent = new OrderDetailMessageEvent();
                     messageEvent.setType(OrderDetailMessageEvent.TYPE_FAILURE);
-                    messageEvent.setFailureResult("未知錯誤");
+                    messageEvent.setFailureResult("網絡不給力");
                     EventBus.getDefault().post(messageEvent);
                 }
 
@@ -101,6 +161,7 @@ public class OrderDetailUtility {
                         event.setType(OrderDetailMessageEvent.TYPE_SUCCESS);
                         Gson gson = new Gson();
                         OrderDetail orderDetail = gson.fromJson(response.body().string(), OrderDetail.class);
+                        Log.d("detail", orderDetail.toString());
                         event.setOrderDetail(orderDetail);
                     }
                     EventBus.getDefault().post(event);

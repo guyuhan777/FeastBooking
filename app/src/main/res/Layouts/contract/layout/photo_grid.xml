@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:paddingLeft="@dimen/app_body_margin"
+    android:paddingRight="@dimen/app_body_margin"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp"
+    android:background="@color/white"
+    android:layout_width="wrap_content"
+    android:layout_height="133dp">
+    <RelativeLayout
+        android:layout_width="@dimen/photo_width"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/photo_delete_iv"
+            android:src="@drawable/delete"
+            android:layout_alignParentRight="true"
+            android:layout_width="@dimen/app_recycle_icon_size"
+            android:layout_height="@dimen/app_recycle_icon_size" />
+        <ImageView
+            android:layout_below="@id/photo_delete_iv"
+            android:layout_marginTop="3dp"
+            android:visibility="gone"
+            android:id="@+id/photo_tiv"
+            android:scaleType="centerCrop"
+            android:layout_width="@dimen/photo_width"
+            android:layout_height="@dimen/photo_height" />
+    </RelativeLayout>
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:layout_centerVertical="true"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        app:riv_border_color="@color/light_grey"
+        app:riv_border_width="2dp"
+        app:riv_corner_radius="5dp"
+        android:src="@drawable/add_photo"
+        android:scaleType="centerCrop"
+        android:id="@+id/add_photo_iv"
+        android:visibility="gone"
+        android:layout_width="@dimen/photo_width"
+        android:layout_height="@dimen/photo_width" />
+</RelativeLayout>
