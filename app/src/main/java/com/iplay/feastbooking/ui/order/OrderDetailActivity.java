@@ -29,8 +29,6 @@ import com.iplay.feastbooking.ui.order.adapter.OrderCandidateDateBarAdapter;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.ArrayList;
-
 /**
  * Created by Guyuhan on 2017/11/4.
  */
@@ -97,6 +95,10 @@ public class OrderDetailActivity extends BasicActivity implements View.OnClickLi
 
     private TextView title_tv;
 
+    private TextView review_tv;
+
+    private boolean isInit = false;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         isRegistered = true;
@@ -116,7 +118,7 @@ public class OrderDetailActivity extends BasicActivity implements View.OnClickLi
 
     @Override
     public void findViews() {
-        View status_bar_fix = (View) findViewById(R.id.status_bar_fix_title);
+        View status_bar_fix = findViewById(R.id.status_bar_fix_title);
         status_bar_fix.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, WindowAttr.getStatusBarHeight(this)));
         findViewById(R.id.back_iv).setOnClickListener(this);
         title_tv = (TextView) findViewById(R.id.title_tv);
@@ -213,6 +215,7 @@ public class OrderDetailActivity extends BasicActivity implements View.OnClickLi
                 contract_detail_bar.setEnabled(false);
             }
             initComponent(detail);
+            isInit = true;
         }
     }
 
@@ -263,16 +266,13 @@ public class OrderDetailActivity extends BasicActivity implements View.OnClickLi
                 break;
             case R.id.contract_detail_bar:
                 OrderDetail.OrderContract contract = detail.orderContract;
-                ArrayList<String> files = new ArrayList<>();
-                if(contract != null && contract.files != null){
-                    for(int i=0; i<contract.files.size(); i++){
-                        files.add(contract.files.get(i));
-                    }
-                }
-                ContractManagementActivity.start(this, detail.id,  files, content.getIdentityMatrix());
+                ContractManagementActivity.start(this, detail.id,  contract, content.getIdentityMatrix());
                 break;
             case R.id.change_manager_bar:
                 ChangeManagerActivity.start(this, detail);
+                break;
+            case R.id.change_feastDate_bar:
+                ChangeFeastDateActivity.start(this, detail);
                 break;
         }
     }

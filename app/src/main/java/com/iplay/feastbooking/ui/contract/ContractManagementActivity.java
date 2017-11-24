@@ -3,6 +3,7 @@ package com.iplay.feastbooking.ui.contract;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.view.View;
@@ -18,6 +19,7 @@ import com.iplay.feastbooking.assistance.WindowAttr;
 import com.iplay.feastbooking.basic.BasicActivity;
 import com.iplay.feastbooking.component.view.gridview.UnScrollableGridView;
 import com.iplay.feastbooking.entity.IdentityMatrix;
+import com.iplay.feastbooking.gson.orderDetail.OrderDetail;
 import com.iplay.feastbooking.messageEvent.contract.PhotoUpdateMessageEvent;
 import com.iplay.feastbooking.net.utilImpl.contract.ContractUtility;
 import com.iplay.feastbooking.ui.contract.adapter.PhotoGridViewAdapter;
@@ -43,7 +45,7 @@ public class ContractManagementActivity extends BasicActivity implements View.On
 
     private static final String order_id_key = "order_id_key";
 
-    private static final String contract_list_key = "contract_list_key";
+    private static final String contract_key = "contract_key";
 
     private static final String im_key = "im_key";
 
@@ -77,6 +79,8 @@ public class ContractManagementActivity extends BasicActivity implements View.On
 
     private ProgressBar refresh_progress_bar;
 
+    private OrderDetail.OrderContract orderContract;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         isRegistered = true;
@@ -84,10 +88,10 @@ public class ContractManagementActivity extends BasicActivity implements View.On
         utility = ContractUtility.getInstance(this);
     }
 
-    public static void start(Context context, int orderId, ArrayList<String> contractPhotoUrls, IdentityMatrix identityMatrix){
+    public static void start(Context context, int orderId, @NonNull OrderDetail.OrderContract orderContract, IdentityMatrix identityMatrix){
         Intent intent = new Intent(context, ContractManagementActivity.class);
         intent.putExtra(order_id_key, orderId);
-        intent.putStringArrayListExtra(contract_list_key, contractPhotoUrls);
+        intent.putExtra(contract_key, orderContract);
         intent.putExtra(im_key, identityMatrix);
         context.startActivity(intent);
     }
@@ -105,9 +109,13 @@ public class ContractManagementActivity extends BasicActivity implements View.On
         findViewById(R.id.cancel_choose_tv).setOnClickListener(this);
         findViewById(R.id.choose_from_album_tv).setOnClickListener(this);
         findViewById(R.id.submit_tv).setOnClickListener(this);
+
         photo_gv = (UnScrollableGridView) findViewById(R.id.photo_gv);
-        adapter = new PhotoGridViewAdapter(this, R.layout.photo_grid, contractPhotoPath, identityMatrix);
+        String approvalStatus = orderContract == null ? null : orderContract.approvalStatus;
+        adapter = new PhotoGridViewAdapter(this,
+                R.layout.photo_grid, contractPhotoPath, identityMatrix, approvalStatus);
         photo_gv.setAdapter(adapter);
+
         bottom_sheet_ll = (LinearLayout) findViewById(R.id.photo_bottom_sheet);
         load_tv = (TextView) findViewById(R.id.load_tv);
         back_tv = (TextView) findViewById(R.id.back_tv);
@@ -127,8 +135,8 @@ public class ContractManagementActivity extends BasicActivity implements View.On
         Intent intent = getIntent();
         orderId = intent.getIntExtra(order_id_key, -1);
         contractPhotoPath = new ArrayList<>();
-        List<String> photoUrls = getIntent().getStringArrayListExtra(contract_list_key);
-        contractPhotoPath = new ArrayList<>();
+        orderContract = (OrderDetail.OrderContract) getIntent().getSerializableExtra(contract_key);
+        List<String> photoUrls = orderContract == null ? null : orderContract.files;
         if(photoUrls != null){
             for(int i=0; i<photoUrls.size(); i++){
                 ContractPhotoPath path = new ContractPhotoPath(ContractPhotoPath.TYPE_FROM_INTERNET, photoUrls.get(i));
@@ -146,7 +154,10 @@ public class ContractManagementActivity extends BasicActivity implements View.On
     @Override
     public void showContent() {
         if(identityMatrix == null ||
-                (identityMatrix != null && !identityMatrix.isCustomer())){
+                (identityMatrix != null && !identityMatrix.isCustomer()) ||
+                orderContract == null ||
+                orderContract.approvalStatus == null ||
+                !orderContract.approvalStatus.equals("PENDING")){
             submit_tv.setVisibility(View.GONE);
         }
     }

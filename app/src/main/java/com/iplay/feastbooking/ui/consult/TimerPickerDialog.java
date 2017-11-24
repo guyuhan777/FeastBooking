@@ -25,8 +25,15 @@ public class TimerPickerDialog extends Dialog implements View.OnClickListener{
 
     private CalendarPickerView calendar;
 
+    private CalendarPickerView.SelectionMode mode;
+
     public TimerPickerDialog(@NonNull Context context) {
         super(context);
+    }
+
+    public TimerPickerDialog(@NonNull Context context, CalendarPickerView.SelectionMode mode){
+        super(context);
+        this.mode = mode;
     }
 
     public TimerPickerDialog(@NonNull Context context, @StyleRes int themeResId) {
@@ -47,7 +54,9 @@ public class TimerPickerDialog extends Dialog implements View.OnClickListener{
 
         calendar = (CalendarPickerView) findViewById(R.id.calendar_view);
         Date today = new Date();
-        calendar.init(today, nextYear.getTime()).withSelectedDate(today).inMode(CalendarPickerView.SelectionMode.RANGE);
+        calendar.init(today, nextYear.getTime())
+                .withSelectedDate(today)
+                .inMode(mode == null ? CalendarPickerView.SelectionMode.RANGE : mode);
     }
 
 

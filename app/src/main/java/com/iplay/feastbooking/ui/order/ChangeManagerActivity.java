@@ -5,12 +5,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.iplay.feastbooking.R;
+import com.iplay.feastbooking.assistance.WindowAttr;
 import com.iplay.feastbooking.basic.BasicActivity;
 import com.iplay.feastbooking.gson.orderDetail.OrderDetail;
 import com.iplay.feastbooking.messageEvent.orderdetail.OrderDetailChangeMessageEvent;
@@ -54,6 +57,8 @@ public class ChangeManagerActivity extends BasicActivity implements View.OnClick
 
     @Override
     public void findViews() {
+        View status_bar_fix = findViewById(R.id.status_bar_fix_title);
+        status_bar_fix.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, WindowAttr.getStatusBarHeight(this)));
         findViewById(R.id.back_iv).setOnClickListener(this);
         submit_tv = (TextView) findViewById(R.id.submit_tv);
         submit_tv.setOnClickListener(this);
@@ -76,17 +81,15 @@ public class ChangeManagerActivity extends BasicActivity implements View.OnClick
 
     @Override
     public void getData() {
-        detail = getIntent().getParcelableExtra(ORDERR_DETAIL_KEY);
+        detail = (OrderDetail) getIntent().getSerializableExtra(ORDERR_DETAIL_KEY);
     }
 
     @Override
     public void showContent() {
-        if(detail.manager != null || !detail.manager.equals("")){
+        if(detail.manager != null && !detail.manager.equals("")){
             manager_et.setText(detail.manager);
         }
     }
-
-
 
     @Override
     public void onClick(View v) {
@@ -102,6 +105,7 @@ public class ChangeManagerActivity extends BasicActivity implements View.OnClick
             case R.id.submit_tv:
                 String username = manager_et.getText().toString().trim();
                 if(username.equals("")){
+                    Toast.makeText(this, "尚未設置經理人", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 loading_pb.setIndeterminate(true);

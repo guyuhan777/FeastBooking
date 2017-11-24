@@ -43,13 +43,24 @@ public class PhotoGridViewAdapter extends BasicArrayAdapter<ContractPhotoPath>{
 
     private static final int IMAGE_WIDTH = 90, IMAGE_HEIGHT = 100;
 
-    public PhotoGridViewAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull List<ContractPhotoPath> objects) {
+    private String approvalStatus;
+
+    public PhotoGridViewAdapter(@NonNull Context context, @LayoutRes int resource,
+                                @NonNull List<ContractPhotoPath> objects) {
         super(context, resource, objects);
     }
 
-    public PhotoGridViewAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull List<ContractPhotoPath> objects, IdentityMatrix identityMatrix) {
+    public PhotoGridViewAdapter(@NonNull Context context, @LayoutRes int resource,
+                                @NonNull List<ContractPhotoPath> objects, IdentityMatrix identityMatrix) {
         super(context, resource, objects);
         this.identityMatrix = identityMatrix;
+    }
+
+    public PhotoGridViewAdapter(@NonNull Context context, @LayoutRes int resource,
+                                @NonNull List<ContractPhotoPath> objects, IdentityMatrix identityMatrix,
+                                String approvalStatus){
+        this(context, resource, objects, identityMatrix);
+        this.approvalStatus = approvalStatus;
     }
 
     public boolean isModified(){
@@ -74,7 +85,9 @@ public class PhotoGridViewAdapter extends BasicArrayAdapter<ContractPhotoPath>{
 
         int viewType = getItemViewType(position);
         if(viewType == TYPE_PHOTO){
-            if(identityMatrix.isCustomer()) {
+            if(identityMatrix.isCustomer()
+                    && approvalStatus !=null
+                    && approvalStatus.equals("PENDING")) {
                 viewHolder.delete_iv.setVisibility(View.VISIBLE);
                 viewHolder.delete_iv.setOnClickListener(new OnPhotoDeleteClickListener(position));
             }else {

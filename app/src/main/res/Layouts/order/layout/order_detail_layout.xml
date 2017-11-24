@@ -28,6 +28,15 @@
             android:id="@+id/title_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/review_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:text="評價"
+            android:textColor="@color/pink"
+            android:textSize="@dimen/app_text_title_size" />
     </RelativeLayout>
     <include layout="@layout/title_sepertae_horizontal" />
     <RelativeLayout
