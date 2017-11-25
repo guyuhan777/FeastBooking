@@ -18,7 +18,7 @@ import com.iplay.feastbooking.assistance.ImageCompressUtility;
 import com.iplay.feastbooking.basic.BasicArrayAdapter;
 import com.iplay.feastbooking.entity.IdentityMatrix;
 import com.iplay.feastbooking.net.utilImpl.contract.ContractUtility;
-import com.iplay.feastbooking.ui.contract.data.ContractPhotoPath;
+import com.iplay.feastbooking.ui.contract.data.PhotoPath;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.io.File;
@@ -32,7 +32,7 @@ import me.iwf.photopicker.PhotoPreview;
  * Created by Guyuhan on 2017/11/8.
  */
 
-public class PhotoGridViewAdapter extends BasicArrayAdapter<ContractPhotoPath>{
+public class PhotoGridViewAdapter extends BasicArrayAdapter<PhotoPath>{
 
     private boolean isModified = false;
 
@@ -45,19 +45,22 @@ public class PhotoGridViewAdapter extends BasicArrayAdapter<ContractPhotoPath>{
 
     private String approvalStatus;
 
+    public static final int TYPE_CONTRACT = 1000, TYPE_PAYMENT = 1001;
+
+
     public PhotoGridViewAdapter(@NonNull Context context, @LayoutRes int resource,
-                                @NonNull List<ContractPhotoPath> objects) {
+                                @NonNull List<PhotoPath> objects) {
         super(context, resource, objects);
     }
 
     public PhotoGridViewAdapter(@NonNull Context context, @LayoutRes int resource,
-                                @NonNull List<ContractPhotoPath> objects, IdentityMatrix identityMatrix) {
+                                @NonNull List<PhotoPath> objects, IdentityMatrix identityMatrix) {
         super(context, resource, objects);
         this.identityMatrix = identityMatrix;
     }
 
     public PhotoGridViewAdapter(@NonNull Context context, @LayoutRes int resource,
-                                @NonNull List<ContractPhotoPath> objects, IdentityMatrix identityMatrix,
+                                @NonNull List<PhotoPath> objects, IdentityMatrix identityMatrix,
                                 String approvalStatus){
         this(context, resource, objects, identityMatrix);
         this.approvalStatus = approvalStatus;
@@ -95,9 +98,9 @@ public class PhotoGridViewAdapter extends BasicArrayAdapter<ContractPhotoPath>{
             }
             ImageView tiv = viewHolder.photo_iv;
             tiv.setVisibility(View.VISIBLE);
-            ContractPhotoPath path = mGridData.get(position);
+            PhotoPath path = mGridData.get(position);
             viewHolder.add_iv.setVisibility(View.INVISIBLE);
-            if(path.getType() == ContractPhotoPath.TYPE_FROM_INTERNET){
+            if(path.getType() == PhotoPath.TYPE_FROM_INTERNET){
                 Glide.with(parent.getContext())
                         .load(path.getUrl())
                         .placeholder(R.drawable.loading)
@@ -106,7 +109,7 @@ public class PhotoGridViewAdapter extends BasicArrayAdapter<ContractPhotoPath>{
                         .dontAnimate()
                         .override(IMAGE_WIDTH, IMAGE_HEIGHT)
                         .into(tiv);
-            }else if(path.getType() == ContractPhotoPath.TYPE_FROM_DISK){
+            }else if(path.getType() == PhotoPath.TYPE_FROM_DISK){
                 Glide.with(mContext)
                         .load(new File(path.getUrl()))
                         .placeholder(R.drawable.loading)
@@ -135,7 +138,7 @@ public class PhotoGridViewAdapter extends BasicArrayAdapter<ContractPhotoPath>{
     }
 
 
-    public void addPhoto(ContractPhotoPath path){
+    public void addPhoto(PhotoPath path){
         if(path == null){
             return;
         }
@@ -155,12 +158,13 @@ public class PhotoGridViewAdapter extends BasicArrayAdapter<ContractPhotoPath>{
         }
     }
 
-    public void upLoadFileList(int orderId, ContractUtility utility) throws Exception {
+    public void upLoadFileList(int orderId, int type) throws Exception {
+        ContractUtility utility = ContractUtility.getInstance(mContext);
         List<File> files = new ArrayList<>();
         String filesToDelete = "";
         String imagePath = ContractUtility.getInstance(mContext).getImageResourcePath();
         for(int i=0; i<mGridData.size(); i++){
-            ContractPhotoPath path = mGridData.get(i);
+            PhotoPath path = mGridData.get(i);
             if(path != null){
                 String url = path.getUrl();
                 File file ;
@@ -175,7 +179,11 @@ public class PhotoGridViewAdapter extends BasicArrayAdapter<ContractPhotoPath>{
                 }
             }
         }
-        utility.updateLoadPictures(orderId, filesToDelete, files, mContext);
+        if(type == TYPE_CONTRACT) {
+            utility.updateLoadPictures(orderId, filesToDelete, files, mContext);
+        }else if(type == TYPE_PAYMENT){
+
+        }
     }
 
     @Override

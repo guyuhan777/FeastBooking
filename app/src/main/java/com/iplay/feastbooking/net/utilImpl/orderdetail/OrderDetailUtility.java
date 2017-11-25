@@ -81,7 +81,7 @@ public class OrderDetailUtility {
             }
             token = tokenPrefix + " " +  token;
             RequestBody body = RequestBody.create(UtilMessage.JSON, "");
-            final Request request = new Request.Builder()
+            Request request = new Request.Builder()
                     .url(serverUrl + urlSeperator
                             + findOrderByIdAPI + urlSeperator
                             + orderId + urlSeperator + changeFeastDate + "?value=" + feastDate)

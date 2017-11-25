@@ -12,9 +12,11 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.iplay.feastbooking.R;
 import com.iplay.feastbooking.assistance.WindowAttr;
+import com.iplay.feastbooking.assistance.property.OrderStatus;
 import com.iplay.feastbooking.basic.BasicActivity;
 import com.iplay.feastbooking.component.view.gridview.UnScrollableGridView;
 import com.iplay.feastbooking.entity.IdentityMatrix;
@@ -25,6 +27,7 @@ import com.iplay.feastbooking.net.NetProperties;
 import com.iplay.feastbooking.net.utilImpl.orderdetail.OrderDetailUtility;
 import com.iplay.feastbooking.ui.contract.ContractManagementActivity;
 import com.iplay.feastbooking.ui.order.adapter.OrderCandidateDateBarAdapter;
+import com.iplay.feastbooking.ui.review.PostReviewActivity;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -91,13 +94,13 @@ public class OrderDetailActivity extends BasicActivity implements View.OnClickLi
 
     private RelativeLayout change_recommender_bar;
 
+    private RelativeLayout upload_payment_bar;
+
     private ImageView forwards_recommender_iv;
 
     private TextView title_tv;
 
     private TextView review_tv;
-
-    private boolean isInit = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -141,6 +144,9 @@ public class OrderDetailActivity extends BasicActivity implements View.OnClickLi
         contract_detail_bar = (RelativeLayout) findViewById(R.id.contract_detail_bar);
         contract_detail_bar.setOnClickListener(this);
 
+        upload_payment_bar = (RelativeLayout) findViewById(R.id.payment_evidence_bar);
+        upload_payment_bar.setOnClickListener(this);
+
         change_feastDate_bar = (RelativeLayout) findViewById(R.id.change_feastDate_bar);
         change_feastDate_bar.setOnClickListener(this);
         feastDate_forwards_iv = (ImageView) findViewById(R.id.feastDate_forwards_iv);
@@ -152,6 +158,9 @@ public class OrderDetailActivity extends BasicActivity implements View.OnClickLi
         change_recommender_bar = (RelativeLayout) findViewById(R.id.change_recommender_bar);
         change_recommender_bar.setOnClickListener(this);
         forwards_recommender_iv = (ImageView) findViewById(R.id.forwards_recommender_iv);
+
+        review_tv = (TextView) findViewById(R.id.review_tv);
+        review_tv.setOnClickListener(this);
 
         setAccessibleByPrivilege(content.getIdentityMatrix());
     }
@@ -215,7 +224,6 @@ public class OrderDetailActivity extends BasicActivity implements View.OnClickLi
                 contract_detail_bar.setEnabled(false);
             }
             initComponent(detail);
-            isInit = true;
         }
     }
 
@@ -246,7 +254,7 @@ public class OrderDetailActivity extends BasicActivity implements View.OnClickLi
             }
             order_number_tv.setText(detail.orderNumber + "");
             banquetHall_tv.setText(detail.banquetHall);
-            order_status_tv.setText(WindowAttr.getOrderStatusCh(detail.orderStatus));
+            order_status_tv.setText(OrderStatus.getOrderStatusCh(detail.orderStatus));
             tel_tv.setText(detail.phone);
             OrderCandidateDateBarAdapter adapter = new OrderCandidateDateBarAdapter(this, R.layout.order_candidate_bar, detail.candidateDates);
             candidate_gv.setAdapter(adapter);
@@ -268,8 +276,18 @@ public class OrderDetailActivity extends BasicActivity implements View.OnClickLi
                 OrderDetail.OrderContract contract = detail.orderContract;
                 ContractManagementActivity.start(this, detail.id,  contract, content.getIdentityMatrix());
                 break;
+            case R.id.review_tv:
+                PostReviewActivity.start(this, orderId);
+                break;
             case R.id.change_manager_bar:
                 ChangeManagerActivity.start(this, detail);
+                break;
+            case R.id.payment_evidence_bar:
+                if(detail != null){
+                    if(detail.orderStatus == OrderStatus.STATUS_CONSULTING){
+                        Toast.makeText(this, "預定酒席后才能顯示支付憑證", Toast.LENGTH_SHORT).show();
+                    }
+                }
                 break;
             case R.id.change_feastDate_bar:
                 ChangeFeastDateActivity.start(this, detail);

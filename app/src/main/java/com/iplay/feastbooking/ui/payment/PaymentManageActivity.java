@@ -1,4 +1,4 @@
-package com.iplay.feastbooking.ui.contract;
+package com.iplay.feastbooking.ui.payment;
 
 import android.content.Context;
 import android.content.Intent;
@@ -20,8 +20,8 @@ import com.iplay.feastbooking.basic.BasicActivity;
 import com.iplay.feastbooking.component.view.gridview.UnScrollableGridView;
 import com.iplay.feastbooking.entity.IdentityMatrix;
 import com.iplay.feastbooking.gson.orderDetail.OrderDetail;
-import com.iplay.feastbooking.messageEvent.contract.PhotoUpdateMessageEvent;
-import com.iplay.feastbooking.net.utilImpl.contract.ContractUtility;
+import com.iplay.feastbooking.messageEvent.common.CommonMessageEvent;
+import com.iplay.feastbooking.ui.contract.ContractManagementActivity;
 import com.iplay.feastbooking.ui.contract.adapter.PhotoGridViewAdapter;
 import com.iplay.feastbooking.ui.contract.data.PhotoPath;
 import com.iplay.feastbooking.ui.order.OrderDetailActivity;
@@ -36,16 +36,16 @@ import java.util.List;
 import me.iwf.photopicker.PhotoPicker;
 
 /**
- * Created by Guyuhan on 2017/11/7.
+ * Created by gu_y-pc on 2017/11/25.
  */
 
-public class ContractManagementActivity extends BasicActivity implements View.OnClickListener{
+public class PaymentManageActivity extends BasicActivity implements View.OnClickListener{
 
-    private final String TAG = "ContractManagement";
+    public static final String TAG = "PaymentManageActivity";
 
     private static final String order_id_key = "order_id_key";
 
-    private static final String contract_key = "contract_key";
+    private static final String payment_key = "payment_key";
 
     private static final String im_key = "im_key";
 
@@ -77,7 +77,7 @@ public class ContractManagementActivity extends BasicActivity implements View.On
 
     private ProgressBar refresh_progress_bar;
 
-    private OrderDetail.OrderContract orderContract;
+    private OrderDetail.OrderPayment orderPayment;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -85,17 +85,9 @@ public class ContractManagementActivity extends BasicActivity implements View.On
         super.onCreate(savedInstanceState);
     }
 
-    public static void start(Context context, int orderId, @NonNull OrderDetail.OrderContract orderContract, IdentityMatrix identityMatrix){
-        Intent intent = new Intent(context, ContractManagementActivity.class);
-        intent.putExtra(order_id_key, orderId);
-        intent.putExtra(contract_key, orderContract);
-        intent.putExtra(im_key, identityMatrix);
-        context.startActivity(intent);
-    }
-
     @Override
     public void setContentView() {
-        setContentView(R.layout.contract_management_layout);
+        setContentView(R.layout.payment_management_layout);
     }
 
     @Override
@@ -108,7 +100,7 @@ public class ContractManagementActivity extends BasicActivity implements View.On
         findViewById(R.id.submit_tv).setOnClickListener(this);
 
         photo_gv = (UnScrollableGridView) findViewById(R.id.photo_gv);
-        String approvalStatus = orderContract == null ? null : orderContract.approvalStatus;
+        String approvalStatus = orderPayment == null ? null : orderPayment.approvalStatus;
         adapter = new PhotoGridViewAdapter(this,
                 R.layout.photo_grid, photoPath, identityMatrix, approvalStatus);
         photo_gv.setAdapter(adapter);
@@ -127,13 +119,21 @@ public class ContractManagementActivity extends BasicActivity implements View.On
         submit_tv.setOnClickListener(this);
     }
 
+    public static void start(Context context, int orderId, @NonNull OrderDetail.OrderPayment orderPayment, IdentityMatrix identityMatrix){
+        Intent intent = new Intent(context, ContractManagementActivity.class);
+        intent.putExtra(order_id_key, orderId);
+        intent.putExtra(payment_key, orderPayment);
+        intent.putExtra(im_key, identityMatrix);
+        context.startActivity(intent);
+    }
+
     @Override
     public void getData() {
         Intent intent = getIntent();
         orderId = intent.getIntExtra(order_id_key, -1);
         photoPath = new ArrayList<>();
-        orderContract = (OrderDetail.OrderContract) getIntent().getSerializableExtra(contract_key);
-        List<String> photoUrls = orderContract == null ? null : orderContract.files;
+        orderPayment = (OrderDetail.OrderPayment) getIntent().getSerializableExtra(payment_key);
+        List<String> photoUrls = orderPayment == null ? null : orderPayment.files;
         if(photoUrls != null){
             for(int i=0; i<photoUrls.size(); i++){
                 PhotoPath path = new PhotoPath(PhotoPath.TYPE_FROM_INTERNET, photoUrls.get(i));
@@ -152,26 +152,16 @@ public class ContractManagementActivity extends BasicActivity implements View.On
     public void showContent() {
         if(identityMatrix == null ||
                 (identityMatrix != null && !identityMatrix.isCustomer()) ||
-                orderContract == null ||
-                orderContract.approvalStatus == null ||
-                !orderContract.approvalStatus.equals("PENDING")){
+                orderPayment == null ||
+                orderPayment.approvalStatus == null ||
+                !orderPayment.approvalStatus.equals("PENDING")){
             submit_tv.setVisibility(View.GONE);
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onPhotoUpdateMessageEvent(final PhotoUpdateMessageEvent event){
-        if(event.type == PhotoUpdateMessageEvent.TYPE.TYPE_FAILURE){
-            cancelLoading("上傳失敗");
-        }else if(event.type == PhotoUpdateMessageEvent.TYPE.TYPE_SUCCESS){
-            cancelLoading("操作成功");
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    deleteCropImage(event.getFilesToDelete());
-                }
-            }).start();
-        }
+    public void onCommonMessageEvent(CommonMessageEvent messageEvent){
+
     }
 
     private void deleteCropImage(List<File> files){
@@ -243,7 +233,7 @@ public class ContractManagementActivity extends BasicActivity implements View.On
                     @Override
                     public void run() {
                         try {
-                            adapter.upLoadFileList(orderId, PhotoGridViewAdapter.TYPE_CONTRACT);
+                            adapter.upLoadFileList(orderId, PhotoGridViewAdapter.TYPE_PAYMENT);
                         } catch (Exception e) {
                             e.printStackTrace();
                             runOnUiThread(new Runnable() {
@@ -302,5 +292,4 @@ public class ContractManagementActivity extends BasicActivity implements View.On
             }
         }
     }
-
 }
