@@ -91,7 +91,7 @@ public class OrderDetail implements Serializable {
     }
 
     public static class OrderPayment implements Serializable{
-        public int amountPaid;
+        public double amountPaid;
 
         public String approvalStatus;
 

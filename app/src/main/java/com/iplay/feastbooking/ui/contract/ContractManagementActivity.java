@@ -16,12 +16,12 @@ import android.widget.Toast;
 
 import com.iplay.feastbooking.R;
 import com.iplay.feastbooking.assistance.WindowAttr;
+import com.iplay.feastbooking.assistance.property.OrderStatus;
 import com.iplay.feastbooking.basic.BasicActivity;
 import com.iplay.feastbooking.component.view.gridview.UnScrollableGridView;
 import com.iplay.feastbooking.entity.IdentityMatrix;
 import com.iplay.feastbooking.gson.orderDetail.OrderDetail;
 import com.iplay.feastbooking.messageEvent.contract.PhotoUpdateMessageEvent;
-import com.iplay.feastbooking.net.utilImpl.contract.ContractUtility;
 import com.iplay.feastbooking.ui.contract.adapter.PhotoGridViewAdapter;
 import com.iplay.feastbooking.ui.contract.data.PhotoPath;
 import com.iplay.feastbooking.ui.order.OrderDetailActivity;
@@ -48,6 +48,8 @@ public class ContractManagementActivity extends BasicActivity implements View.On
     private static final String contract_key = "contract_key";
 
     private static final String im_key = "im_key";
+
+    private static final String status_key = "status_key";
 
     private int orderId;
 
@@ -77,6 +79,8 @@ public class ContractManagementActivity extends BasicActivity implements View.On
 
     private ProgressBar refresh_progress_bar;
 
+    private String orderStatus;
+
     private OrderDetail.OrderContract orderContract;
 
     @Override
@@ -85,11 +89,15 @@ public class ContractManagementActivity extends BasicActivity implements View.On
         super.onCreate(savedInstanceState);
     }
 
-    public static void start(Context context, int orderId, @NonNull OrderDetail.OrderContract orderContract, IdentityMatrix identityMatrix){
+    public static void start(Context context, int orderId,
+                             @NonNull OrderDetail.OrderContract orderContract,
+                             IdentityMatrix identityMatrix, String orderStatus){
         Intent intent = new Intent(context, ContractManagementActivity.class);
         intent.putExtra(order_id_key, orderId);
         intent.putExtra(contract_key, orderContract);
         intent.putExtra(im_key, identityMatrix);
+        intent.putExtra(status_key, orderStatus);
+
         context.startActivity(intent);
     }
 
@@ -131,6 +139,7 @@ public class ContractManagementActivity extends BasicActivity implements View.On
     public void getData() {
         Intent intent = getIntent();
         orderId = intent.getIntExtra(order_id_key, -1);
+        orderStatus = intent.getStringExtra(status_key);
         photoPath = new ArrayList<>();
         orderContract = (OrderDetail.OrderContract) getIntent().getSerializableExtra(contract_key);
         List<String> photoUrls = orderContract == null ? null : orderContract.files;
@@ -142,7 +151,8 @@ public class ContractManagementActivity extends BasicActivity implements View.On
         }
         identityMatrix = (IdentityMatrix) intent.getSerializableExtra(im_key);
         if(identityMatrix != null){
-            if(identityMatrix.isCustomer()) {
+            if(identityMatrix.isCustomer() && orderStatus != null
+                    && orderStatus.equals(OrderStatus.STATUS_CONSULTING)) {
                 photoPath.add(null);
             }
         }
@@ -152,9 +162,12 @@ public class ContractManagementActivity extends BasicActivity implements View.On
     public void showContent() {
         if(identityMatrix == null ||
                 (identityMatrix != null && !identityMatrix.isCustomer()) ||
-                orderContract == null ||
-                orderContract.approvalStatus == null ||
-                !orderContract.approvalStatus.equals("PENDING")){
+                (orderContract != null &&
+                        (orderContract.approvalStatus == null || !orderContract.approvalStatus.equals("PENDING")))){
+            submit_tv.setVisibility(View.GONE);
+        }
+        if(orderStatus == null ||
+                !orderStatus.equals(OrderStatus.STATUS_CONSULTING)){
             submit_tv.setVisibility(View.GONE);
         }
     }

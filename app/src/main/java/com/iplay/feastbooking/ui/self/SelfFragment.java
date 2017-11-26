@@ -54,7 +54,7 @@ public class SelfFragment extends BasicFragment implements View.OnClickListener{
         view = inflater.inflate(R.layout.self_main_page,container,false);
         mContext = getActivity();
 
-        statusView = (View) view.findViewById(R.id.status_bar_fix);
+        statusView = view.findViewById(R.id.status_bar_fix);
         statusView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, WindowAttr.getStatusBarHeight(getActivity())));
 
         avatar = (CircleImageView) view.findViewById(R.id.user_portrait);

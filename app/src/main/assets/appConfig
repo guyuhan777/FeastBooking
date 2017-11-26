@@ -16,6 +16,7 @@ postOrder=orders
 getOrderList=user/orders
 consultTotp=totp
 uploadContractSuffix=contract
+uploadPaymentSuffix=payment
 changeManager=manager
 changeFeastingDate=feasting_date
 reviews=reviews

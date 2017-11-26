@@ -27,6 +27,7 @@ import com.iplay.feastbooking.net.NetProperties;
 import com.iplay.feastbooking.net.utilImpl.orderdetail.OrderDetailUtility;
 import com.iplay.feastbooking.ui.contract.ContractManagementActivity;
 import com.iplay.feastbooking.ui.order.adapter.OrderCandidateDateBarAdapter;
+import com.iplay.feastbooking.ui.payment.PaymentManageActivity;
 import com.iplay.feastbooking.ui.review.PostReviewActivity;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -274,7 +275,8 @@ public class OrderDetailActivity extends BasicActivity implements View.OnClickLi
                 break;
             case R.id.contract_detail_bar:
                 OrderDetail.OrderContract contract = detail.orderContract;
-                ContractManagementActivity.start(this, detail.id,  contract, content.getIdentityMatrix());
+                ContractManagementActivity.start(this, detail.id,  contract,
+                        content.getIdentityMatrix(), detail.orderStatus);
                 break;
             case R.id.review_tv:
                 PostReviewActivity.start(this, orderId);
@@ -286,6 +288,14 @@ public class OrderDetailActivity extends BasicActivity implements View.OnClickLi
                 if(detail != null){
                     if(detail.orderStatus == OrderStatus.STATUS_CONSULTING){
                         Toast.makeText(this, "預定酒席后才能顯示支付憑證", Toast.LENGTH_SHORT).show();
+                    }else if(detail.manager == null || detail.feastingDate == null){
+                        Toast.makeText(this, "請先填寫擺酒日期和經理人信息", Toast.LENGTH_SHORT).show();
+                    }else if(detail.orderStatus.equals(OrderStatus.STATUS_CONSULTING)){
+                        Toast.makeText(this, "尚處于資訊中狀態", Toast.LENGTH_SHORT).show();
+                    }else {
+                        OrderDetail.OrderPayment payment = detail.orderPayment;
+                        PaymentManageActivity.start(this, detail.id, payment,
+                                content.getIdentityMatrix(), detail.orderStatus);
                     }
                 }
                 break;

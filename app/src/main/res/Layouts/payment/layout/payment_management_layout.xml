@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/root_view"
     android:background="@color/white">
     <RelativeLayout
         android:visibility="invisible"
@@ -101,16 +102,19 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
                     <RelativeLayout
+                        android:layout_marginBottom="@dimen/app_body_margin"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
                         <TextView
                             android:textColor="@color/app_title_color"
+                            android:text="支付金額"
                             android:textSize="@dimen/app_text_normal"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content" />
                         <EditText
-                            android:inputType="number"
+                            android:inputType="numberDecimal"
                             android:id="@+id/pay_amount_et"
+                            android:background="@null"
                             android:hint="請填寫支付金額"
                             android:textSize="@dimen/app_text_normal"
                             android:layout_alignParentEnd="true"

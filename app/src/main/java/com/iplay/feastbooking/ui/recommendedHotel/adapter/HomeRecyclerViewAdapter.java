@@ -101,8 +101,8 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter {
         items.add(rhPhData);
 
         TitleHomeData titleAll = new TitleHomeData();
-        titleRecommend.setTitle("所有酒楼");
-        items.add(titleRecommend);
+        titleAll.setTitle("所有酒楼");
+        items.add(titleAll);
     }
 
     @Override

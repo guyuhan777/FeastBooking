@@ -44,6 +44,8 @@ public class ContractUtility {
 
     private final String uploadContractSuffix;
 
+    private final String uploadPaymentSuffix;
+
     private final String postOrderAPI;
 
     private final int connectSeconds;
@@ -58,6 +60,7 @@ public class ContractUtility {
         postOrderAPI = properties.getProperty("postOrder");
         uploadContractSuffix = properties.getProperty("uploadContractSuffix");
         resource = properties.getProperty("resource");
+        uploadPaymentSuffix = properties.getProperty("uploadPaymentSuffix");
         connectSeconds = 120;
     }
 
@@ -89,7 +92,66 @@ public class ContractUtility {
         return filesToDelete;
     };
 
-    public void updateLoadPictures(int orderId, String filesToDelete, final List<File> files, Context context){
+    public void upLoadPayment(int orderId, String filesToDelete, final List<File> files, Context context, double payment){
+        if(!NetProperties.isNetworkConnected(context)){
+            PhotoUpdateMessageEvent event = new PhotoUpdateMessageEvent(PhotoUpdateMessageEvent.TYPE.TYPE_FAILURE, "網絡不給力");
+            EventBus.getDefault().post(event);
+        }else {
+            String token = LoginUserHolder.getInstance().getCurrentUser().getToken();
+            if(token == null || token.equals("")){
+                return;
+            }
+            token = tokenPrefix + " " +  token;
+            OkHttpClient client = new OkHttpClient.Builder()
+                    .connectTimeout(connectSeconds, TimeUnit.SECONDS)
+                    .readTimeout(connectSeconds, TimeUnit.SECONDS)
+                    .writeTimeout(connectSeconds, TimeUnit.SECONDS)
+                    .build();
+            MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
+            Log.d("deleted", filesToDelete);
+            builder.addFormDataPart("deleted", filesToDelete);
+            builder.addFormDataPart("amountPaid", payment + "");
+            if(files != null){
+                for(int i=0; i<files.size(); i++){
+                    File file;
+                    if((file = files.get(i)) != null){
+                        RequestBody fileBody = RequestBody.create(null, file);
+                        builder.addFormDataPart("files", "picture" + i +".jpg", fileBody);
+                    }
+                }
+            }
+            RequestBody requestBody = builder.build();
+            Request request = new Request.Builder()
+                    .header("Authorization", token)
+                    .url(serverUrl + urlSeperator +  postOrderAPI + urlSeperator
+                            + orderId + urlSeperator + uploadPaymentSuffix)
+                    .post(requestBody)
+                    .build();
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    Log.d("upload", "over time" + e);
+                    PhotoUpdateMessageEvent event = new PhotoUpdateMessageEvent(PhotoUpdateMessageEvent.TYPE.TYPE_FAILURE, "網絡不給力");
+                    EventBus.getDefault().post(event);
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    PhotoUpdateMessageEvent event;
+                    if(!response.isSuccessful()){
+                        Log.d("upload", response.body().string());
+                        event = new PhotoUpdateMessageEvent(PhotoUpdateMessageEvent.TYPE.TYPE_FAILURE, "未知錯誤");
+                    }else {
+                        event = new PhotoUpdateMessageEvent(PhotoUpdateMessageEvent.TYPE.TYPE_SUCCESS);
+                        event.setFilesToDelete(generateFilesToDelete(files));
+                    }
+                    EventBus.getDefault().post(event);
+                }
+            });
+        }
+    }
+
+    public void upLoadContracts(int orderId, String filesToDelete, final List<File> files, Context context){
         if(!NetProperties.isNetworkConnected(context)){
             PhotoUpdateMessageEvent event = new PhotoUpdateMessageEvent(PhotoUpdateMessageEvent.TYPE.TYPE_FAILURE, "網絡不給力");
             EventBus.getDefault().post(event);

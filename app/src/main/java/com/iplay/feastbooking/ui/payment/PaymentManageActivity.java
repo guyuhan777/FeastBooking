@@ -6,8 +6,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -16,12 +19,12 @@ import android.widget.Toast;
 
 import com.iplay.feastbooking.R;
 import com.iplay.feastbooking.assistance.WindowAttr;
+import com.iplay.feastbooking.assistance.property.OrderStatus;
 import com.iplay.feastbooking.basic.BasicActivity;
 import com.iplay.feastbooking.component.view.gridview.UnScrollableGridView;
 import com.iplay.feastbooking.entity.IdentityMatrix;
 import com.iplay.feastbooking.gson.orderDetail.OrderDetail;
-import com.iplay.feastbooking.messageEvent.common.CommonMessageEvent;
-import com.iplay.feastbooking.ui.contract.ContractManagementActivity;
+import com.iplay.feastbooking.messageEvent.contract.PhotoUpdateMessageEvent;
 import com.iplay.feastbooking.ui.contract.adapter.PhotoGridViewAdapter;
 import com.iplay.feastbooking.ui.contract.data.PhotoPath;
 import com.iplay.feastbooking.ui.order.OrderDetailActivity;
@@ -49,6 +52,8 @@ public class PaymentManageActivity extends BasicActivity implements View.OnClick
 
     private static final String im_key = "im_key";
 
+    private static final String status_key = "status_key";
+
     private int orderId;
 
     private List<PhotoPath> photoPath;
@@ -75,7 +80,11 @@ public class PaymentManageActivity extends BasicActivity implements View.OnClick
 
     private TextView back_tv;
 
+    private TextView pay_amount_et;
+
     private ProgressBar refresh_progress_bar;
+
+    private String orderStatus;
 
     private OrderDetail.OrderPayment orderPayment;
 
@@ -98,6 +107,7 @@ public class PaymentManageActivity extends BasicActivity implements View.OnClick
         findViewById(R.id.cancel_choose_tv).setOnClickListener(this);
         findViewById(R.id.choose_from_album_tv).setOnClickListener(this);
         findViewById(R.id.submit_tv).setOnClickListener(this);
+        findViewById(R.id.root_view).setOnClickListener(this);
 
         photo_gv = (UnScrollableGridView) findViewById(R.id.photo_gv);
         String approvalStatus = orderPayment == null ? null : orderPayment.approvalStatus;
@@ -115,15 +125,22 @@ public class PaymentManageActivity extends BasicActivity implements View.OnClick
         bottomSheetBehavior = BottomSheetBehavior.from(bottom_sheet_ll);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         bottomSheetBehavior.setHideable(true);
+
+        pay_amount_et = (EditText) findViewById(R.id.pay_amount_et);
+
         submit_tv = (TextView) findViewById(R.id.submit_tv);
         submit_tv.setOnClickListener(this);
     }
 
-    public static void start(Context context, int orderId, @NonNull OrderDetail.OrderPayment orderPayment, IdentityMatrix identityMatrix){
-        Intent intent = new Intent(context, ContractManagementActivity.class);
+    public static void start(Context context, int orderId,
+                             @NonNull OrderDetail.OrderPayment orderPayment,
+                             IdentityMatrix identityMatrix, String orderStatus){
+        Log.d(TAG, orderStatus);
+        Intent intent = new Intent(context, PaymentManageActivity.class);
         intent.putExtra(order_id_key, orderId);
         intent.putExtra(payment_key, orderPayment);
         intent.putExtra(im_key, identityMatrix);
+        intent.putExtra(status_key, orderStatus);
         context.startActivity(intent);
     }
 
@@ -131,6 +148,7 @@ public class PaymentManageActivity extends BasicActivity implements View.OnClick
     public void getData() {
         Intent intent = getIntent();
         orderId = intent.getIntExtra(order_id_key, -1);
+        orderStatus = intent.getStringExtra(status_key);
         photoPath = new ArrayList<>();
         orderPayment = (OrderDetail.OrderPayment) getIntent().getSerializableExtra(payment_key);
         List<String> photoUrls = orderPayment == null ? null : orderPayment.files;
@@ -142,7 +160,9 @@ public class PaymentManageActivity extends BasicActivity implements View.OnClick
         }
         identityMatrix = (IdentityMatrix) intent.getSerializableExtra(im_key);
         if(identityMatrix != null){
-            if(identityMatrix.isCustomer()) {
+            if(identityMatrix.isCustomer()  && orderStatus != null
+                    && (orderStatus.equals(OrderStatus.STATUS_RESERVED)
+                        || orderStatus.equals(OrderStatus.STATUS_FEASTED))) {
                 photoPath.add(null);
             }
         }
@@ -152,16 +172,33 @@ public class PaymentManageActivity extends BasicActivity implements View.OnClick
     public void showContent() {
         if(identityMatrix == null ||
                 (identityMatrix != null && !identityMatrix.isCustomer()) ||
-                orderPayment == null ||
-                orderPayment.approvalStatus == null ||
-                !orderPayment.approvalStatus.equals("PENDING")){
+                (orderPayment != null &&
+                        (orderPayment.approvalStatus == null || !orderPayment.approvalStatus.equals("PENDING")))){
             submit_tv.setVisibility(View.GONE);
+        }
+        if(orderStatus == null ||
+                !(orderStatus.equals(OrderStatus.STATUS_FEASTED) ||
+                        orderStatus.equals(OrderStatus.STATUS_RESERVED))){
+            submit_tv.setVisibility(View.GONE);
+        }
+        if(orderPayment != null){
+            pay_amount_et.setText(orderPayment.amountPaid + "");
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onCommonMessageEvent(CommonMessageEvent messageEvent){
-
+    public void onPhotoUpdateMessageEvent(final PhotoUpdateMessageEvent event){
+        if(event.type == PhotoUpdateMessageEvent.TYPE.TYPE_FAILURE){
+            cancelLoading("上傳失敗");
+        }else if(event.type == PhotoUpdateMessageEvent.TYPE.TYPE_SUCCESS){
+            cancelLoading("操作成功");
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    deleteCropImage(event.getFilesToDelete());
+                }
+            }).start();
+        }
     }
 
     private void deleteCropImage(List<File> files){
@@ -190,9 +227,17 @@ public class PaymentManageActivity extends BasicActivity implements View.OnClick
         back_tv.setVisibility(View.VISIBLE);
     }
 
+    private void hideInput(View v){
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(v.getWindowToken(),0);
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()){
+            case R.id.root_view:
+                hideInput(v);
+                break;
             case R.id.back_tv:
                 OrderDetailActivity.reload(this, orderId);
                 break;
@@ -223,17 +268,20 @@ public class PaymentManageActivity extends BasicActivity implements View.OnClick
                         .start(this);
                 break;
             case R.id.submit_tv:
+                hideInput(v);
                 hideBottomSheet();
-                if(!adapter.isModified()){
-                    Toast.makeText(this, "尚未修改", Toast.LENGTH_SHORT).show();
+                String paymentInput = pay_amount_et.getText().toString().trim();
+                if(paymentInput.equals("")){
+                    Toast.makeText(this, "請填寫金額", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                final double paymentAmount = Double.parseDouble(paymentInput);
                 showLoading();
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
                         try {
-                            adapter.upLoadFileList(orderId, PhotoGridViewAdapter.TYPE_PAYMENT);
+                            adapter.upLoadFileList(orderId, PhotoGridViewAdapter.TYPE_PAYMENT, paymentAmount);
                         } catch (Exception e) {
                             e.printStackTrace();
                             runOnUiThread(new Runnable() {

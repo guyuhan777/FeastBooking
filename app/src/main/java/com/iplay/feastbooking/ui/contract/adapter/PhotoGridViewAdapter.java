@@ -24,7 +24,10 @@ import com.makeramen.roundedimageview.RoundedImageView;
 import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import me.iwf.photopicker.PhotoPreview;
 
@@ -47,6 +50,7 @@ public class PhotoGridViewAdapter extends BasicArrayAdapter<PhotoPath>{
 
     public static final int TYPE_CONTRACT = 1000, TYPE_PAYMENT = 1001;
 
+    private Set<String> filesToDelete = new HashSet<>();
 
     public PhotoGridViewAdapter(@NonNull Context context, @LayoutRes int resource,
                                 @NonNull List<PhotoPath> objects) {
@@ -130,7 +134,12 @@ public class PhotoGridViewAdapter extends BasicArrayAdapter<PhotoPath>{
     }
 
     public void removePhoto(int position){
-        if(mGridData.get(position) != null){
+        String imagePath = ContractUtility.getInstance(mContext).getImageResourcePath();
+        PhotoPath photoPath;
+        if((photoPath = mGridData.get(position)) != null){
+            if(photoPath.getType() == PhotoPath.TYPE_FROM_INTERNET){
+                filesToDelete.add(photoPath.getUrl().replace(imagePath, ""));
+            }
             mGridData.remove(position);
             notifyDataSetChanged();
             isModified = true;
@@ -158,11 +167,20 @@ public class PhotoGridViewAdapter extends BasicArrayAdapter<PhotoPath>{
         }
     }
 
-    public void upLoadFileList(int orderId, int type) throws Exception {
+    private String getFilesToDelete(){
+        String ret = "";
+        Iterator<String> it = filesToDelete.iterator();
+        while (it.hasNext()){
+            ret += it.next() + ";";
+        }
+        return ret;
+    }
+
+    public void upLoadFileList(int orderId, int type, double... payment) throws Exception {
         ContractUtility utility = ContractUtility.getInstance(mContext);
         List<File> files = new ArrayList<>();
-        String filesToDelete = "";
-        String imagePath = ContractUtility.getInstance(mContext).getImageResourcePath();
+        String filesToDelete = getFilesToDelete();
+
         for(int i=0; i<mGridData.size(); i++){
             PhotoPath path = mGridData.get(i);
             if(path != null){
@@ -174,15 +192,15 @@ public class PhotoGridViewAdapter extends BasicArrayAdapter<PhotoPath>{
                         throw new Exception("File is null");
                     }
                     files.add(file);
-                }else {
-                    filesToDelete += url.replace(imagePath, "") + ";";
                 }
             }
         }
         if(type == TYPE_CONTRACT) {
-            utility.updateLoadPictures(orderId, filesToDelete, files, mContext);
+            utility.upLoadContracts(orderId, filesToDelete, files, mContext);
         }else if(type == TYPE_PAYMENT){
-
+            if(payment != null && payment.length == 1){
+                utility.upLoadPayment(orderId, filesToDelete, files, mContext, payment[0]);
+            }
         }
     }
 

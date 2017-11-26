@@ -61,10 +61,13 @@
         <LinearLayout
             android:orientation="vertical"
             android:background="@color/white"
-            android:padding="5dp"
+            android:paddingLeft="@dimen/app_body_margin"
+            android:paddingRight="@dimen/app_body_margin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <RelativeLayout
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <TextView
