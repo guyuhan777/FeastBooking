@@ -62,6 +62,7 @@
         <activity android:name=".ui.order.ChangeFeastDateActivity" android:screenOrientation="portrait" />
         <activity android:name=".ui.review.PostReviewActivity" android:screenOrientation="portrait"/>
         <activity android:name=".ui.payment.PaymentManageActivity" android:screenOrientation="portrait" />
+        <activity android:name=".ui.review.HotelReviewActivity" android:screenOrientation="portrait" />
     </application>
 
 </manifest>

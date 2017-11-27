@@ -75,7 +75,7 @@ public class OrderListActivity extends BasicActivity implements View.OnClickList
 
     @Override
     public void findViews() {
-        View status_bar_fix = (View) findViewById(R.id.status_bar_fix_title);
+        View status_bar_fix = findViewById(R.id.status_bar_fix_title);
         status_bar_fix.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, WindowAttr.getStatusBarHeight(this)));
         order_list_tv = (TextView) findViewById(R.id.order_state_tv);
         findViewById(R.id.back_iv).setOnClickListener(this);

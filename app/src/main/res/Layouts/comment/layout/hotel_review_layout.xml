@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <View
+        android:id="@+id/status_bar_fix_title"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/white" />
+    <RelativeLayout
+        android:background="@color/white"
+        android:padding="@dimen/app_body_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_centerVertical="true"
+            android:src="@drawable/back_sm"
+            android:id="@id/back_iv"
+            android:layout_width="@dimen/app_back_size"
+            android:layout_height="@dimen/app_back_size" />
+        <TextView
+            android:layout_centerHorizontal="true"
+            android:text="顧客評價"
+            android:layout_centerVertical="true"
+            android:textColor="@color/app_title_color"
+            android:textSize="@dimen/app_text_title_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+    <include layout="@layout/title_sepertae_horizontal" />
+    <RelativeLayout
+        android:id="@+id/load_state_rl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/load_tv"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:textSize="@dimen/app_text_normal"
+            android:text="正在努力加載中"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <ProgressBar
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/load_tv"
+            android:layout_marginLeft="5dp"
+            android:id="@+id/refresh_progress_bar"
+            android:layout_width="@dimen/app_text_normal"
+            android:layout_height="@dimen/app_text_normal" />
+    </RelativeLayout>
+    <android.support.v7.widget.RecyclerView
+        android:visibility="gone"
+        android:id="@+id/comment_list_rv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </android.support.v7.widget.RecyclerView>
+</LinearLayout>

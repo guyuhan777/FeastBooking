@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:paddingLeft="@dimen/app_body_margin"
+    android:paddingRight="@dimen/app_body_margin"
+    android:paddingTop="@dimen/app_body_margin"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <android.support.v4.widget.CircleImageView
+        android:id="@+id/reviewer_portrait_civ"
+        android:scaleType="centerCrop"
+        android:layout_width="@dimen/review_portrait_size"
+        android:layout_height="@dimen/review_portrait_size" />
+    <TextView
+        android:id="@+id/reviewer_name_tv"
+        android:layout_marginLeft="@dimen/app_body_margin"
+        android:layout_toRightOf="@id/reviewer_portrait_civ"
+        android:text="iplay"
+        android:textColor="@color/app_title_color"
+        android:textSize="@dimen/app_text_normal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <com.iplay.feastbooking.component.view.bar.RatingBar
+        android:layout_alignParentRight="true"
+        android:id="@+id/hotel_rate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:layout_marginTop="@dimen/app_body_margin"
+        android:layout_marginLeft="@dimen/app_body_margin"
+        android:id="@+id/remark_tv"
+        android:text="1231231231211111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
+        android:textSize="@dimen/app_text_normal"
+        android:layout_below="@id/reviewer_portrait_civ"
+        android:layout_toRightOf="@+id/reviewer_portrait_civ"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <TextView
+        android:text="2017.11.19"
+        android:layout_below="@id/remark_tv"
+        android:textColor="@color/light_grey"
+        android:id="@+id/date_tv"
+        android:layout_marginTop="@dimen/app_body_margin"
+        android:layout_marginLeft="@dimen/app_body_margin"
+        android:layout_toRightOf="@+id/reviewer_portrait_civ"
+        android:textSize="@dimen/app_text_normal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <LinearLayout
+        android:layout_marginTop="@dimen/app_body_margin"
+        android:layout_below="@id/date_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <include layout="@layout/seperateline_horizontal" />
+    </LinearLayout>
+</RelativeLayout>

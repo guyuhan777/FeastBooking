@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="review_portrait_size">20dp</dimen>
     <dimen name="bottom_menu_height">150dp</dimen>
     <dimen name="photo_width">90dp</dimen>
     <dimen name="photo_height">100dp</dimen>
