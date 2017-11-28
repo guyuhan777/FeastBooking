@@ -19,7 +19,7 @@ import com.iplay.feastbooking.entity.IdentityMatrix;
 import com.iplay.feastbooking.gson.order.OrderListItem;
 import com.iplay.feastbooking.ui.order.OrderDetailActivity;
 import com.iplay.feastbooking.ui.order.data.OrderItemData;
-import com.iplay.feastbooking.ui.order.data.basic.OrderBasicData;
+import com.iplay.feastbooking.ui.order.data.basic.BasicData;
 import com.iplay.feastbooking.ui.timeline.data.TimeLineNode;
 
 import java.lang.ref.WeakReference;
@@ -31,7 +31,7 @@ import java.util.List;
  * Created by Guyuhan on 2017/10/29.
  */
 
-public class OrderItemAdapterDelegate extends AdapterDelegate<List<OrderBasicData>> {
+public class OrderItemAdapterDelegate extends AdapterDelegate<List<BasicData>> {
 
     private WeakReference<Activity> activityWF;
 
@@ -43,7 +43,7 @@ public class OrderItemAdapterDelegate extends AdapterDelegate<List<OrderBasicDat
     }
 
     @Override
-    protected boolean isForViewType(@NonNull List<OrderBasicData> items, int position) {
+    protected boolean isForViewType(@NonNull List<BasicData> items, int position) {
         return items.get(position) instanceof OrderItemData;
     }
 
@@ -54,7 +54,7 @@ public class OrderItemAdapterDelegate extends AdapterDelegate<List<OrderBasicDat
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull List<OrderBasicData> items, int position, @NonNull RecyclerView.ViewHolder holder, @NonNull List<Object> payloads) {
+    protected void onBindViewHolder(@NonNull List<BasicData> items, int position, @NonNull RecyclerView.ViewHolder holder, @NonNull List<Object> payloads) {
         OrderItemData data = (OrderItemData) items.get(position);
         OrderListItem.Content content = data.getContent();
         IdentityMatrix identityMatrix;

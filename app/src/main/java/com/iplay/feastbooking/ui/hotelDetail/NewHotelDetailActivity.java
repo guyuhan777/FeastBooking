@@ -123,7 +123,7 @@ public class NewHotelDetailActivity extends BasicActivity implements View.OnClic
             tel_tv = (TextView) findViewById(R.id.tel_tv);
             address_tv = (TextView) findViewById(R.id.address_tv);
             hotel_describe = (ExpandableTextView) findViewById(R.id.hotel_describe);
-            ratingBar = (RatingBar) findViewById(R.id.hotel_rate);
+            ratingBar = (RatingBar) findViewById(R.id.hotel_rate_bar);
             single_pic_iv = (ImageView) findViewById(R.id.single_icon);
             hotel_room_ph = (View) findViewById(R.id.hotel_room_placeholder);
             hotel_room_list = (UnScrollableGridView) findViewById(R.id.hotel_room_list);

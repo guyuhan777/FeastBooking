@@ -1,12 +1,12 @@
 package com.iplay.feastbooking.ui.order.data;
 
-import com.iplay.feastbooking.ui.order.data.basic.OrderBasicData;
+import com.iplay.feastbooking.ui.order.data.basic.BasicData;
 
 /**
  * Created by Guyuhan on 2017/10/29.
  */
 
-public class FootStateData extends OrderBasicData {
+public class FootStateData extends BasicData {
 
 
 

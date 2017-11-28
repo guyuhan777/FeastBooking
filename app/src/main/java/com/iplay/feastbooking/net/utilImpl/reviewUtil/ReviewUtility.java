@@ -8,16 +8,15 @@ import com.iplay.feastbooking.assistance.LoginUserHolder;
 import com.iplay.feastbooking.assistance.ProperTies;
 import com.iplay.feastbooking.gson.comment.CommentVO;
 import com.iplay.feastbooking.messageEvent.common.CommonMessageEvent;
+import com.iplay.feastbooking.messageEvent.order.OrderListMessageEvent;
+import com.iplay.feastbooking.messageEvent.review.ReviewListMessageEvent;
 import com.iplay.feastbooking.net.NetProperties;
 import com.iplay.feastbooking.net.message.UtilMessage;
-import com.iplay.feastbooking.net.utilImpl.consult.ConsultUtility;
-import com.iplay.feastbooking.net.utilImpl.registerUtil.RegisterConfirmUtility;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
 import java.util.Properties;
-import java.util.StringTokenizer;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
@@ -42,9 +41,11 @@ public class ReviewUtility {
 
     private final String urlSeperator;
 
+    private final String hotel;
+
     private final String tokenPrefix;
 
-    private final String postCommentAPI;
+    private final String reviews;
 
     private final String orders;
 
@@ -53,8 +54,9 @@ public class ReviewUtility {
         serverUrl = properties.getProperty("serverUrl");
         urlSeperator = properties.getProperty("urlSeperator");
         tokenPrefix = properties.getProperty("tokenPrefix");
-        postCommentAPI = properties.getProperty("reviews");
+        reviews = properties.getProperty("reviews");
         orders = properties.getProperty("postOrder");
+        hotel = properties.getProperty("listHotelsForUser");
     }
 
     public void postComment(int orderId, @NonNull String comment, double rating, Context context){
@@ -76,7 +78,7 @@ public class ReviewUtility {
             Request request = new Request.Builder()
                     .url(serverUrl + urlSeperator
                             + orders + urlSeperator
-                            + postCommentAPI)
+                            + reviews)
                     .post(body)
                     .header("Authorization", token).build();
             client.newCall(request).enqueue(new Callback() {
@@ -123,5 +125,44 @@ public class ReviewUtility {
         return instance;
     }
 
+    public void load(int page, final boolean isInit, int hotelId){
+        OkHttpClient client = new OkHttpClient.Builder().connectTimeout(5, TimeUnit.SECONDS).build();
+        String token = LoginUserHolder.getInstance().getCurrentUser().getToken();
+        if(token == null || token.equals("")){
+            return;
+        }
+        token = tokenPrefix + " " +  token;
 
+        Request request = new Request.Builder().
+                url(serverUrl + urlSeperator + hotel + urlSeperator + hotelId + urlSeperator +
+                        reviews + "?page=" + page).
+                header("Authorization", token).build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                ReviewListMessageEvent event = new ReviewListMessageEvent();
+                if(isInit) {
+                    event.setInit(true);
+                }
+                event.setType(ReviewListMessageEvent.TYPE_FAILURE);
+                event.setFailureReason("網絡不給力");
+                EventBus.getDefault().post(event);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                ReviewListMessageEvent event = new ReviewListMessageEvent();
+                if(isInit) {
+                    event.setInit(true);
+                }
+                if(!response.isSuccessful()){
+                    event.setType(ReviewListMessageEvent.TYPE_FAILURE);
+                    event.setFailureReason("未知錯誤");
+                }else {
+                    event.setType(ReviewListMessageEvent.TYPE_SUCCESS);
+
+                }
+            }
+        });
+    }
 }

@@ -83,7 +83,7 @@
                     android:textSize="@dimen/app_text_title_size" />
 
                 <com.iplay.feastbooking.component.view.bar.RatingBar
-                    android:id="@+id/hotel_rate"
+                    android:id="@+id/hotel_rate_bar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 

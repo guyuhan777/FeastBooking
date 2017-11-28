@@ -23,7 +23,7 @@ import com.iplay.feastbooking.net.utilImpl.order.OrderListUtility;
 import com.iplay.feastbooking.ui.order.adapter.OrderRecyclerViewAdapter;
 import com.iplay.feastbooking.ui.order.data.FootStateData;
 import com.iplay.feastbooking.ui.order.data.OrderItemData;
-import com.iplay.feastbooking.ui.order.data.basic.OrderBasicData;
+import com.iplay.feastbooking.ui.order.data.basic.BasicData;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -108,7 +108,7 @@ public class OrderListActivity extends BasicActivity implements View.OnClickList
                     order_list_rv.setVisibility(View.VISIBLE);
                     order_list_tv.setVisibility(View.GONE);
                     if(adapter == null){
-                        List<OrderBasicData> dataList = new ArrayList<>();
+                        List<BasicData> dataList = new ArrayList<>();
                         for(int i=0; i<orderListItem.content.size(); i++){
                             OrderItemData orderItemData = new OrderItemData();
                             orderItemData.setContent(orderListItem.content.get(i));

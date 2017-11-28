@@ -11,7 +11,7 @@ import android.widget.ProgressBar;
 import com.hannesdorfmann.adapterdelegates3.AdapterDelegate;
 import com.iplay.feastbooking.R;
 import com.iplay.feastbooking.ui.order.data.FootStateData;
-import com.iplay.feastbooking.ui.order.data.basic.OrderBasicData;
+import com.iplay.feastbooking.ui.order.data.basic.BasicData;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ import java.util.List;
  * Created by Guyuhan on 2017/10/29.
  */
 
-public class LoadingAdapter extends AdapterDelegate<List<OrderBasicData>> {
+public class LoadingAdapter extends AdapterDelegate<List<BasicData>> {
 
     private LayoutInflater inflater;
 
@@ -28,7 +28,7 @@ public class LoadingAdapter extends AdapterDelegate<List<OrderBasicData>> {
     }
 
     @Override
-    protected boolean isForViewType(@NonNull List<OrderBasicData> items, int position) {
+    protected boolean isForViewType(@NonNull List<BasicData> items, int position) {
         return items.get(position) instanceof FootStateData && ((FootStateData) items.get(position)).getType() == FootStateData.TYPE_LOADING;
     }
 
@@ -39,7 +39,7 @@ public class LoadingAdapter extends AdapterDelegate<List<OrderBasicData>> {
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull List<OrderBasicData> items, int position, @NonNull RecyclerView.ViewHolder holder, @NonNull List<Object> payloads) {
+    protected void onBindViewHolder(@NonNull List<BasicData> items, int position, @NonNull RecyclerView.ViewHolder holder, @NonNull List<Object> payloads) {
         ((UnderLoadingViewHolder) holder).pb.setIndeterminate(true);
     }
 

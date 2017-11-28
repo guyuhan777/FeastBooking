@@ -5,7 +5,7 @@
     android:paddingTop="@dimen/app_body_margin"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-    <android.support.v4.widget.CircleImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/reviewer_portrait_civ"
         android:scaleType="centerCrop"
         android:layout_width="@dimen/review_portrait_size"
@@ -22,7 +22,7 @@
 
     <com.iplay.feastbooking.component.view.bar.RatingBar
         android:layout_alignParentRight="true"
-        android:id="@+id/hotel_rate"
+        android:id="@+id/hotel_rate_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <TextView
@@ -32,7 +32,7 @@
         android:text="1231231231211111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111"
         android:textSize="@dimen/app_text_normal"
         android:layout_below="@id/reviewer_portrait_civ"
-        android:layout_toRightOf="@+id/reviewer_portrait_civ"
+        android:layout_toRightOf="@id/reviewer_portrait_civ"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <TextView
@@ -42,7 +42,7 @@
         android:id="@+id/date_tv"
         android:layout_marginTop="@dimen/app_body_margin"
         android:layout_marginLeft="@dimen/app_body_margin"
-        android:layout_toRightOf="@+id/reviewer_portrait_civ"
+        android:layout_toRightOf="@id/reviewer_portrait_civ"
         android:textSize="@dimen/app_text_normal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />

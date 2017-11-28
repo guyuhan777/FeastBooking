@@ -13,7 +13,8 @@ import com.hannesdorfmann.adapterdelegates3.AdapterDelegate;
 import com.iplay.feastbooking.R;
 import com.iplay.feastbooking.ui.order.adapter.OrderRecyclerViewAdapter;
 import com.iplay.feastbooking.ui.order.data.FootStateData;
-import com.iplay.feastbooking.ui.order.data.basic.OrderBasicData;
+import com.iplay.feastbooking.ui.order.data.basic.BasicData;
+import com.iplay.feastbooking.ui.uiListener.InitCLMListener;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -22,22 +23,22 @@ import java.util.List;
  * Created by Guyuhan on 2017/10/29.
  */
 
-public class ClickToLoadMoreAdapterDelegate extends AdapterDelegate<List<OrderBasicData>> {
+public class ClickToLoadMoreAdapterDelegate extends AdapterDelegate<List<BasicData>> {
 
     private LayoutInflater inflater;
 
     private WeakReference<Context> contextWeakReference;
 
-    private WeakReference<OrderRecyclerViewAdapter> adapterWeakReference;
+    private WeakReference<InitCLMListener> clmListenerWeakReference;
 
-    public ClickToLoadMoreAdapterDelegate(Activity activity, OrderRecyclerViewAdapter adapter) {
+    public ClickToLoadMoreAdapterDelegate(Activity activity, InitCLMListener initCLMListener) {
         inflater = LayoutInflater.from(activity);
         contextWeakReference = new WeakReference<Context>(activity);
-        adapterWeakReference = new WeakReference<>(adapter);
+        clmListenerWeakReference = new WeakReference<>(initCLMListener);
     }
 
     @Override
-    protected boolean isForViewType(@NonNull List<OrderBasicData> items, int position) {
+    protected boolean isForViewType(@NonNull List<BasicData> items, int position) {
         return items.get(position) instanceof FootStateData && ((FootStateData) items.get(position)).getType() == FootStateData.TYPE_CLICK_TO_LOAD_MORE;
     }
 
@@ -48,9 +49,9 @@ public class ClickToLoadMoreAdapterDelegate extends AdapterDelegate<List<OrderBa
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull List<OrderBasicData> items, int position, @NonNull RecyclerView.ViewHolder holder, @NonNull List<Object> payloads) {
+    protected void onBindViewHolder(@NonNull List<BasicData> items, int position, @NonNull RecyclerView.ViewHolder holder, @NonNull List<Object> payloads) {
         ClickToLoadMoreViewHolder clickToLoadMoreVH = (ClickToLoadMoreViewHolder) holder;
-        adapterWeakReference.get().initListenerOnCLM(clickToLoadMoreVH.click_to_load_tv, contextWeakReference.get());
+        clmListenerWeakReference.get().initListenerOnCLM(clickToLoadMoreVH.click_to_load_tv, contextWeakReference.get());
     }
 
     private static class ClickToLoadMoreViewHolder extends RecyclerView.ViewHolder{

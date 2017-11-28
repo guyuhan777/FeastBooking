@@ -13,11 +13,12 @@ import com.iplay.feastbooking.net.NetProperties;
 import com.iplay.feastbooking.net.utilImpl.order.OrderListUtility;
 import com.iplay.feastbooking.ui.order.data.FootStateData;
 import com.iplay.feastbooking.ui.order.data.OrderItemData;
-import com.iplay.feastbooking.ui.order.data.basic.OrderBasicData;
+import com.iplay.feastbooking.ui.order.data.basic.BasicData;
 import com.iplay.feastbooking.ui.order.delegate.ClickToLoadMoreAdapterDelegate;
 import com.iplay.feastbooking.ui.order.delegate.FooterStateAdapterDelegate;
 import com.iplay.feastbooking.ui.order.delegate.LoadingAdapter;
 import com.iplay.feastbooking.ui.order.delegate.OrderItemAdapterDelegate;
+import com.iplay.feastbooking.ui.uiListener.InitCLMListener;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -26,11 +27,11 @@ import java.util.List;
  * Created by Guyuhan on 2017/10/29.
  */
 
-public class OrderRecyclerViewAdapter extends RecyclerView.Adapter {
+public class OrderRecyclerViewAdapter extends RecyclerView.Adapter implements InitCLMListener{
 
-    private List<OrderBasicData> orderBasics;
+    private List<BasicData> orderBasics;
 
-    private AdapterDelegatesManager<List<OrderBasicData>> delegatesManager;
+    private AdapterDelegatesManager<List<BasicData>> delegatesManager;
 
     private boolean isLoading = false;
 
@@ -57,7 +58,7 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter {
         return false;
     }
 
-    public OrderRecyclerViewAdapter(Activity activity, List<OrderBasicData> orderBasics) {
+    public OrderRecyclerViewAdapter(Activity activity, List<BasicData> orderBasics) {
         delegatesManager = new AdapterDelegatesManager<>();
         delegatesManager.addDelegate(new OrderItemAdapterDelegate(activity));
         delegatesManager.addDelegate(new FooterStateAdapterDelegate(activity));
@@ -92,7 +93,7 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter {
         return orderBasics == null ? 0 : orderBasics.size();
     }
 
-    public void addData(OrderBasicData data){
+    public void addData(BasicData data){
         orderBasics.add(data);
         if(data instanceof OrderItemData){
             numOfOrders++;
@@ -101,7 +102,7 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter {
     }
 
     public synchronized void cancelLoading(){
-        OrderBasicData data;
+        BasicData data;
         if((data = orderBasics.get(orderBasics.size()-1)) instanceof FootStateData){
             if(((FootStateData) data).getType() == FootStateData.TYPE_LOADING){
                 orderBasics.remove(orderBasics.size()-1);
@@ -109,6 +110,7 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter {
         }
     }
 
+    @Override
     public void initListenerOnCLM(TextView clickToLoadMore, Context context){
         clickToLoadMore.setOnClickListener(new ClickToLoadMoreListener(context));
     }

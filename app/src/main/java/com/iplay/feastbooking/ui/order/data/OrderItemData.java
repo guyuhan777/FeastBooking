@@ -1,13 +1,13 @@
 package com.iplay.feastbooking.ui.order.data;
 
 import com.iplay.feastbooking.gson.order.OrderListItem;
-import com.iplay.feastbooking.ui.order.data.basic.OrderBasicData;
+import com.iplay.feastbooking.ui.order.data.basic.BasicData;
 
 /**
  * Created by Guyuhan on 2017/10/29.
  */
 
-public class OrderItemData extends OrderBasicData {
+public class OrderItemData extends BasicData {
 
     private OrderListItem.Content content;
 
