@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -29,6 +30,7 @@ import com.iplay.feastbooking.ui.consult.ConsultActivity;
 import com.iplay.feastbooking.ui.hotelDetail.adapter.HotelFeastGridAdapter;
 import com.iplay.feastbooking.ui.hotelDetail.adapter.HotelRoomGridAdapter;
 import com.iplay.feastbooking.ui.login.LoginActivity;
+import com.iplay.feastbooking.ui.review.HotelReviewActivity;
 import com.jude.rollviewpager.RollPagerView;
 import com.jude.rollviewpager.adapter.LoopPagerAdapter;
 
@@ -87,6 +89,8 @@ public class NewHotelDetailActivity extends BasicActivity implements View.OnClic
 
     private TextView address_tv;
 
+    private RelativeLayout remark_bar;
+
     public static void start(Context startActivity,RecommendHotelGO hotel){
         Intent intent = new Intent(startActivity,NewHotelDetailActivity.class);
         intent.putExtra(HOTEL_KEY,hotel);
@@ -111,10 +115,12 @@ public class NewHotelDetailActivity extends BasicActivity implements View.OnClic
     @Override
     public void findViews() {
         title_bar = (LinearLayout) findViewById(R.id.title_bar);
-        status_bar_fix_tile = (View) findViewById(R.id.status_bar_fix_title);
+        status_bar_fix_tile = findViewById(R.id.status_bar_fix_title);
         status_bar_fix_tile.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, WindowAttr.getStatusBarHeight(this)));
         back_iv = (ImageView) findViewById(R.id.back_iv);
         back_iv.setOnClickListener(this);
+        remark_bar = (RelativeLayout) findViewById(R.id.remark_bar);
+        remark_bar.setOnClickListener(this);
         if(isNetOn){
             findViewById(R.id.consult_btn).setOnClickListener(this);
             hotel_sv = (ObservableScrollView) findViewById(R.id.hotel_sv);
@@ -214,6 +220,9 @@ public class NewHotelDetailActivity extends BasicActivity implements View.OnClic
                         ConsultActivity.start(this, hotelDetail);
                     }
                 }
+                break;
+            case R.id.remark_bar:
+                HotelReviewActivity.start(this, hotel.id);
                 break;
             default:
                 break;

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -40,6 +41,7 @@ public class PostReviewActivity extends BasicActivity implements View.OnClickLis
     private TextView submit_tv;
 
     private EditText remark_ev;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

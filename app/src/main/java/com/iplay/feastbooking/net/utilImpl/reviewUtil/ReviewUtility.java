@@ -7,15 +7,20 @@ import com.google.gson.Gson;
 import com.iplay.feastbooking.assistance.LoginUserHolder;
 import com.iplay.feastbooking.assistance.ProperTies;
 import com.iplay.feastbooking.gson.comment.CommentVO;
+import com.iplay.feastbooking.gson.comment.ReviewListResponse;
+import com.iplay.feastbooking.gson.order.OrderListItem;
 import com.iplay.feastbooking.messageEvent.common.CommonMessageEvent;
 import com.iplay.feastbooking.messageEvent.order.OrderListMessageEvent;
 import com.iplay.feastbooking.messageEvent.review.ReviewListMessageEvent;
 import com.iplay.feastbooking.net.NetProperties;
 import com.iplay.feastbooking.net.message.UtilMessage;
+import com.iplay.feastbooking.ui.review.data.ReviewData;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
@@ -152,16 +157,35 @@ public class ReviewUtility {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 ReviewListMessageEvent event = new ReviewListMessageEvent();
-                if(isInit) {
+                if (isInit) {
                     event.setInit(true);
                 }
-                if(!response.isSuccessful()){
+                if (!response.isSuccessful()) {
                     event.setType(ReviewListMessageEvent.TYPE_FAILURE);
                     event.setFailureReason("未知錯誤");
-                }else {
+                } else {
                     event.setType(ReviewListMessageEvent.TYPE_SUCCESS);
-
+                    Gson gson = new Gson();
+                    ReviewListResponse reviewListResponse = gson.fromJson(response.body().string(),
+                            ReviewListResponse.class);
+                    List<ReviewListResponse.Content> contents = reviewListResponse == null ?
+                            null : reviewListResponse.content;
+                    if (contents == null) {
+                        event.setType(ReviewListMessageEvent.TYPE_FAILURE);
+                        event.setFailureReason("未知錯誤");
+                    } else {
+                        List<ReviewData> reviews = new ArrayList<>();
+                        for (int i = 0; i < contents.size(); i++) {
+                            ReviewListResponse.Content content = contents.get(i);
+                            ReviewData reviewData = new ReviewData(content.author, content.authorId,
+                                    content.banquetHall, content.hotelId, content.id, content.rating,
+                                    content.review, content.reviewTime);
+                            reviews.add(reviewData);
+                        }
+                        event.setReviews(reviews);
+                    }
                 }
+                EventBus.getDefault().post(event);
             }
         });
     }

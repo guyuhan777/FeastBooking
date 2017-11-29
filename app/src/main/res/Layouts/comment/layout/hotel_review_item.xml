@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:paddingLeft="@dimen/app_body_margin"
-    android:paddingRight="@dimen/app_body_margin"
-    android:paddingTop="@dimen/app_body_margin"
+    android:background="@color/white"
+    android:padding="@dimen/app_body_margin"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
     <de.hdodenhof.circleimageview.CircleImageView
