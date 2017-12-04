@@ -13,7 +13,7 @@ public class RecommendHotelGO implements Serializable{
 
     public String name;
 
-    public int numOfComment;
+    public int numOfReviews;
 
     public String districtOfAddress = "";
 
@@ -23,11 +23,11 @@ public class RecommendHotelGO implements Serializable{
 
     public List<Integer> tableRange;
 
-    public String getNumOfComment(){
-        if(numOfComment == 0){
+    public String getNumOfReviews(){
+        if(numOfReviews == 0){
             return "暫無評論";
         }
-        return  numOfComment + "條評論";
+        return  numOfReviews + "條評論";
     }
 
     public String getPriceRange(){
@@ -43,7 +43,7 @@ public class RecommendHotelGO implements Serializable{
         return "RecommendHotelGO{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", numOfComment=" + numOfComment +
+                ", numOfReviews=" + numOfReviews +
                 ", districtOfAddress='" + districtOfAddress + '\'' +
                 ", pictureUrl='" + pictureUrl + '\'' +
                 ", priceRange=" + priceRange +

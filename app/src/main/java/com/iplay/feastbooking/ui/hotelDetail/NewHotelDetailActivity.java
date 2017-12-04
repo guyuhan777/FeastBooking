@@ -91,6 +91,8 @@ public class NewHotelDetailActivity extends BasicActivity implements View.OnClic
 
     private RelativeLayout remark_bar;
 
+    private TextView remark_tv;
+
     public static void start(Context startActivity,RecommendHotelGO hotel){
         Intent intent = new Intent(startActivity,NewHotelDetailActivity.class);
         intent.putExtra(HOTEL_KEY,hotel);
@@ -129,6 +131,7 @@ public class NewHotelDetailActivity extends BasicActivity implements View.OnClic
             tel_tv = (TextView) findViewById(R.id.tel_tv);
             address_tv = (TextView) findViewById(R.id.address_tv);
             hotel_describe = (ExpandableTextView) findViewById(R.id.hotel_describe);
+            remark_tv = (TextView) findViewById(R.id.remark_tv);
             ratingBar = (RatingBar) findViewById(R.id.hotel_rate_bar);
             single_pic_iv = (ImageView) findViewById(R.id.single_icon);
             hotel_room_ph = (View) findViewById(R.id.hotel_room_placeholder);
@@ -158,6 +161,7 @@ public class NewHotelDetailActivity extends BasicActivity implements View.OnClic
         hotel_describe.setText(hotelDetail.description);
         ratingBar.setRate(hotelDetail.rating);
         tel_tv.setText(hotelDetail.telephone);
+        remark_tv.setText("顧客評價 (" + hotelDetail.numOfReviews + ")" );
         if(hotelDetail.address != null){
             address_tv.setText(hotelDetail.address.getFormatString());
         }

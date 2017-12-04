@@ -61,7 +61,7 @@ public class HotelAdapterDelegate extends AdapterDelegate<List<BasicHomeData>> {
             hotelHolder.hotel_name_iv.setText(go.name);
             hotelHolder.price_range_iv.setText(go.getPriceRange());
             hotelHolder.table_num_iv.setText(go.getTableRange());
-            hotelHolder.remark_num_iv.setText(go.getNumOfComment());
+            hotelHolder.remark_num_iv.setText(go.getNumOfReviews());
             hotelHolder.loc_iv.setText(go.districtOfAddress);
             hotelHolder.itemView.setOnClickListener(new HotelItemOnClickListener(go, contextWeakReference.get()));
         }

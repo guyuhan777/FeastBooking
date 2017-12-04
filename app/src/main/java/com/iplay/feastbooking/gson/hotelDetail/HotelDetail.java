@@ -28,6 +28,8 @@ public class HotelDetail implements Serializable{
 
     public List<String> pictureUrls;
 
+    public int numOfReviews;
+
     public double[] priceRange;
 
     public double rating;

@@ -11,7 +11,7 @@
     <include layout="@layout/seperateline_horizontal" />
     <TextView
         android:id="@+id/choose_from_album_tv"
-        android:textColor="@color/blue_hint"
+        android:textColor="@color/app_title_color"
         android:padding="@dimen/app_body_margin"
         android:gravity="center"
         android:textSize="@dimen/app_recycle_view_text_size"
@@ -21,7 +21,7 @@
     <include layout="@layout/seperateline_horizontal" />
     <TextView
         android:id="@+id/cancel_choose_tv"
-        android:textColor="@color/blue_hint"
+        android:textColor="@color/deep_red"
         android:padding="@dimen/app_body_margin"
         android:gravity="center"
         android:textSize="@dimen/app_recycle_view_text_size"

@@ -29,6 +29,14 @@
                 android:textSize="@dimen/app_text_normal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
+            <ImageView
+                android:layout_marginRight="5dp"
+                android:id="@+id/role_iv"
+                android:src="@drawable/role"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@id/order_date_tv"
+                android:layout_width="@dimen/app_back_size"
+                android:layout_height="@dimen/app_back_size" />
         </RelativeLayout>
         <RelativeLayout
             android:layout_width="match_parent"

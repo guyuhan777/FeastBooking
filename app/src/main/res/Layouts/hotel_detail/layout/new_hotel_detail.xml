@@ -164,7 +164,7 @@
                         android:layout_marginLeft="20dp"
                         android:textColor="@color/grey"
                         android:id="@+id/remark_tv"
-                        android:text="酒樓評價"
+                        android:text="顧客評價"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
                 </RelativeLayout>

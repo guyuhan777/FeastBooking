@@ -1,200 +1,257 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <View
-        android:id="@+id/status_bar_fix_title"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="#00000000" />
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
     <RelativeLayout
-        android:id="@+id/up_part"
-        android:layout_below="@id/status_bar_fix_title"
-        android:background="@color/white"
+        android:id="@+id/root_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/app_body_margin">
-        <ImageView
-            android:layout_centerVertical="true"
-            android:id="@+id/back_iv"
-            android:background="@drawable/back_sm"
-            android:layout_width="@dimen/app_back_size"
-            android:layout_height="@dimen/app_back_size" />
-        <TextView
-            android:textColor="@color/app_title_color"
-            android:textSize="@dimen/app_text_title_size"
-            android:text="個人資料"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </RelativeLayout>
-    <LinearLayout
-        android:id="@+id/title_seperate_line"
-        android:orientation="vertical"
-        android:layout_below="@id/up_part"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <include layout="@layout/title_sepertae_horizontal" />
-    </LinearLayout>
-    <RelativeLayout
-        android:background="@color/white"
-        android:id="@+id/log_out_btn"
-        android:layout_alignParentBottom="true"
-        android:padding="@dimen/app_body_margin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:textSize="@dimen/app_text_title_size"
-            android:textColor="@color/deep_red"
-            android:text="退出登錄"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </RelativeLayout>
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/title_seperate_line"
-        android:layout_above="@id/log_out_btn">
-        <LinearLayout
-            android:orientation="vertical"
-            android:background="@color/white"
-            android:paddingLeft="@dimen/app_body_margin"
-            android:paddingRight="@dimen/app_body_margin"
+        android:layout_height="match_parent">
+
+        <View
+            android:id="@+id/status_bar_fix_title"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <RelativeLayout
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:textSize="@dimen/app_recycle_view_text_size"
-                    android:text="用戶頭像"
-                    android:layout_centerVertical="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-                <ImageView
-                    android:id="@+id/portrait_forwards"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentRight="true"
-                    android:src="@drawable/forwards"
-                    android:layout_width="@dimen/app_back_small"
-                    android:layout_height="@dimen/app_back_small" />
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:layout_marginRight="@dimen/app_body_margin"
-                    android:layout_toLeftOf="@+id/portrait_forwards"
-                    android:src="@drawable/shenzi"
-                    android:layout_width="@dimen/portrait_size"
-                    android:layout_height="@dimen/portrait_size" />
-            </RelativeLayout>
-            <include layout="@layout/seperateline_horizontal" />
-            <RelativeLayout
-                android:paddingTop="@dimen/app_body_margin"
-                android:paddingBottom="@dimen/app_body_margin"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:textSize="@dimen/app_recycle_view_text_size"
-                    android:text="用戶名"
-                    android:layout_centerVertical="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-                <ImageView
-                    android:id="@+id/username_forwards"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentRight="true"
-                    android:src="@drawable/forwards"
-                    android:layout_width="@dimen/app_back_small"
-                    android:layout_height="@dimen/app_back_small" />
-                <TextView
-                    android:layout_marginRight="@dimen/app_body_margin"
-                    android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@id/username_forwards"
-                    android:text="El psy congroo"
-                    android:id="@+id/user_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </RelativeLayout>
-            <include layout="@layout/seperateline_horizontal" />
-            <RelativeLayout
-                android:paddingTop="@dimen/app_body_margin"
-                android:paddingBottom="@dimen/app_body_margin"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:textSize="@dimen/app_recycle_view_text_size"
-                    android:text="電子郵箱"
-                    android:layout_centerVertical="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-                <ImageView
-                    android:id="@+id/email_forwards"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentRight="true"
-                    android:src="@drawable/forwards"
-                    android:layout_width="@dimen/app_back_small"
-                    android:layout_height="@dimen/app_back_small" />
-                <TextView
-                    android:layout_marginRight="@dimen/app_body_margin"
-                    android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@id/email_forwards"
-                    android:text="2534821384@qq.com"
-                    android:id="@+id/email"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </RelativeLayout>
-            <include layout="@layout/seperateline_horizontal" />
-            <RelativeLayout
-                android:paddingTop="@dimen/app_body_margin"
-                android:paddingBottom="@dimen/app_body_margin"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:textSize="@dimen/app_recycle_view_text_size"
-                    android:text="聯系電話"
-                    android:layout_centerVertical="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-                <ImageView
-                    android:id="@+id/phone_forwards"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentRight="true"
-                    android:src="@drawable/forwards"
-                    android:layout_width="@dimen/app_back_small"
-                    android:layout_height="@dimen/app_back_small" />
-                <TextView
-                    android:layout_marginRight="@dimen/app_body_margin"
-                    android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@id/phone_forwards"
-                    android:text="15365363655"
-                    android:id="@+id/phone"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </RelativeLayout>
-            <include layout="@layout/seperateline_horizontal" />
-            <RelativeLayout
-                android:paddingTop="@dimen/app_body_margin"
-                android:paddingBottom="@dimen/app_body_margin"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView
-                    android:textSize="@dimen/app_recycle_view_text_size"
-                    android:text="修改密碼"
-                    android:layout_centerVertical="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-                <ImageView
-                    android:id="@+id/changePW_forwards"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentRight="true"
-                    android:src="@drawable/forwards"
-                    android:layout_width="@dimen/app_back_small"
-                    android:layout_height="@dimen/app_back_small" />
-            </RelativeLayout>
-            <include layout="@layout/seperateline_horizontal" />
+            android:layout_height="0dp"
+            android:background="#00000000" />
+
+        <RelativeLayout
+            android:id="@+id/up_part"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/status_bar_fix_title"
+            android:background="@color/white"
+            android:padding="@dimen/app_body_margin">
+
+            <ImageView
+                android:id="@+id/back_iv"
+                android:layout_width="@dimen/app_back_size"
+                android:layout_height="@dimen/app_back_size"
+                android:layout_centerVertical="true"
+                android:background="@drawable/back_sm" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="個人資料"
+                android:textColor="@color/app_title_color"
+                android:textSize="@dimen/app_text_title_size" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/title_seperate_line"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/up_part"
+            android:orientation="vertical">
+
+            <include layout="@layout/title_sepertae_horizontal" />
         </LinearLayout>
-    </ScrollView>
-</RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/log_out_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <include layout="@layout/seperateline_horizontal" />
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:padding="@dimen/app_body_margin">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:text="退出登錄"
+                    android:textColor="@color/deep_red"
+                    android:textSize="@dimen/app_text_title_size" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/log_out_btn"
+            android:layout_below="@+id/title_seperate_line">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/app_body_margin"
+                android:paddingRight="@dimen/app_body_margin">
+
+                <RelativeLayout
+                    android:id="@+id/change_portrait_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="5dp"
+                    android:paddingTop="5dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="用戶頭像"
+                        android:textSize="@dimen/app_recycle_view_text_size" />
+
+                    <ImageView
+                        android:id="@+id/portrait_forwards"
+                        android:layout_width="@dimen/app_back_small"
+                        android:layout_height="@dimen/app_back_small"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/forwards" />
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/portrait_civ"
+                        android:layout_width="@dimen/portrait_size"
+                        android:layout_height="@dimen/portrait_size"
+                        android:layout_marginRight="@dimen/app_body_margin"
+                        android:layout_toLeftOf="@+id/portrait_forwards"
+                        android:src="@drawable/shenzi" />
+                </RelativeLayout>
+
+                <include layout="@layout/seperateline_horizontal" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="@dimen/app_body_margin"
+                    android:paddingTop="@dimen/app_body_margin">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="用戶名"
+                        android:textSize="@dimen/app_recycle_view_text_size" />
+
+                    <ImageView
+                        android:id="@+id/username_forwards"
+                        android:layout_width="@dimen/app_back_small"
+                        android:layout_height="@dimen/app_back_small"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/forwards" />
+
+                    <TextView
+                        android:id="@+id/user_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="@dimen/app_body_margin"
+                        android:layout_toLeftOf="@id/username_forwards"
+                        android:text="El psy congroo" />
+                </RelativeLayout>
+
+                <include layout="@layout/seperateline_horizontal" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="@dimen/app_body_margin"
+                    android:paddingTop="@dimen/app_body_margin">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="電子郵箱"
+                        android:textSize="@dimen/app_recycle_view_text_size" />
+
+                    <ImageView
+                        android:id="@+id/email_forwards"
+                        android:layout_width="@dimen/app_back_small"
+                        android:layout_height="@dimen/app_back_small"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/forwards" />
+
+                    <TextView
+                        android:id="@+id/email"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="@dimen/app_body_margin"
+                        android:layout_toLeftOf="@id/email_forwards"
+                        android:text="2534821384@qq.com" />
+                </RelativeLayout>
+
+                <include layout="@layout/seperateline_horizontal" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="@dimen/app_body_margin"
+                    android:paddingTop="@dimen/app_body_margin">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="聯系電話"
+                        android:textSize="@dimen/app_recycle_view_text_size" />
+
+                    <ImageView
+                        android:id="@+id/phone_forwards"
+                        android:layout_width="@dimen/app_back_small"
+                        android:layout_height="@dimen/app_back_small"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/forwards" />
+
+                    <TextView
+                        android:id="@+id/phone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="@dimen/app_body_margin"
+                        android:layout_toLeftOf="@id/phone_forwards"
+                        android:text="15365363655" />
+                </RelativeLayout>
+
+                <include layout="@layout/seperateline_horizontal" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="@dimen/app_body_margin"
+                    android:paddingTop="@dimen/app_body_margin">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="修改密碼"
+                        android:textSize="@dimen/app_recycle_view_text_size" />
+
+                    <ImageView
+                        android:id="@+id/changePW_forwards"
+                        android:layout_width="@dimen/app_back_small"
+                        android:layout_height="@dimen/app_back_small"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/forwards" />
+                </RelativeLayout>
+
+                <include layout="@layout/seperateline_horizontal" />
+            </LinearLayout>
+        </ScrollView>
+    </RelativeLayout>
+    <include layout="@layout/photo_bottom_menu_layout" />
+</android.support.design.widget.CoordinatorLayout>

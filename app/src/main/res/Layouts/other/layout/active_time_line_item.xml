@@ -10,15 +10,15 @@
         android:layout_height="wrap_content">
         <View
             android:id="@+id/node_left_line"
-            android:layout_width="50dp"
+            android:layout_width="@dimen/time_line_width"
             android:layout_height="2dp"
             android:layout_centerVertical="true"
             android:background="@color/pink" />
 
         <com.iplay.feastbooking.ui.timeline.ActiveRingView
             android:id="@+id/ring_node"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="@dimen/time_line_circle_size"
+            android:layout_height="@dimen/time_line_circle_size"
             android:layout_centerVertical="true"
             android:layout_toRightOf="@id/node_left_line" />
     </RelativeLayout>

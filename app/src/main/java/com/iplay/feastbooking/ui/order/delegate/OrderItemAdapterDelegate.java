@@ -66,8 +66,10 @@ public class OrderItemAdapterDelegate extends AdapterDelegate<List<BasicData>> {
         if(identityMatrix.isCustomer()){
             orderItemVH.table_num_tv.setText(content.tables + "桌");
             orderItemVH.order_date_tv.setText((content.date == null || content.date.equals(""))? "暫無日期" : content.date);
+            orderItemVH.role_iv.setVisibility(View.INVISIBLE);
         }else{
             orderItemVH.order_date_tv.setTextColor(activityWF.get().getResources().getColor(R.color.pink));
+            orderItemVH.role_iv.setVisibility(View.VISIBLE);
             if(identityMatrix.isManager()){
                 if(!identityMatrix.isRecommender()){
                     orderItemVH.order_date_tv.setText("經理人");
@@ -199,6 +201,8 @@ public class OrderItemAdapterDelegate extends AdapterDelegate<List<BasicData>> {
 
     private static class OrderItemViewHolder extends RecyclerView.ViewHolder{
 
+        private ImageView role_iv;
+
         private  TextView banquet_halls_tv;
 
         private TextView order_date_tv;
@@ -217,6 +221,7 @@ public class OrderItemAdapterDelegate extends AdapterDelegate<List<BasicData>> {
 
         OrderItemViewHolder(View itemView) {
             super(itemView);
+            role_iv = (ImageView) itemView.findViewById(R.id.role_iv);
             banquet_halls_tv = (TextView) itemView.findViewById(R.id.banquet_halls_tv);
             order_date_tv = (TextView) itemView.findViewById(R.id.order_date_tv);
             hotel_name_tv = (TextView) itemView.findViewById(R.id.hotel_name_tv);
