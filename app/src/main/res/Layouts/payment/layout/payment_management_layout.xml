@@ -88,7 +88,7 @@
         <include layout="@layout/title_sepertae_horizontal" />
 
         <ScrollView
-            android:id="@+id/contract_sv"
+            android:id="@+id/payment_sv"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 

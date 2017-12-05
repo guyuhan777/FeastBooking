@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.v4.view.ScrollingView;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -14,6 +16,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,7 +45,7 @@ import me.iwf.photopicker.PhotoPicker;
  * Created by gu_y-pc on 2017/11/25.
  */
 
-public class PaymentManageActivity extends BasicActivity implements View.OnClickListener{
+public class PaymentManageActivity extends BasicActivity implements View.OnClickListener, View.OnTouchListener{
 
     public static final String TAG = "PaymentManageActivity";
 
@@ -88,6 +91,8 @@ public class PaymentManageActivity extends BasicActivity implements View.OnClick
 
     private OrderDetail.OrderPayment orderPayment;
 
+    private ScrollView payment_sv;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         isRegistered = true;
@@ -109,19 +114,24 @@ public class PaymentManageActivity extends BasicActivity implements View.OnClick
         findViewById(R.id.submit_tv).setOnClickListener(this);
         findViewById(R.id.root_view).setOnClickListener(this);
 
+        payment_sv = (ScrollView) findViewById(R.id.payment_sv);
+        payment_sv.setOnTouchListener(this);
+
         photo_gv = (UnScrollableGridView) findViewById(R.id.photo_gv);
+        photo_gv.setOnTouchListener(this);
         String approvalStatus = orderPayment == null ? null : orderPayment.approvalStatus;
         adapter = new PhotoGridViewAdapter(this,
                 R.layout.photo_grid, photoPath, identityMatrix, approvalStatus);
         photo_gv.setAdapter(adapter);
 
-        bottom_sheet_ll = (LinearLayout) findViewById(R.id.photo_bottom_sheet);
         load_tv = (TextView) findViewById(R.id.load_tv);
         back_tv = (TextView) findViewById(R.id.back_tv);
         back_tv.setOnClickListener(this);
         loading_rl = (RelativeLayout) findViewById(R.id.loading_rl);
         refresh_progress_bar = (ProgressBar) findViewById(R.id.refresh_progress_bar);
         content_ll = (LinearLayout) findViewById(R.id.content_ll);
+
+        bottom_sheet_ll = (LinearLayout) findViewById(R.id.photo_bottom_sheet);
         bottomSheetBehavior = BottomSheetBehavior.from(bottom_sheet_ll);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         bottomSheetBehavior.setHideable(true);
@@ -213,6 +223,7 @@ public class PaymentManageActivity extends BasicActivity implements View.OnClick
     }
 
     private void showLoading(){
+
         content_ll.setVisibility(View.INVISIBLE);
         loading_rl.setVisibility(View.VISIBLE);
         back_tv.setVisibility(View.INVISIBLE);
@@ -237,6 +248,7 @@ public class PaymentManageActivity extends BasicActivity implements View.OnClick
         switch (v.getId()){
             case R.id.root_view:
                 hideInput(v);
+                hideBottomSheet();
                 break;
             case R.id.back_tv:
                 OrderDetailActivity.reload(this, orderId);
@@ -339,5 +351,12 @@ public class PaymentManageActivity extends BasicActivity implements View.OnClick
                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
             }
         }
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        hideBottomSheet();
+        hideInput(v);
+        return false;
     }
 }

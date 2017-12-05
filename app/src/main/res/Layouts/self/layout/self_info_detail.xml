@@ -3,8 +3,43 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white">
-
     <RelativeLayout
+        android:visibility="invisible"
+        android:id="@+id/loading_rl"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:textColor="@color/pink"
+            android:id="@+id/load_tv"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:textSize="@dimen/app_text_title_size"
+            android:text="正在努力加載中"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:visibility="invisible"
+            android:textColor="@color/pink"
+            android:id="@+id/back_tv"
+            android:layout_marginTop="5dp"
+            android:layout_below="@id/load_tv"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:textSize="@dimen/app_text_title_size"
+            android:text="返回"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <ProgressBar
+            android:layout_below="@+id/load_tv"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp"
+            android:id="@+id/refresh_progress_bar"
+            android:layout_width="@dimen/app_text_title_size"
+            android:layout_height="@dimen/app_text_title_size" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:clickable="true"
         android:id="@+id/root_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -82,6 +117,7 @@
         </LinearLayout>
 
         <ScrollView
+            android:id="@+id/self_info_sv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@id/log_out_btn"

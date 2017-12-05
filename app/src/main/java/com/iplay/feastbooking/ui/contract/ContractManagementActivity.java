@@ -6,11 +6,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.v4.view.ScrollingView;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,7 +42,7 @@ import me.iwf.photopicker.PhotoPicker;
  * Created by Guyuhan on 2017/11/7.
  */
 
-public class ContractManagementActivity extends BasicActivity implements View.OnClickListener{
+public class ContractManagementActivity extends BasicActivity implements View.OnClickListener, View.OnTouchListener{
 
     private final String TAG = "ContractManagement";
 
@@ -83,6 +86,8 @@ public class ContractManagementActivity extends BasicActivity implements View.On
 
     private OrderDetail.OrderContract orderContract;
 
+    private ScrollView contract_sv;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         isRegistered = true;
@@ -115,11 +120,17 @@ public class ContractManagementActivity extends BasicActivity implements View.On
         findViewById(R.id.choose_from_album_tv).setOnClickListener(this);
         findViewById(R.id.submit_tv).setOnClickListener(this);
 
+        contract_sv = (ScrollView) findViewById(R.id.contract_sv);
+        contract_sv.setOnTouchListener(this);
+
         photo_gv = (UnScrollableGridView) findViewById(R.id.photo_gv);
+        photo_gv.setOnTouchListener(this);
         String approvalStatus = orderContract == null ? null : orderContract.approvalStatus;
         adapter = new PhotoGridViewAdapter(this,
                 R.layout.photo_grid, photoPath, identityMatrix, approvalStatus);
         photo_gv.setAdapter(adapter);
+
+
 
         bottom_sheet_ll = (LinearLayout) findViewById(R.id.photo_bottom_sheet);
         load_tv = (TextView) findViewById(R.id.load_tv);
@@ -128,6 +139,7 @@ public class ContractManagementActivity extends BasicActivity implements View.On
         loading_rl = (RelativeLayout) findViewById(R.id.loading_rl);
         refresh_progress_bar = (ProgressBar) findViewById(R.id.refresh_progress_bar);
         content_ll = (LinearLayout) findViewById(R.id.content_ll);
+        content_ll.setOnClickListener(this);
         bottomSheetBehavior = BottomSheetBehavior.from(bottom_sheet_ll);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         bottomSheetBehavior.setHideable(true);
@@ -227,6 +239,9 @@ public class ContractManagementActivity extends BasicActivity implements View.On
                     }
                 });
                 break;
+            case R.id.content_ll:
+                hideBottomSheet();
+                break;
             case R.id.add_photo_iv:
                 showBottomSheet();
                 break;
@@ -316,4 +331,9 @@ public class ContractManagementActivity extends BasicActivity implements View.On
         }
     }
 
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        hideBottomSheet();
+        return false;
+    }
 }

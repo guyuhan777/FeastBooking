@@ -16,7 +16,15 @@ import com.iplay.feastbooking.assistance.WindowAttr;
 import com.iplay.feastbooking.basic.BasicFragment;
 import com.iplay.feastbooking.component.view.bar.FunctionBar;
 import com.iplay.feastbooking.dao.UserDao;
+import com.iplay.feastbooking.gson.selfInfo.SelfInfo;
+import com.iplay.feastbooking.messageEvent.selfInfo.SelfInfoMessageEvent;
+import com.iplay.feastbooking.net.utilImpl.recommendHotelUtil.RecommendHotelListUtility;
+import com.iplay.feastbooking.net.utilImpl.selfDetail.ChangeSelfInfoUtility;
 import com.iplay.feastbooking.ui.order.OrderListActivity;
+import com.iplay.feastbooking.ui.recommendedHotel.adapter.HomeRecyclerViewAdapter;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -48,6 +56,10 @@ public class SelfFragment extends BasicFragment implements View.OnClickListener{
 
     private FunctionBar functionBars[] = new FunctionBar[5];
 
+    private TextView user_name_tv;
+
+    private TextView user_email_tv;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -57,8 +69,8 @@ public class SelfFragment extends BasicFragment implements View.OnClickListener{
         statusView = view.findViewById(R.id.status_bar_fix);
         statusView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, WindowAttr.getStatusBarHeight(getActivity())));
 
-        avatar = (CircleImageView) view.findViewById(R.id.user_portrait);
-        Glide.with(mContext).load(R.drawable.ks).into(avatar);
+        user_name_tv = (TextView) view.findViewById(R.id.user_name);
+        user_email_tv = (TextView) view.findViewById(R.id.user_email);
 
         functionBars[ORDER_UNDER_INDEX] = (FunctionBar) view.findViewById(R.id.order_under_fb);
         functionBars[ORDER_UNDER_INDEX].setOnClickListener(this);
@@ -77,13 +89,34 @@ public class SelfFragment extends BasicFragment implements View.OnClickListener{
 
         UserDao currentUser;
         if((currentUser = LoginUserHolder.getInstance().getCurrentUser())!=null){
-            ((TextView) view.findViewById(R.id.user_name)).setText(currentUser.getUsername());
-            ((TextView) view.findViewById(R.id.user_id)).setText("ID: " + currentUser.getUserId());
+            user_name_tv.setText(currentUser.getUsername());
+            user_email_tv.setText("邮箱: " + currentUser.getEmail());
         }
 
         view.findViewById(R.id.self_detail_rl).setOnClickListener(this);
+        refreshSelfInfo();
 
         return view;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        isRegisteredNeed = true;
+        super.onCreate(savedInstanceState);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSelfInfoMessageEvent(SelfInfoMessageEvent event){
+        SelfInfo selfInfo = event.getSelfInfo();
+        if(selfInfo != null){
+            Glide.with(mContext).load(selfInfo.avatar).placeholder(R.drawable.ks).into(avatar);
+            user_name_tv.setText(selfInfo.username);
+            user_email_tv.setText("邮箱: " + selfInfo.email);
+        }
+    }
+
+    private void refreshSelfInfo(){
+        ChangeSelfInfoUtility.getInstance(mContext).updateSelfInfo(mContext);
     }
 
     @Override

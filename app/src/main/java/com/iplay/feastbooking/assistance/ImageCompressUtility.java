@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -164,5 +165,18 @@ public class ImageCompressUtility {
         }
     }
 
+    public static void deleteCropImage(List<File> files){
+        if(files != null){
+            for(int i=0; i<files.size(); i++){
+                deleteCropImage(files.get(i));
+            }
+        }
+    }
+
+    public static void deleteCropImage(File file){
+        if(file != null && file.exists()){
+            file.delete();
+        }
+    }
 
 }
