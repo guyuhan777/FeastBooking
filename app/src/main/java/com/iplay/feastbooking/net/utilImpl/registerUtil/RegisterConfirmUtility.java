@@ -6,7 +6,7 @@ import android.content.Context;
 import com.google.gson.Gson;
 import com.google.gson.internal.LinkedTreeMap;
 import com.iplay.feastbooking.assistance.ProperTies;
-import com.iplay.feastbooking.dao.UserDao;
+import com.iplay.feastbooking.dto.UserDto;
 import com.iplay.feastbooking.gson.register.RegisterConfirmRequest;
 import com.iplay.feastbooking.gson.register.RegisterConfirmResponse;
 import com.iplay.feastbooking.messageEvent.register.RegisterConfirmMessageEvent;
@@ -95,17 +95,17 @@ public class RegisterConfirmUtility {
                             LinkedTreeMap map = (LinkedTreeMap) confirmResponse.data;
                             String userToken = (String) map.get("token");
                             int userId = ((Double) map.get("userId")).intValue();
-                            UserDao userDao = new UserDao();
-                            userDao.setUserId(userId);
-                            userDao.setToken(userToken);
-                            userDao.setUsername(username);
-                            userDao.setPassword(password);
-                            userDao.setEmail(mail);
-                            userDao.setLogin(true);
-                            userDao.save();
+                            UserDto userDto = new UserDto();
+                            userDto.setUserId(userId);
+                            userDto.setToken(userToken);
+                            userDto.setUsername(username);
+                            userDto.setPassword(password);
+                            userDto.setEmail(mail);
+                            userDto.setLogin(true);
+                            userDto.save();
                             ContentValues values = new ContentValues();
                             values.put("isLogin", false);
-                            DataSupport.updateAll(UserDao.class, values, "userId != ?", userId + "");
+                            DataSupport.updateAll(UserDto.class, values, "userId != ?", userId + "");
                             HomeActivity.startActivity(context);
                         }
                     }

@@ -2,8 +2,9 @@ package com.iplay.feastbooking.ui.self;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,19 +13,17 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.iplay.feastbooking.R;
 import com.iplay.feastbooking.assistance.ImageCompressUtility;
 import com.iplay.feastbooking.assistance.LoginUserHolder;
 import com.iplay.feastbooking.assistance.WindowAttr;
 import com.iplay.feastbooking.basic.BasicActivity;
-import com.iplay.feastbooking.dao.UserDao;
-import com.iplay.feastbooking.messageEvent.common.CommonMessageEvent;
-import com.iplay.feastbooking.messageEvent.contract.PhotoUpdateMessageEvent;
-import com.iplay.feastbooking.net.utilImpl.reviewUtil.ReviewUtility;
+import com.iplay.feastbooking.dto.UserDto;
+import com.iplay.feastbooking.gson.selfInfo.SelfInfo;
+import com.iplay.feastbooking.messageEvent.selfInfo.ChangePortraitMessageEvent;
 import com.iplay.feastbooking.net.utilImpl.selfDetail.ChangeSelfInfoUtility;
-import com.iplay.feastbooking.ui.contract.data.PhotoPath;
 import com.iplay.feastbooking.ui.home.HomeActivity;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -33,6 +32,7 @@ import org.litepal.crud.DataSupport;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -45,6 +45,8 @@ import me.iwf.photopicker.PhotoPicker;
 public class SelfInfoActivity extends BasicActivity implements View.OnClickListener{
 
     public static final String TAG = "SelfInfoActivity";
+
+    private static final String SELF_INFO_KEY = "SELF_INFO_KEY";
 
     private LinearLayout bottom_sheet_ll;
 
@@ -63,6 +65,14 @@ public class SelfInfoActivity extends BasicActivity implements View.OnClickListe
     private TextView back_tv;
 
     private RelativeLayout root_view;
+
+    private SelfInfo info;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        isRegistered = true;
+        super.onCreate(savedInstanceState);
+    }
 
     @Override
     public void setContentView() {
@@ -107,8 +117,10 @@ public class SelfInfoActivity extends BasicActivity implements View.OnClickListe
         refresh_progress_bar = (ProgressBar) findViewById(R.id.refresh_progress_bar);
     }
 
-    public static void start(Context context){
-        context.startActivity(new Intent(context,SelfInfoActivity.class));
+    public static void start(Context context, SelfInfo info){
+        Intent intent = new Intent(context,SelfInfoActivity.class);
+        intent.putExtra(SELF_INFO_KEY, info);
+        context.startActivity(intent);
     }
 
     @Override
@@ -147,22 +159,22 @@ public class SelfInfoActivity extends BasicActivity implements View.OnClickListe
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onCommonMessageEvent(final CommonMessageEvent<File> event){
-        if(event.getType() == CommonMessageEvent.TYPE.TYPE_FAILURE){
+    public void onChangePortraitMessageEvent(final ChangePortraitMessageEvent event){
+        if(event.getType() == ChangePortraitMessageEvent.TYPE_FAILURE){
             cancelLoading("上傳失敗");
-        }else if(event.getType() == CommonMessageEvent.TYPE.TYPE_SUCCESS){
+        }else if(event.getType() == ChangePortraitMessageEvent.TYPE_SUCCESS){
             cancelLoading("操作成功");
         }
         new Thread(new Runnable() {
             @Override
             public void run() {
-                ImageCompressUtility.deleteCropImage(event.getSuccessResult());
+                ImageCompressUtility.deleteCropImage(event.getFile());
             }
         }).start();
     }
 
     private void showLoading(){
-        root_view.setVisibility(View.INVISIBLE);
+        root_view.setVisibility(View.GONE);
         loading_rl.setVisibility(View.VISIBLE);
         back_tv.setVisibility(View.INVISIBLE);
         load_tv.setText("上傳中");
@@ -178,18 +190,25 @@ public class SelfInfoActivity extends BasicActivity implements View.OnClickListe
 
     @Override
     public void getData() {
-
+        Serializable s = getIntent().getSerializableExtra(SELF_INFO_KEY);
+        if( s != null){
+            info = (SelfInfo) s;
+        }
     }
 
     @Override
     public void showContent() {
-
+        if(info != null){
+            Glide.with(this).load(info.avatar);
+        }
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.back_tv:
+                root_view.setVisibility(View.VISIBLE);
+                loading_rl.setVisibility(View.GONE);
                 break;
             case R.id.back_iv:
                 runOnUiThread(new Runnable() {
@@ -200,7 +219,7 @@ public class SelfInfoActivity extends BasicActivity implements View.OnClickListe
                 });
                 break;
             case R.id.log_out_btn:
-                DataSupport.deleteAll(UserDao.class,"isLogin = ?","" + 1);
+                DataSupport.deleteAll(UserDto.class,"isLogin = ?","" + 1);
                 LoginUserHolder.getInstance().removeCurrentUser();
                 HomeActivity.startActivity(this);
                 finish();

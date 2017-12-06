@@ -1,4 +1,4 @@
-package com.iplay.feastbooking.dao;
+package com.iplay.feastbooking.dto;
 
 import com.iplay.feastbooking.gson.homepage.RecommendGridGO;
 
@@ -8,7 +8,7 @@ import org.litepal.crud.DataSupport;
  * Created by admin on 2017/10/2.
  */
 
-public class RecommendGridDao extends DataSupport {
+public class RecommendGridDto extends DataSupport {
 
     private int id;
 
@@ -41,8 +41,8 @@ public class RecommendGridDao extends DataSupport {
         this.filename = filename;
     }
 
-    public static RecommendGridDao transFromGO(RecommendGridGO go, String basicPath){
-        RecommendGridDao dao = new RecommendGridDao();
+    public static RecommendGridDto transFromGO(RecommendGridGO go, String basicPath){
+        RecommendGridDto dao = new RecommendGridDto();
         dao.setFilename(go.pictureUrl.replace(basicPath,""));
         dao.setHotelId(go.hotelId);
         return dao;

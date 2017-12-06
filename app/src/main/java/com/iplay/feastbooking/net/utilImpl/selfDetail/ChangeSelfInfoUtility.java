@@ -6,10 +6,12 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.iplay.feastbooking.assistance.LoginUserHolder;
 import com.iplay.feastbooking.assistance.ProperTies;
+import com.iplay.feastbooking.dto.UserDto;
 import com.iplay.feastbooking.gson.comment.ReviewListResponse;
 import com.iplay.feastbooking.gson.selfInfo.SelfInfo;
 import com.iplay.feastbooking.messageEvent.common.CommonMessageEvent;
 import com.iplay.feastbooking.messageEvent.contract.PhotoUpdateMessageEvent;
+import com.iplay.feastbooking.messageEvent.selfInfo.ChangePortraitMessageEvent;
 import com.iplay.feastbooking.messageEvent.selfInfo.SelfInfoMessageEvent;
 import com.iplay.feastbooking.net.NetProperties;
 import com.iplay.feastbooking.net.utilImpl.reviewUtil.ReviewUtility;
@@ -17,6 +19,7 @@ import com.iplay.feastbooking.net.utilImpl.reviewUtil.ReviewUtility;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.litepal.crud.DataSupport;
 
 import java.io.File;
 import java.io.IOException;
@@ -116,6 +119,11 @@ public class ChangeSelfInfoUtility {
                         Gson gson = new Gson();
                         SelfInfo selfInfo =  gson.fromJson(response.body().string(),
                                 SelfInfo.class);
+                        UserDto userDto = new UserDto();
+                        userDto.setEmail(selfInfo.email);
+                        userDto.setUsername(selfInfo.username);
+                        userDto.setId(selfInfo.userId);
+                        userDto.save();
                         event.setSelfInfo(selfInfo);
                     }
                     EventBus.getDefault().post(event);
@@ -124,12 +132,11 @@ public class ChangeSelfInfoUtility {
         }
     }
 
-
-
     public void upLoadPortrait(final File file, Context context){
         if(!NetProperties.isNetworkConnected(context)){
-            CommonMessageEvent event = new CommonMessageEvent(CommonMessageEvent.TYPE.TYPE_FAILURE, "網絡不給力");
-            event.setSuccessResult(file);
+            ChangePortraitMessageEvent event = new ChangePortraitMessageEvent();
+            event.setType(ChangePortraitMessageEvent.TYPE_FAILURE);
+            event.setFile(file);
             EventBus.getDefault().post(event);
         }else {
             String token = LoginUserHolder.getInstance().getCurrentUser().getToken();
@@ -158,21 +165,22 @@ public class ChangeSelfInfoUtility {
                 @Override
                 public void onFailure(Call call, IOException e) {
                     Log.d("upload", "over time" + e);
-                    CommonMessageEvent<File> event = new CommonMessageEvent<>(CommonMessageEvent.TYPE.TYPE_FAILURE, "網絡不給力");
-                    event.setSuccessResult(file);
+                    ChangePortraitMessageEvent event = new ChangePortraitMessageEvent();
+                    event.setType(ChangePortraitMessageEvent.TYPE_FAILURE);
+                    event.setFile(file);
                     EventBus.getDefault().post(event);
                 }
 
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
-                    CommonMessageEvent event;
+                    ChangePortraitMessageEvent event = new ChangePortraitMessageEvent();
+                    event.setFile(file);
                     if(!response.isSuccessful()){
                         Log.d("upload", response.body().string());
-                        event = new CommonMessageEvent(CommonMessageEvent.TYPE.TYPE_FAILURE, "未知錯誤");
+                        event.setType(ChangePortraitMessageEvent.TYPE_FAILURE);
                     }else {
-                        event = new CommonMessageEvent(CommonMessageEvent.TYPE.TYPE_SUCCESS);
+                        event.setType(ChangePortraitMessageEvent.TYPE_SUCCESS);
                     }
-                    event.setSuccessResult(file);
                     EventBus.getDefault().post(event);
                 }
             });

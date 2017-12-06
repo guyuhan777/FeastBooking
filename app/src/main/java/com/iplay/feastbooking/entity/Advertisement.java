@@ -1,6 +1,6 @@
 package com.iplay.feastbooking.entity;
 
-import com.iplay.feastbooking.dao.AdvertisementDao;
+import com.iplay.feastbooking.dto.AdvertisementDto;
 import com.iplay.feastbooking.gson.homepage.advertisement.AdvertisementGO;
 
 import java.util.ArrayList;
@@ -14,7 +14,7 @@ public class Advertisement {
 
     private String url;
 
-    public static Advertisement transFromDO(AdvertisementDao dao, String prefixPath, String seperator){
+    public static Advertisement transFromDO(AdvertisementDto dao, String prefixPath, String seperator){
         Advertisement advertisement = new Advertisement();
         advertisement.setUrl(prefixPath + seperator + dao.getFileName());
         return advertisement;
@@ -26,7 +26,7 @@ public class Advertisement {
         return advertisement;
     }
 
-    public static List<Advertisement> transFromDOs(List<AdvertisementDao> daos, String prefixPath, String seperator){
+    public static List<Advertisement> transFromDOs(List<AdvertisementDto> daos, String prefixPath, String seperator){
         List<Advertisement> advertisements = new ArrayList<>();
         for (int i = 0; i<daos.size(); i++){
             advertisements.add(transFromDO(daos.get(i), prefixPath, seperator));

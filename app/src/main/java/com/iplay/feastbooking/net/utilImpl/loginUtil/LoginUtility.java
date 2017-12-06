@@ -5,7 +5,7 @@ import android.content.Context;
 
 import com.google.gson.Gson;
 import com.iplay.feastbooking.assistance.ProperTies;
-import com.iplay.feastbooking.dao.UserDao;
+import com.iplay.feastbooking.dto.UserDto;
 import com.iplay.feastbooking.gson.login.LoginRequest;
 import com.iplay.feastbooking.gson.login.LoginResponse;
 import com.iplay.feastbooking.messageEvent.home.LoginMessageEvent;
@@ -91,19 +91,19 @@ public class LoginUtility {
     private void handleResponse(LoginResponse response,String username,String password){
         LoginResponse.User user = response.user;
         if(user != null){
-            UserDao userDao = DataSupport.where("userId = ?", user.id + "").findFirst(UserDao.class);
-            if(userDao == null) {
-                userDao = new UserDao();
-                userDao.setUserId(user.id);
-                userDao.setUsername(username);
-                userDao.setPassword(password);
-                userDao.setToken(response.token);
-                userDao.setLogin(true);
-                userDao.save();
+            UserDto userDto = DataSupport.where("userId = ?", user.id + "").findFirst(UserDto.class);
+            if(userDto == null) {
+                userDto = new UserDto();
+                userDto.setUserId(user.id);
+                userDto.setUsername(username);
+                userDto.setPassword(password);
+                userDto.setToken(response.token);
+                userDto.setLogin(true);
+                userDto.save();
             }
             ContentValues values = new ContentValues();
             values.put("isLogin",false);
-            DataSupport.updateAll(UserDao.class, values, "userId != ?", user.id + "");
+            DataSupport.updateAll(UserDto.class, values, "userId != ?", user.id + "");
         }
     }
 

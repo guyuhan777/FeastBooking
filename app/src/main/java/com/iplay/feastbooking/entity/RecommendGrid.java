@@ -1,6 +1,6 @@
 package com.iplay.feastbooking.entity;
 
-import com.iplay.feastbooking.dao.RecommendGridDao;
+import com.iplay.feastbooking.dto.RecommendGridDto;
 import com.iplay.feastbooking.gson.homepage.RecommendGridGO;
 
 import java.util.ArrayList;
@@ -23,14 +23,14 @@ public class RecommendGrid {
         return recommendGrid;
     }
 
-    public static RecommendGrid transFromDO(RecommendGridDao dao, String prefixPath, String seperator){
+    public static RecommendGrid transFromDO(RecommendGridDto dao, String prefixPath, String seperator){
         RecommendGrid advertisement = new RecommendGrid();
         advertisement.setHotelId(dao.getHotelId());
         advertisement.setUrl(prefixPath + seperator + dao.getFilename());
         return advertisement;
     }
 
-    public static List<RecommendGrid> transFromDOs(List<RecommendGridDao> daos, String prefixPath, String seperator){
+    public static List<RecommendGrid> transFromDOs(List<RecommendGridDto> daos, String prefixPath, String seperator){
         List<RecommendGrid> recommendGrids = new ArrayList<>();
         for (int i = 0; i<daos.size(); i++){
             recommendGrids.add(transFromDO(daos.get(i), prefixPath, seperator));

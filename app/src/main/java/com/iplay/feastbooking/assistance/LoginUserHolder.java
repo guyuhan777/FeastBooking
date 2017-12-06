@@ -1,6 +1,6 @@
 package com.iplay.feastbooking.assistance;
 
-import com.iplay.feastbooking.dao.UserDao;
+import com.iplay.feastbooking.dto.UserDto;
 
 import org.litepal.crud.DataSupport;
 
@@ -14,17 +14,17 @@ public class LoginUserHolder {
 
     private static volatile LoginUserHolder instance;
 
-    private volatile UserDao currentUser;
+    private volatile UserDto currentUser;
 
     private LoginUserHolder(){
 
     }
 
-    public synchronized UserDao getCurrentUser(){
+    public synchronized UserDto getCurrentUser(){
         if(currentUser == null){
-            List<UserDao> userDaos = DataSupport.where("isLogin = ?","" + 1).find(UserDao.class);
-            if(userDaos.size() == 1){
-                currentUser = userDaos.get(0);
+            List<UserDto> userDtos = DataSupport.where("isLogin = ?","" + 1).find(UserDto.class);
+            if(userDtos.size() == 1){
+                currentUser = userDtos.get(0);
             }
         }
         return currentUser;

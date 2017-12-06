@@ -1,4 +1,4 @@
-package com.iplay.feastbooking.dao;
+package com.iplay.feastbooking.dto;
 
 import com.iplay.feastbooking.gson.homepage.advertisement.AdvertisementGO;
 
@@ -8,12 +8,11 @@ import org.litepal.crud.DataSupport;
  * Created by admin on 2017/10/1.
  */
 
-public class AdvertisementDao extends DataSupport{
+public class AdvertisementDto extends DataSupport{
 
     private int id;
 
     private String fileName;
-
 
     public String getFileName() {
         return fileName;
@@ -24,8 +23,8 @@ public class AdvertisementDao extends DataSupport{
     }
 
 
-    public static AdvertisementDao transFromGO(AdvertisementGO go,String basicPath){
-        AdvertisementDao dao = new AdvertisementDao();
+    public static AdvertisementDto transFromGO(AdvertisementGO go, String basicPath){
+        AdvertisementDto dao = new AdvertisementDto();
         dao.setFileName(go.pictureUrl.replace(basicPath,""));
         return dao;
     }
@@ -40,7 +39,7 @@ public class AdvertisementDao extends DataSupport{
 
     @Override
     public String toString() {
-        return "AdvertisementDao{" +
+        return "AdvertisementDto{" +
                 "id=" + id +
                 ", fileName='" + fileName + '\'' +
                 '}';

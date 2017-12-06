@@ -15,13 +15,11 @@ import com.iplay.feastbooking.assistance.LoginUserHolder;
 import com.iplay.feastbooking.assistance.WindowAttr;
 import com.iplay.feastbooking.basic.BasicFragment;
 import com.iplay.feastbooking.component.view.bar.FunctionBar;
-import com.iplay.feastbooking.dao.UserDao;
+import com.iplay.feastbooking.dto.UserDto;
 import com.iplay.feastbooking.gson.selfInfo.SelfInfo;
 import com.iplay.feastbooking.messageEvent.selfInfo.SelfInfoMessageEvent;
-import com.iplay.feastbooking.net.utilImpl.recommendHotelUtil.RecommendHotelListUtility;
 import com.iplay.feastbooking.net.utilImpl.selfDetail.ChangeSelfInfoUtility;
 import com.iplay.feastbooking.ui.order.OrderListActivity;
-import com.iplay.feastbooking.ui.recommendedHotel.adapter.HomeRecyclerViewAdapter;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -60,6 +58,8 @@ public class SelfFragment extends BasicFragment implements View.OnClickListener{
 
     private TextView user_email_tv;
 
+    private SelfInfo info;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -71,6 +71,7 @@ public class SelfFragment extends BasicFragment implements View.OnClickListener{
 
         user_name_tv = (TextView) view.findViewById(R.id.user_name);
         user_email_tv = (TextView) view.findViewById(R.id.user_email);
+        avatar = (CircleImageView) view.findViewById(R.id.user_portrait);
 
         functionBars[ORDER_UNDER_INDEX] = (FunctionBar) view.findViewById(R.id.order_under_fb);
         functionBars[ORDER_UNDER_INDEX].setOnClickListener(this);
@@ -87,10 +88,10 @@ public class SelfFragment extends BasicFragment implements View.OnClickListener{
         functionBars[SETTING_INDEX] = (FunctionBar) view.findViewById(R.id.setting_fb);
         functionBars[SETTING_INDEX].function_name_tv.setText("設置");
 
-        UserDao currentUser;
+        UserDto currentUser;
         if((currentUser = LoginUserHolder.getInstance().getCurrentUser())!=null){
             user_name_tv.setText(currentUser.getUsername());
-            user_email_tv.setText("邮箱: " + currentUser.getEmail());
+            user_email_tv.setText("郵箱: " + currentUser.getEmail());
         }
 
         view.findViewById(R.id.self_detail_rl).setOnClickListener(this);
@@ -109,9 +110,15 @@ public class SelfFragment extends BasicFragment implements View.OnClickListener{
     public void onSelfInfoMessageEvent(SelfInfoMessageEvent event){
         SelfInfo selfInfo = event.getSelfInfo();
         if(selfInfo != null){
-            Glide.with(mContext).load(selfInfo.avatar).placeholder(R.drawable.ks).into(avatar);
+            info = selfInfo;
+            String avatarUrl = selfInfo.avatar;
+            if(avatarUrl != null){
+                Glide.with(mContext).load(selfInfo.avatar).placeholder(R.drawable.ks).into(avatar);
+            }else {
+                Glide.with(mContext).load(R.drawable.ks).into(avatar);
+            }
             user_name_tv.setText(selfInfo.username);
-            user_email_tv.setText("邮箱: " + selfInfo.email);
+            user_email_tv.setText("郵箱: " + selfInfo.email);
         }
     }
 

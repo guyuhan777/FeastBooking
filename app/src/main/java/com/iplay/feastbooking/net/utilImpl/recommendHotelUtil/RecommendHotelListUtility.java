@@ -5,8 +5,8 @@ import android.content.Context;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.iplay.feastbooking.assistance.ProperTies;
-import com.iplay.feastbooking.dao.AdvertisementDao;
-import com.iplay.feastbooking.dao.RecommendGridDao;
+import com.iplay.feastbooking.dto.AdvertisementDto;
+import com.iplay.feastbooking.dto.RecommendGridDto;
 import com.iplay.feastbooking.entity.Advertisement;
 import com.iplay.feastbooking.entity.RecommendGrid;
 import com.iplay.feastbooking.gson.homepage.RecommendGridGO;
@@ -105,9 +105,9 @@ public class RecommendHotelListUtility {
                         List<AdvertisementGO> gos =  gson.fromJson(response.body().string(),type);
                         List<Advertisement> advertisements = Advertisement.transFromGOs(gos);
 
-                        DataSupport.deleteAll(AdvertisementDao.class);
+                        DataSupport.deleteAll(AdvertisementDto.class);
                         for(int i=0; i<gos.size(); i++){
-                            AdvertisementDao dao = AdvertisementDao.transFromGO(gos.get(i),basicPath);
+                            AdvertisementDto dao = AdvertisementDto.transFromGO(gos.get(i),basicPath);
                             dao.save();
                         }
                         AdvertisementMessageEvent event = new AdvertisementMessageEvent();
@@ -149,9 +149,9 @@ public class RecommendHotelListUtility {
                         Type type = new TypeToken<List<RecommendGridGO>>(){}.getType();
                         List<RecommendGridGO> gos =  gson.fromJson(response.body().string(),type);
                         List<RecommendGrid> recommendGrids = RecommendGrid.transFromGOs(gos);
-                        DataSupport.deleteAll(RecommendGridDao.class);
+                        DataSupport.deleteAll(RecommendGridDto.class);
                         for(int i=0; i<gos.size(); i++){
-                            RecommendGridDao dao = RecommendGridDao.transFromGO(gos.get(i),basicPath);
+                            RecommendGridDto dao = RecommendGridDto.transFromGO(gos.get(i),basicPath);
                             dao.save();
                         }
                         RecommendGridMessageEvent event = new RecommendGridMessageEvent();
@@ -236,14 +236,14 @@ public class RecommendHotelListUtility {
         }
     }
 
-    private List<AdvertisementDao> getAdvertisementsWithoutNetwork(){
-        List<AdvertisementDao> advertisementDaos = DataSupport.findAll(AdvertisementDao.class);
-        return advertisementDaos;
+    private List<AdvertisementDto> getAdvertisementsWithoutNetwork(){
+        List<AdvertisementDto> advertisementDtos = DataSupport.findAll(AdvertisementDto.class);
+        return advertisementDtos;
     }
 
-    private List<RecommendGridDao> getRecommendGridsWithoutNetWork(){
-        List<RecommendGridDao> recommendGridDaos = DataSupport.findAll(RecommendGridDao.class);
-        return recommendGridDaos;
+    private List<RecommendGridDto> getRecommendGridsWithoutNetWork(){
+        List<RecommendGridDto> recommendGridDtos = DataSupport.findAll(RecommendGridDto.class);
+        return recommendGridDtos;
     }
 
     public static RecommendHotelListUtility getInstance(Context context){

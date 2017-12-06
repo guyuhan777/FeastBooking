@@ -9,7 +9,8 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.iplay.feastbooking.R;
 import com.iplay.feastbooking.basic.BasicActivity;
-import com.iplay.feastbooking.dao.UserDao;
+import com.iplay.feastbooking.dto.UserDto;
+import com.iplay.feastbooking.gson.selfInfo.SelfInfo;
 import com.iplay.feastbooking.ui.home.HomeActivity;
 
 import org.litepal.crud.DataSupport;
@@ -58,13 +59,13 @@ public class WelcomeActivity extends BasicActivity {
         @Override
         public void handleMessage(Message msg) {
             if(msg.what == 3){
-                List<UserDao> userDaos = DataSupport.where("isLogin = ?","" + 1).find(UserDao.class);
-                if(userDaos.size() == 1){
+                List<UserDto> userDtos = DataSupport.where("isLogin = ?","" + 1).find(UserDto.class);
+                if(userDtos.size() == 1){
                     HomeActivity.startActivity(WelcomeActivity.this);
                     overridePendingTransition(R.anim.fade,R.anim.hold);
                     WelcomeActivity.this.finish();
                 }
-                if(userDaos.size() == 0){
+                if(userDtos.size() == 0){
                     HomeActivity.startActivity(WelcomeActivity.this);
                     overridePendingTransition(R.anim.fade,R.anim.hold);
                     WelcomeActivity.this.finish();
