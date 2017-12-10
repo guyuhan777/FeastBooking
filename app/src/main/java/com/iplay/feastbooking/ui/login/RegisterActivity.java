@@ -34,7 +34,6 @@ public class RegisterActivity extends BasicActivity implements View.OnClickListe
 
     public static final String TAG = "RegisterActivity";
 
-    private RegisterValidUtility utility;
 
     private View status_bar_fix;
 
@@ -194,7 +193,7 @@ public class RegisterActivity extends BasicActivity implements View.OnClickListe
 
     @Override
     public void showContent() {
-        utility = RegisterValidUtility.getInstance(this);
+
     }
 
     @Override
@@ -207,12 +206,12 @@ public class RegisterActivity extends BasicActivity implements View.OnClickListe
             case next_btn:
                 String validCode = code_et.getText().toString().trim();
                 String email = mail_et.getText().toString().trim();
-                utility.verify(email, validCode, this);
+                RegisterValidUtility.getInstance(this).verify(email, validCode, this);
                 break;
             case R.id.valid_code_btn:
                 valid_code_btn.setText("驗證中");
                 disableValidButton();
-                utility.applyForRegistrationEmail(mail_et.getText().toString().trim(), this);
+                RegisterValidUtility.getInstance(this).applyForRegistrationEmail(mail_et.getText().toString().trim(), this);
                 break;
             case R.id.login_now:
                 LoginActivity.startActivity(this);

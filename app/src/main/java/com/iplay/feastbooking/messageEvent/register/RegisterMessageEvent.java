@@ -20,6 +20,8 @@ public class RegisterMessageEvent {
 
     private String token;
 
+    private String email;
+
     public String getToken() {
         return token;
     }
@@ -34,5 +36,13 @@ public class RegisterMessageEvent {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

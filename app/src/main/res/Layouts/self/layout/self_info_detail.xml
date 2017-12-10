@@ -165,6 +165,7 @@
                 <include layout="@layout/seperateline_horizontal" />
 
                 <RelativeLayout
+                    android:id="@+id/change_user_name_bar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingBottom="@dimen/app_body_margin"
@@ -191,13 +192,13 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="@dimen/app_body_margin"
-                        android:layout_toLeftOf="@id/username_forwards"
-                        android:text="El psy congroo" />
+                        android:layout_toLeftOf="@id/username_forwards" />
                 </RelativeLayout>
 
                 <include layout="@layout/seperateline_horizontal" />
 
                 <RelativeLayout
+                    android:id="@+id/change_email_bar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingBottom="@dimen/app_body_margin"
@@ -224,8 +225,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="@dimen/app_body_margin"
-                        android:layout_toLeftOf="@id/email_forwards"
-                        android:text="2534821384@qq.com" />
+                        android:layout_toLeftOf="@id/email_forwards" />
                 </RelativeLayout>
 
                 <include layout="@layout/seperateline_horizontal" />

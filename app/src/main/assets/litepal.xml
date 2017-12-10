@@ -1,7 +1,7 @@
 <litepal>
     <dbname value="feast_booking"/>
 
-    <version value ="8"/>
+    <version value ="20"/>
 
     <list>
         <mapping class="com.iplay.feastbooking.dto.UserDto"/>

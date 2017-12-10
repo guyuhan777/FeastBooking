@@ -49,7 +49,7 @@ public class ConsultSuccessActivity extends BasicActivity implements View.OnClic
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.finish_tv:
-                HomeActivity.startHomeActivity(this);
+                HomeActivity.startHomeActivity(this, HomeActivity.START_TYPE.HOME);
                 overridePendingTransition(R.anim.hold,R.anim.top2bottom);
                 break;
             default:

@@ -11,8 +11,6 @@ import java.io.Serializable;
 
 public class UserDto extends DataSupport implements Serializable{
 
-    private int id;
-
     @Column(unique = true)
     private int userId;
 
@@ -25,8 +23,28 @@ public class UserDto extends DataSupport implements Serializable{
 
     private String email;
 
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    private String phone;
+
     @Column(defaultValue = "false")
     private boolean isLogin;
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
+    }
+
+    private String avatarUrl;
 
     public String getRole() {
         return role;
@@ -87,24 +105,18 @@ public class UserDto extends DataSupport implements Serializable{
         isLogin = login;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
     @Override
     public String toString() {
         return "UserDto{" +
-                "id=" + id +
-                ", userId=" + userId +
+                "userId=" + userId +
                 ", token='" + token + '\'' +
                 ", password='" + password + '\'' +
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
                 ", isLogin=" + isLogin +
+                ", avatarUrl='" + avatarUrl + '\'' +
+                ", role='" + role + '\'' +
                 '}';
     }
 }

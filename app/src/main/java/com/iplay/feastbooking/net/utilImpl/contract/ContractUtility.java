@@ -95,6 +95,7 @@ public class ContractUtility {
     public void upLoadPayment(int orderId, String filesToDelete, final List<File> files, Context context, double payment){
         if(!NetProperties.isNetworkConnected(context)){
             PhotoUpdateMessageEvent event = new PhotoUpdateMessageEvent(PhotoUpdateMessageEvent.TYPE.TYPE_FAILURE, "網絡不給力");
+            event.setFilesToDelete(generateFilesToDelete(files));
             EventBus.getDefault().post(event);
         }else {
             String token = LoginUserHolder.getInstance().getCurrentUser().getToken();
@@ -132,6 +133,7 @@ public class ContractUtility {
                 public void onFailure(Call call, IOException e) {
                     Log.d("upload", "over time" + e);
                     PhotoUpdateMessageEvent event = new PhotoUpdateMessageEvent(PhotoUpdateMessageEvent.TYPE.TYPE_FAILURE, "網絡不給力");
+                    event.setFilesToDelete(generateFilesToDelete(files));
                     EventBus.getDefault().post(event);
                 }
 
@@ -143,8 +145,8 @@ public class ContractUtility {
                         event = new PhotoUpdateMessageEvent(PhotoUpdateMessageEvent.TYPE.TYPE_FAILURE, "未知錯誤");
                     }else {
                         event = new PhotoUpdateMessageEvent(PhotoUpdateMessageEvent.TYPE.TYPE_SUCCESS);
-                        event.setFilesToDelete(generateFilesToDelete(files));
                     }
+                    event.setFilesToDelete(generateFilesToDelete(files));
                     EventBus.getDefault().post(event);
                 }
             });
@@ -154,6 +156,7 @@ public class ContractUtility {
     public void upLoadContracts(int orderId, String filesToDelete, final List<File> files, Context context){
         if(!NetProperties.isNetworkConnected(context)){
             PhotoUpdateMessageEvent event = new PhotoUpdateMessageEvent(PhotoUpdateMessageEvent.TYPE.TYPE_FAILURE, "網絡不給力");
+            event.setFilesToDelete(generateFilesToDelete(files));
             EventBus.getDefault().post(event);
         }else {
             String token = LoginUserHolder.getInstance().getCurrentUser().getToken();
@@ -189,6 +192,7 @@ public class ContractUtility {
                 public void onFailure(Call call, IOException e) {
                     Log.d("upload", "over time" + e);
                     PhotoUpdateMessageEvent event = new PhotoUpdateMessageEvent(PhotoUpdateMessageEvent.TYPE.TYPE_FAILURE, "網絡不給力");
+                    event.setFilesToDelete(generateFilesToDelete(files));
                     EventBus.getDefault().post(event);
                 }
 
@@ -200,8 +204,8 @@ public class ContractUtility {
                         event = new PhotoUpdateMessageEvent(PhotoUpdateMessageEvent.TYPE.TYPE_FAILURE, "未知錯誤");
                     }else {
                         event = new PhotoUpdateMessageEvent(PhotoUpdateMessageEvent.TYPE.TYPE_SUCCESS);
-                        event.setFilesToDelete(generateFilesToDelete(files));
                     }
+                    event.setFilesToDelete(generateFilesToDelete(files));
                     EventBus.getDefault().post(event);
                 }
             });

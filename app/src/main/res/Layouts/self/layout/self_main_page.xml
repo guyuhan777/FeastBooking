@@ -47,6 +47,7 @@
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/user_portrait"
+                        android:src="@drawable/ks"
                         android:layout_width="@dimen/portrait_size"
                         android:layout_height="@dimen/portrait_size"
                         android:layout_centerVertical="true"
@@ -66,7 +67,6 @@
                             android:id="@+id/user_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Sato mimi"
                             android:textColor="@color/app_title_color"
                             android:textSize="@dimen/app_text_title_size" />
 

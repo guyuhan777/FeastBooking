@@ -58,8 +58,6 @@ public class SelfFragment extends BasicFragment implements View.OnClickListener{
 
     private TextView user_email_tv;
 
-    private SelfInfo info;
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -92,6 +90,10 @@ public class SelfFragment extends BasicFragment implements View.OnClickListener{
         if((currentUser = LoginUserHolder.getInstance().getCurrentUser())!=null){
             user_name_tv.setText(currentUser.getUsername());
             user_email_tv.setText("郵箱: " + currentUser.getEmail());
+            String avatarUrl = currentUser.getAvatarUrl();
+            if(avatarUrl != null){
+                Glide.with(mContext).load(avatarUrl).into(avatar);
+            }
         }
 
         view.findViewById(R.id.self_detail_rl).setOnClickListener(this);
@@ -110,15 +112,16 @@ public class SelfFragment extends BasicFragment implements View.OnClickListener{
     public void onSelfInfoMessageEvent(SelfInfoMessageEvent event){
         SelfInfo selfInfo = event.getSelfInfo();
         if(selfInfo != null){
-            info = selfInfo;
             String avatarUrl = selfInfo.avatar;
             if(avatarUrl != null){
-                Glide.with(mContext).load(selfInfo.avatar).placeholder(R.drawable.ks).into(avatar);
-            }else {
-                Glide.with(mContext).load(R.drawable.ks).into(avatar);
+                Glide.with(mContext).load(selfInfo.avatar).placeholder(R.drawable.loading).into(avatar);
             }
-            user_name_tv.setText(selfInfo.username);
-            user_email_tv.setText("郵箱: " + selfInfo.email);
+            if(selfInfo.username != null){
+                user_name_tv.setText(selfInfo.username);
+            }
+            if(selfInfo.email != null){
+                user_email_tv.setText("郵箱: " + selfInfo.email);
+            }
         }
     }
 

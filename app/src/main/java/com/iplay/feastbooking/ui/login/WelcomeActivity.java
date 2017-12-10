@@ -70,7 +70,6 @@ public class WelcomeActivity extends BasicActivity {
                     overridePendingTransition(R.anim.fade,R.anim.hold);
                     WelcomeActivity.this.finish();
                 }
-
             }
         }
     }

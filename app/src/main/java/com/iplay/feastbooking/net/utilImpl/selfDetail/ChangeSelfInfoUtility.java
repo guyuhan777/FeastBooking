@@ -8,13 +8,21 @@ import com.iplay.feastbooking.assistance.LoginUserHolder;
 import com.iplay.feastbooking.assistance.ProperTies;
 import com.iplay.feastbooking.dto.UserDto;
 import com.iplay.feastbooking.gson.comment.ReviewListResponse;
+import com.iplay.feastbooking.gson.common.CommonSingleStringRequest;
+import com.iplay.feastbooking.gson.register.TotpConfirm;
+import com.iplay.feastbooking.gson.register.VerifyResponse;
 import com.iplay.feastbooking.gson.selfInfo.SelfInfo;
 import com.iplay.feastbooking.messageEvent.common.CommonMessageEvent;
 import com.iplay.feastbooking.messageEvent.contract.PhotoUpdateMessageEvent;
+import com.iplay.feastbooking.messageEvent.register.RegisterMessageEvent;
+import com.iplay.feastbooking.messageEvent.selfInfo.ChangeEmailConfirmMessageEvent;
+import com.iplay.feastbooking.messageEvent.selfInfo.ChangeEmailMessageEvent;
 import com.iplay.feastbooking.messageEvent.selfInfo.ChangePortraitMessageEvent;
 import com.iplay.feastbooking.messageEvent.selfInfo.SelfInfoMessageEvent;
 import com.iplay.feastbooking.net.NetProperties;
+import com.iplay.feastbooking.net.message.UtilMessage;
 import com.iplay.feastbooking.net.utilImpl.reviewUtil.ReviewUtility;
+import com.iplay.feastbooking.ui.login.RegisterConfirmActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -56,11 +64,13 @@ public class ChangeSelfInfoUtility {
 
     private final String profile;
 
-    private final String email;
+    private final String mail;
 
     private final String password;
 
     private final String phone;
+
+    private final String verify;
 
     private final int connectSeconds;
 
@@ -72,9 +82,10 @@ public class ChangeSelfInfoUtility {
         user = properties.getProperty("user");
         avatar = properties.getProperty("avatar");
         profile = properties.getProperty("profile");
-        email = properties.getProperty("email");
+        mail = properties.getProperty("email");
         password = properties.getProperty("password");
         phone = properties.getProperty("phone");
+        verify = properties.getProperty("verify");
         connectSeconds = 120;
     }
 
@@ -89,6 +100,100 @@ public class ChangeSelfInfoUtility {
         return instance;
     }
 
+    public void confirmToken(final String token, final String email, Context context){
+        if(!NetProperties.isNetworkConnected(context)){
+            ChangeEmailConfirmMessageEvent event = new ChangeEmailConfirmMessageEvent();
+            event.setType(ChangeEmailConfirmMessageEvent.TYPE.FAILURE);
+            event.setFailureResult("網絡不給力");
+            EventBus.getDefault().post(event);
+        }else {
+            String previewToken = LoginUserHolder.getInstance().getCurrentUser().getToken();
+            if(previewToken == null || previewToken.equals("")){
+                return;
+            }
+            previewToken = tokenPrefix + " " +  previewToken;
+
+            CommonSingleStringRequest singleStringRequest = new CommonSingleStringRequest();
+            singleStringRequest.setValue(tokenPrefix + " " +  token);
+            final Gson gson = new Gson();
+            String json = gson.toJson(singleStringRequest);
+            OkHttpClient client = new OkHttpClient.Builder().connectTimeout(5, TimeUnit.SECONDS).build();
+            RequestBody body = RequestBody.create(UtilMessage.JSON, json);
+            Request request = new Request
+                    .Builder()
+                    .url(serverUrl + urlSeperator +  user + urlSeperator
+                    + profile + urlSeperator + mail)
+                    .put(body)
+                    .header("Authorization", previewToken).build();
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    ChangeEmailConfirmMessageEvent event = new ChangeEmailConfirmMessageEvent();
+                    event.setType(ChangeEmailConfirmMessageEvent.TYPE.FAILURE);
+                    event.setFailureResult("網絡不給力");
+                    EventBus.getDefault().post(event);
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    ChangeEmailConfirmMessageEvent event = new ChangeEmailConfirmMessageEvent();
+                    if(!response.isSuccessful()){
+                        event.setType(ChangeEmailConfirmMessageEvent.TYPE.FAILURE);
+                        event.setFailureResult("未知錯誤");
+                    }else {
+                        event.setType(ChangeEmailConfirmMessageEvent.TYPE.SUCCESS);
+                        event.setToken(token);
+                        event.setEmail(email);
+                    }
+                    EventBus.getDefault().post(event);
+                }
+            });
+        }
+    }
+
+    public void verify(final String email, String totp, final Context context){
+        if(!NetProperties.isNetworkConnected(context)){
+            RegisterMessageEvent event = new RegisterMessageEvent();
+            event.setType(RegisterMessageEvent.TYPE_NO_INTERNET);
+            EventBus.getDefault().post(event);
+        }else {
+            TotpConfirm totpConfirm = new TotpConfirm();
+            totpConfirm.email = email;
+            totpConfirm.totp = totp;
+            final Gson gson = new Gson();
+            String json = gson.toJson(totpConfirm);
+            OkHttpClient client = new OkHttpClient.Builder().connectTimeout(5, TimeUnit.SECONDS).build();
+            RequestBody body = RequestBody.create(UtilMessage.JSON, json);
+            Request request = new Request.Builder().url(serverUrl + urlSeperator + verify).post(body).build();
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    RegisterMessageEvent event = new RegisterMessageEvent();
+                    event.setType(RegisterMessageEvent.TYPE_CONNECT_TIME_OUT);
+                    EventBus.getDefault().post(event);
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    RegisterMessageEvent event = new RegisterMessageEvent();
+                    if(!response.isSuccessful()){
+                        Log.d("reason", response.body().string());
+                        event.setType(RegisterMessageEvent.TYPE_UNKNOWN_ERROR);
+                    }else {
+                        VerifyResponse verifyResponse = gson.fromJson(response.body().string(),VerifyResponse.class);
+                        if(verifyResponse.totpValid){
+                            event.setType(RegisterMessageEvent.TYPE_SUCCESS);
+                            event.setToken(verifyResponse.token);
+                            event.setEmail(email);
+                        }else {
+                            event.setType(RegisterMessageEvent.TYPE_FAILURE);
+                        }
+                    }
+                    EventBus.getDefault().post(event);
+                }
+            });
+        }
+    }
 
     public void updateSelfInfo(Context context){
         if(!NetProperties.isNetworkConnected(context)){
@@ -119,11 +224,20 @@ public class ChangeSelfInfoUtility {
                         Gson gson = new Gson();
                         SelfInfo selfInfo =  gson.fromJson(response.body().string(),
                                 SelfInfo.class);
-                        UserDto userDto = new UserDto();
+                        if(selfInfo == null){
+                            return;
+                        }
+                        UserDto userDto = DataSupport.where("userId = ?", selfInfo.userId + "").findFirst(UserDto.class);
+                        if(userDto == null){
+                            userDto = new UserDto();
+                            userDto.setUserId(selfInfo.userId);
+                        }
+                        userDto.setAvatarUrl(selfInfo.avatar);
                         userDto.setEmail(selfInfo.email);
                         userDto.setUsername(selfInfo.username);
-                        userDto.setId(selfInfo.userId);
+                        userDto.setPhone(selfInfo.phone);
                         userDto.save();
+
                         event.setSelfInfo(selfInfo);
                     }
                     EventBus.getDefault().post(event);

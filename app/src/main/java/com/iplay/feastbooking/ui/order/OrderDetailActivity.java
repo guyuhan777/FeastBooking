@@ -289,7 +289,7 @@ public class OrderDetailActivity extends BasicActivity implements View.OnClickLi
                     if(detail.orderStatus == OrderStatus.STATUS_CONSULTING){
                         Toast.makeText(this, "預定酒席后才能顯示支付憑證", Toast.LENGTH_SHORT).show();
                     }else if(detail.manager == null || detail.feastingDate == null){
-                        Toast.makeText(this, "請先填寫擺酒日期和經理人信息", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "請先填寫擺酒日期/經理人信息", Toast.LENGTH_SHORT).show();
                     }else if(detail.orderStatus.equals(OrderStatus.STATUS_CONSULTING)){
                         Toast.makeText(this, "尚處于資訊中狀態", Toast.LENGTH_SHORT).show();
                     }else {

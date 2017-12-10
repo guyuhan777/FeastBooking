@@ -28,11 +28,13 @@ public class HomeActivity extends BasicActivity implements BottomNavigationBar.O
 
     private static final String TAG = "HomeActivity";
 
-    public static final String KEY_USER = "user_key";
-
     public BottomNavigationBar bottom_bar;
 
-    private static final String KEY_NOT_RECREATE =  "KEY_NOT_RECREATE";
+    private static final String KEY_HOME =  "KEY_HOME";
+
+    private static final String KEY_SELF_PAGE = "KEY_SELF_PAGE";
+
+    public enum START_TYPE{HOME, SELF};
 
     private RecommendedHotelFragment recommendedFragment;
 
@@ -110,15 +112,16 @@ public class HomeActivity extends BasicActivity implements BottomNavigationBar.O
         }else {
             login_hint.setVisibility(View.VISIBLE);
         }
-        //Log.d(TAG,"RESUME");
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
-        if(intent.getBooleanExtra(KEY_NOT_RECREATE, false)){
+        if(intent.getBooleanExtra(KEY_HOME, false)){
             bottom_bar.selectTab(0);
+        }else if(intent.getBooleanExtra(KEY_SELF_PAGE, false)){
+            bottom_bar.selectTab(1);
         }
     }
 
@@ -128,11 +131,17 @@ public class HomeActivity extends BasicActivity implements BottomNavigationBar.O
         context.startActivity(intent);
     }
 
-    public static void startHomeActivity(Context context){
+    public static void startHomeActivity(Context context, START_TYPE type){
         Intent intent = new Intent(context, HomeActivity.class);
-        intent.putExtra(KEY_NOT_RECREATE, true);
+        if(type == START_TYPE.HOME) {
+            intent.putExtra(KEY_HOME, true);
+        }else if(type == START_TYPE.SELF){
+            intent.putExtra(KEY_SELF_PAGE, true);
+        }
         context.startActivity(intent);
     }
+
+
 
     @Override
     public void onTabSelected(int position) {

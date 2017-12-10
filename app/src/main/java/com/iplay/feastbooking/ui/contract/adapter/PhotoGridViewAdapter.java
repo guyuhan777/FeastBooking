@@ -93,8 +93,7 @@ public class PhotoGridViewAdapter extends BasicArrayAdapter<PhotoPath>{
         int viewType = getItemViewType(position);
         if(viewType == TYPE_PHOTO){
             if(identityMatrix.isCustomer()
-                    && approvalStatus !=null
-                    && approvalStatus.equals("PENDING")) {
+                    && (approvalStatus == null || approvalStatus.equals("PENDING"))){
                 viewHolder.delete_iv.setVisibility(View.VISIBLE);
                 viewHolder.delete_iv.setOnClickListener(new OnPhotoDeleteClickListener(position));
             }else {

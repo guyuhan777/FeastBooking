@@ -23,6 +23,7 @@ import com.iplay.feastbooking.basic.BasicActivity;
 import com.iplay.feastbooking.dto.UserDto;
 import com.iplay.feastbooking.gson.selfInfo.SelfInfo;
 import com.iplay.feastbooking.messageEvent.selfInfo.ChangePortraitMessageEvent;
+import com.iplay.feastbooking.messageEvent.selfInfo.SelfInfoMessageEvent;
 import com.iplay.feastbooking.net.utilImpl.selfDetail.ChangeSelfInfoUtility;
 import com.iplay.feastbooking.ui.home.HomeActivity;
 
@@ -46,8 +47,6 @@ public class SelfInfoActivity extends BasicActivity implements View.OnClickListe
 
     public static final String TAG = "SelfInfoActivity";
 
-    private static final String SELF_INFO_KEY = "SELF_INFO_KEY";
-
     private LinearLayout bottom_sheet_ll;
 
     private BottomSheetBehavior bottomSheetBehavior;
@@ -66,7 +65,11 @@ public class SelfInfoActivity extends BasicActivity implements View.OnClickListe
 
     private RelativeLayout root_view;
 
-    private SelfInfo info;
+    private TextView user_name_tv;
+
+    private TextView user_email_tv;
+
+    private TextView user_phone_tv;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -85,6 +88,7 @@ public class SelfInfoActivity extends BasicActivity implements View.OnClickListe
         status_bar_fix.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, WindowAttr.getStatusBarHeight(this)));
         findViewById(R.id.back_iv).setOnClickListener(this);
         findViewById(R.id.log_out_btn).setOnClickListener(this);
+        findViewById(R.id.change_email_bar).setOnClickListener(this);
         self_info_sv = (ScrollView) findViewById(R.id.self_info_sv);
         self_info_sv.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -115,11 +119,16 @@ public class SelfInfoActivity extends BasicActivity implements View.OnClickListe
         back_tv.setOnClickListener(this);
         loading_rl = (RelativeLayout) findViewById(R.id.loading_rl);
         refresh_progress_bar = (ProgressBar) findViewById(R.id.refresh_progress_bar);
+
+        user_name_tv = (TextView) findViewById(R.id.user_name);
+        user_email_tv = (TextView) findViewById(R.id.email);
+        user_phone_tv = (TextView) findViewById(R.id.phone);
+
+        refreshSelfInfo();
     }
 
-    public static void start(Context context, SelfInfo info){
+    public static void start(Context context){
         Intent intent = new Intent(context,SelfInfoActivity.class);
-        intent.putExtra(SELF_INFO_KEY, info);
         context.startActivity(intent);
     }
 
@@ -190,16 +199,43 @@ public class SelfInfoActivity extends BasicActivity implements View.OnClickListe
 
     @Override
     public void getData() {
-        Serializable s = getIntent().getSerializableExtra(SELF_INFO_KEY);
-        if( s != null){
-            info = (SelfInfo) s;
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSelfInfoMessageEvent(SelfInfoMessageEvent event){
+        SelfInfo selfInfo = event.getSelfInfo();
+        if(selfInfo != null){
+            String avatarUrl = selfInfo.avatar;
+            if(avatarUrl != null){
+                Glide.with(this).load(selfInfo.avatar).into(portrait_civ);
+            }
+            if(selfInfo.username != null) {
+                user_name_tv.setText(selfInfo.username);
+            }
+            if(selfInfo.email != null) {
+                user_email_tv.setText(selfInfo.email);
+            }
+            if(selfInfo.phone != null) {
+                user_phone_tv.setText(selfInfo.phone);
+            }
         }
+    }
+
+    private void refreshSelfInfo(){
+        ChangeSelfInfoUtility.getInstance(this).updateSelfInfo(this);
     }
 
     @Override
     public void showContent() {
-        if(info != null){
-            Glide.with(this).load(info.avatar);
+        UserDto currentUser;
+        if ((currentUser = LoginUserHolder.getInstance().getCurrentUser()) != null) {
+            String avatarUrl = currentUser.getAvatarUrl();
+            if (avatarUrl != null) {
+                Glide.with(this).load(avatarUrl).into(portrait_civ);
+            }
+            user_email_tv.setText(currentUser.getEmail());
+            user_phone_tv.setText(currentUser.getPhone());
+            user_name_tv.setText(currentUser.getUsername());
         }
     }
 
@@ -207,8 +243,7 @@ public class SelfInfoActivity extends BasicActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.back_tv:
-                root_view.setVisibility(View.VISIBLE);
-                loading_rl.setVisibility(View.GONE);
+                HomeActivity.startHomeActivity(this, HomeActivity.START_TYPE.SELF);
                 break;
             case R.id.back_iv:
                 runOnUiThread(new Runnable() {
@@ -217,6 +252,9 @@ public class SelfInfoActivity extends BasicActivity implements View.OnClickListe
                         onBackPressed();
                     }
                 });
+                break;
+            case R.id.change_email_bar:
+                SelfChangeEmailActivity.start(this);
                 break;
             case R.id.log_out_btn:
                 DataSupport.deleteAll(UserDto.class,"isLogin = ?","" + 1);
