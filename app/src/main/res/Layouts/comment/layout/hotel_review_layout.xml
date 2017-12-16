@@ -39,7 +39,7 @@
             android:layout_centerHorizontal="true"
             android:gravity="center"
             android:textSize="@dimen/app_text_normal"
-            android:text="正在努力加載中"
+            android:text="@string/loading_hint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <ProgressBar

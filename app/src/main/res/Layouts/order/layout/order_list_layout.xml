@@ -30,13 +30,26 @@
             android:layout_height="wrap_content" />
     </RelativeLayout>
     <include layout="@layout/title_sepertae_horizontal" />
-    <TextView
-        android:textSize="@dimen/app_text_title_size"
-        android:id="@+id/order_state_tv"
-        android:gravity="center"
-        android:layout_gravity="center"
+    <RelativeLayout
+        android:id="@+id/load_state_rl"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/load_tv"
+            android:textSize="@dimen/app_text_normal"
+            android:text="@string/loading_hint"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <ProgressBar
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/load_tv"
+            android:layout_marginLeft="5dp"
+            android:id="@+id/refresh_progress_bar"
+            android:layout_width="@dimen/app_text_normal"
+            android:layout_height="@dimen/app_text_normal" />
+    </RelativeLayout>
     <android.support.v7.widget.RecyclerView
         android:visibility="gone"
         android:id="@+id/order_list_rv"

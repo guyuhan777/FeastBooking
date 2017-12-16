@@ -10,6 +10,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,7 +41,11 @@ public class OrderListActivity extends BasicActivity implements View.OnClickList
 
     private static final String TAG = "OrderListActivity";
 
-    private TextView order_list_tv;
+    private RelativeLayout load_state_rl;
+
+    private TextView load_tv;
+
+    private ProgressBar refresh_progress_bar;
 
     private RecyclerView order_list_rv;
 
@@ -77,7 +83,10 @@ public class OrderListActivity extends BasicActivity implements View.OnClickList
     public void findViews() {
         View status_bar_fix = findViewById(R.id.status_bar_fix_title);
         status_bar_fix.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, WindowAttr.getStatusBarHeight(this)));
-        order_list_tv = (TextView) findViewById(R.id.order_state_tv);
+        load_state_rl = (RelativeLayout) findViewById(R.id.load_state_rl);
+        load_tv = (TextView) findViewById(R.id.load_tv);
+        refresh_progress_bar = (ProgressBar) findViewById(R.id.refresh_progress_bar);
+        refresh_progress_bar.setIndeterminate(true);
         findViewById(R.id.back_iv).setOnClickListener(this);
         order_list_rv = (RecyclerView) findViewById(R.id.order_list_rv);
     }
@@ -92,21 +101,24 @@ public class OrderListActivity extends BasicActivity implements View.OnClickList
         if(event.isInit()){
             if(event.getType() == OrderListMessageEvent.TYPE_NO_INTERNET){
                 order_list_rv.setVisibility(View.GONE);
-                order_list_tv.setVisibility(View.VISIBLE);
-                order_list_tv.setText("網絡不給力");
+                load_state_rl.setVisibility(View.VISIBLE);
+                refresh_progress_bar.setVisibility(View.GONE);
+                load_tv.setText("網絡不給力");
             }else if(event.getType() == OrderListMessageEvent.TYPE_FAILURE){
                 order_list_rv.setVisibility(View.GONE);
-                order_list_tv.setVisibility(View.VISIBLE);
-                order_list_tv.setText(event.getFailureReason());
+                load_state_rl.setVisibility(View.VISIBLE);
+                refresh_progress_bar.setVisibility(View.GONE);
+                load_tv.setText(event.getFailureReason());
             }else {
                 OrderListItem orderListItem = event.getOrderListItemList();
                 if(orderListItem == null || orderListItem.content == null || orderListItem.content.size() == 0){
                     order_list_rv.setVisibility(View.GONE);
-                    order_list_tv.setVisibility(View.VISIBLE);
-                    order_list_tv.setText("暫無數據");
+                    order_list_rv.setVisibility(View.VISIBLE);
+                    refresh_progress_bar.setVisibility(View.GONE);
+                    load_tv.setText("暫無數據");
                 }else {
                     order_list_rv.setVisibility(View.VISIBLE);
-                    order_list_tv.setVisibility(View.GONE);
+                    load_state_rl.setVisibility(View.GONE);
                     if(adapter == null){
                         List<BasicData> dataList = new ArrayList<>();
                         for(int i=0; i<orderListItem.content.size(); i++){
@@ -189,8 +201,9 @@ public class OrderListActivity extends BasicActivity implements View.OnClickList
     public void showContent() {
         if(!NetProperties.isNetworkConnected(this)){
             order_list_rv.setVisibility(View.GONE);
-            order_list_tv.setVisibility(View.VISIBLE);
-            order_list_tv.setText("網絡不給力");
+            load_state_rl.setVisibility(View.VISIBLE);
+            load_tv.setText("網絡不給力");
+            refresh_progress_bar.setVisibility(View.GONE);
         }else {
             utility.initOrderList();
         }

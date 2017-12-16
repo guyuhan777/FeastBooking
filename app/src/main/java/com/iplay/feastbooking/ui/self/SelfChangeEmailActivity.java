@@ -143,18 +143,16 @@ public class SelfChangeEmailActivity extends BasicActivity implements View.OnCli
             Toast.makeText(this, event.getFailureResult(), Toast.LENGTH_SHORT).show();
             submit_tv.setEnabled(true);
         }else if(event.getType() == ChangeEmailConfirmMessageEvent.TYPE.SUCCESS){
-            String token = event.getToken();
             String email = event.getEmail();
             UserDto currentUser = UserDao.getInstance().getLoginUser();
             if(currentUser != null) {
                 currentUser.setEmail(email);
-                currentUser.setToken(token);
                 currentUser.save();
             }
             Toast.makeText(this, "修改成功", Toast.LENGTH_SHORT).show();
             SelfInfoMessageEvent selfInfoMessageEvent = new SelfInfoMessageEvent();
             SelfInfo selfInfo = new SelfInfo();
-            selfInfo.email = event.getEmail();
+            selfInfo.email = email;
             selfInfoMessageEvent.setSelfInfo(selfInfo);
             EventBus.getDefault().post(selfInfoMessageEvent);
             HomeActivity.startHomeActivity(this, HomeActivity.START_TYPE.SELF);

@@ -89,6 +89,8 @@ public class SelfInfoActivity extends BasicActivity implements View.OnClickListe
         findViewById(R.id.back_iv).setOnClickListener(this);
         findViewById(R.id.log_out_btn).setOnClickListener(this);
         findViewById(R.id.change_email_bar).setOnClickListener(this);
+        findViewById(R.id.change_phone_bar).setOnClickListener(this);
+        findViewById(R.id.change_pw_bar).setOnClickListener(this);
         self_info_sv = (ScrollView) findViewById(R.id.self_info_sv);
         self_info_sv.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -253,8 +255,14 @@ public class SelfInfoActivity extends BasicActivity implements View.OnClickListe
                     }
                 });
                 break;
+            case R.id.change_phone_bar:
+                SelfChangePhoneActivity.start(this);
+                break;
             case R.id.change_email_bar:
                 SelfChangeEmailActivity.start(this);
+                break;
+            case R.id.change_pw_bar:
+                SelfChangePasswordActivity.start(this);
                 break;
             case R.id.log_out_btn:
                 DataSupport.deleteAll(UserDto.class,"isLogin = ?","" + 1);
