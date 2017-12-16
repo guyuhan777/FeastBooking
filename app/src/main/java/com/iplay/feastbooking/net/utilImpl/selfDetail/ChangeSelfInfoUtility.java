@@ -7,31 +7,27 @@ import com.google.gson.Gson;
 import com.iplay.feastbooking.assistance.LoginUserHolder;
 import com.iplay.feastbooking.assistance.ProperTies;
 import com.iplay.feastbooking.dto.UserDto;
-import com.iplay.feastbooking.gson.comment.ReviewListResponse;
 import com.iplay.feastbooking.gson.common.CommonSingleStringRequest;
+import com.iplay.feastbooking.gson.consult.CommonStateResponse;
 import com.iplay.feastbooking.gson.register.TotpConfirm;
 import com.iplay.feastbooking.gson.register.VerifyResponse;
+import com.iplay.feastbooking.gson.selfInfo.ChangePasswordRequest;
 import com.iplay.feastbooking.gson.selfInfo.SelfInfo;
-import com.iplay.feastbooking.messageEvent.common.CommonMessageEvent;
-import com.iplay.feastbooking.messageEvent.contract.PhotoUpdateMessageEvent;
 import com.iplay.feastbooking.messageEvent.register.RegisterMessageEvent;
 import com.iplay.feastbooking.messageEvent.selfInfo.ChangeEmailConfirmMessageEvent;
-import com.iplay.feastbooking.messageEvent.selfInfo.ChangeEmailMessageEvent;
+import com.iplay.feastbooking.messageEvent.selfInfo.ChangePasswordMessageEvent;
+import com.iplay.feastbooking.messageEvent.selfInfo.ChangePhoneMessageEvent;
 import com.iplay.feastbooking.messageEvent.selfInfo.ChangePortraitMessageEvent;
 import com.iplay.feastbooking.messageEvent.selfInfo.SelfInfoMessageEvent;
 import com.iplay.feastbooking.net.NetProperties;
 import com.iplay.feastbooking.net.message.UtilMessage;
 import com.iplay.feastbooking.net.utilImpl.reviewUtil.ReviewUtility;
-import com.iplay.feastbooking.ui.login.RegisterConfirmActivity;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import org.litepal.crud.DataSupport;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
@@ -64,11 +60,11 @@ public class ChangeSelfInfoUtility {
 
     private final String profile;
 
-    private final String mail;
+    private final String mailChange;
 
-    private final String password;
+    private final String passwordChange;
 
-    private final String phone;
+    private final String phoneChange;
 
     private final String verify;
 
@@ -82,16 +78,16 @@ public class ChangeSelfInfoUtility {
         user = properties.getProperty("user");
         avatar = properties.getProperty("avatar");
         profile = properties.getProperty("profile");
-        mail = properties.getProperty("email");
-        password = properties.getProperty("password");
-        phone = properties.getProperty("phone");
+        mailChange = properties.getProperty("email");
+        passwordChange = properties.getProperty("password");
+        phoneChange = properties.getProperty("phone");
         verify = properties.getProperty("verify");
         connectSeconds = 120;
     }
 
     public static ChangeSelfInfoUtility getInstance(Context context){
         if(instance == null){
-            synchronized (ReviewUtility.class){
+            synchronized (ChangeSelfInfoUtility.class){
                 if(instance == null){
                     instance = new ChangeSelfInfoUtility(context);
                 }
@@ -100,21 +96,134 @@ public class ChangeSelfInfoUtility {
         return instance;
     }
 
-    public void confirmToken(final String token, final String email, Context context){
+    public void updatePassword(final String newPassword, String password, Context context){
+        if(!NetProperties.isNetworkConnected(context)){
+            ChangePasswordMessageEvent event = new ChangePasswordMessageEvent();
+            event.setType(ChangePasswordMessageEvent.TYPE.FAILURE);
+            event.setFailureResult("網絡不給力");
+            EventBus.getDefault().post(event);
+        }else {
+            String token = LoginUserHolder.getInstance().getCurrentUser().getToken();
+            if(token == null || token.equals("")){
+                return;
+            }
+            token = tokenPrefix + " " +  token;
+
+            ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest(password, newPassword);
+            final Gson gson = new Gson();
+            String json = gson.toJson(changePasswordRequest);
+            OkHttpClient client = new OkHttpClient.Builder().connectTimeout(5, TimeUnit.SECONDS).build();
+            RequestBody body = RequestBody.create(UtilMessage.JSON, json);
+            Request request = new Request
+                    .Builder()
+                    .url(serverUrl + urlSeperator +  user + urlSeperator
+                            + profile + urlSeperator + passwordChange)
+                    .put(body)
+                    .header("Authorization", token).build();
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    ChangePasswordMessageEvent event = new ChangePasswordMessageEvent();
+                    event.setType(ChangePasswordMessageEvent.TYPE.FAILURE);
+                    event.setFailureResult("網絡不給力");
+                    EventBus.getDefault().post(event);
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    ChangePasswordMessageEvent event = new ChangePasswordMessageEvent();
+                    if(!response.isSuccessful()){
+                        event.setType(ChangePasswordMessageEvent.TYPE.FAILURE);
+                        event.setFailureResult("未知錯誤");
+                    }else {
+                        CommonStateResponse commonStateRespone = gson.fromJson(response.body().string(), CommonStateResponse.class);
+                        if(commonStateRespone.success){
+                            event.setType(ChangePasswordMessageEvent.TYPE.SUCCESS);
+                            event.setPassword(newPassword);
+                        }else {
+                            event.setType(ChangePasswordMessageEvent.TYPE.FAILURE);
+                            event.setFailureResult("原密碼錯誤");
+                        }
+                    }
+                    EventBus.getDefault().post(event);
+                }
+            });
+        }
+    }
+
+    public void updatePhone(final String phone, Context context){
+        if(!NetProperties.isNetworkConnected(context)){
+            ChangePhoneMessageEvent event = new ChangePhoneMessageEvent();
+            event.setType(ChangePhoneMessageEvent.TYPE.FAILURE);
+            event.setFailureResult("網絡不給力");
+            EventBus.getDefault().post(event);
+        }else {
+            String token = LoginUserHolder.getInstance().getCurrentUser().getToken();
+            if(token == null || token.equals("")){
+                return;
+            }
+            token = tokenPrefix + " " +  token;
+
+            CommonSingleStringRequest singleStringRequest = new CommonSingleStringRequest();
+            singleStringRequest.setValue(phone);
+            final Gson gson = new Gson();
+            String json = gson.toJson(singleStringRequest);
+            OkHttpClient client = new OkHttpClient.Builder().connectTimeout(5, TimeUnit.SECONDS).build();
+            final RequestBody body = RequestBody.create(UtilMessage.JSON, json);
+            final Request request = new Request
+                    .Builder()
+                    .url(serverUrl + urlSeperator +  user + urlSeperator
+                            + profile + urlSeperator + phoneChange)
+                    .put(body)
+                    .header("Authorization", token).build();
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    ChangePhoneMessageEvent event = new ChangePhoneMessageEvent();
+                    event.setType(ChangePhoneMessageEvent.TYPE.FAILURE);
+                    event.setFailureResult("網絡不給力");
+                    EventBus.getDefault().post(event);
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    ChangePhoneMessageEvent event = new ChangePhoneMessageEvent();
+                    if(!response.isSuccessful()){
+                        Log.d("reason", response.body().string());
+                        event.setType(ChangePhoneMessageEvent.TYPE.FAILURE);
+                        event.setFailureResult("未知錯誤");
+                    }else {
+                        CommonStateResponse commonStateRespone = gson.fromJson(response.body().string(), CommonStateResponse.class);
+                        if(commonStateRespone.success){
+                            event.setType(ChangePhoneMessageEvent.TYPE.SUCCESS);
+                            event.setPhone(phone);
+                        }else {
+                            event.setType(ChangePhoneMessageEvent.TYPE.FAILURE);
+                            Log.d("reason", response.body().string());
+                            event.setFailureResult("未知錯誤");
+                        }
+                    }
+                    EventBus.getDefault().post(event);
+                }
+            });
+        }
+    }
+
+    public void confirmToken(final String emailConfirmToken, final String email, Context context){
         if(!NetProperties.isNetworkConnected(context)){
             ChangeEmailConfirmMessageEvent event = new ChangeEmailConfirmMessageEvent();
             event.setType(ChangeEmailConfirmMessageEvent.TYPE.FAILURE);
             event.setFailureResult("網絡不給力");
             EventBus.getDefault().post(event);
         }else {
-            String previewToken = LoginUserHolder.getInstance().getCurrentUser().getToken();
-            if(previewToken == null || previewToken.equals("")){
+            String token = LoginUserHolder.getInstance().getCurrentUser().getToken();
+            if(token == null || token.equals("")){
                 return;
             }
-            previewToken = tokenPrefix + " " +  previewToken;
+            token = tokenPrefix + " " +  token;
 
             CommonSingleStringRequest singleStringRequest = new CommonSingleStringRequest();
-            singleStringRequest.setValue(tokenPrefix + " " +  token);
+            singleStringRequest.setValue(tokenPrefix + " " +  emailConfirmToken);
             final Gson gson = new Gson();
             String json = gson.toJson(singleStringRequest);
             OkHttpClient client = new OkHttpClient.Builder().connectTimeout(5, TimeUnit.SECONDS).build();
@@ -122,9 +231,9 @@ public class ChangeSelfInfoUtility {
             Request request = new Request
                     .Builder()
                     .url(serverUrl + urlSeperator +  user + urlSeperator
-                    + profile + urlSeperator + mail)
+                    + profile + urlSeperator + mailChange)
                     .put(body)
-                    .header("Authorization", previewToken).build();
+                    .header("Authorization", token).build();
             client.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
@@ -142,7 +251,6 @@ public class ChangeSelfInfoUtility {
                         event.setFailureResult("未知錯誤");
                     }else {
                         event.setType(ChangeEmailConfirmMessageEvent.TYPE.SUCCESS);
-                        event.setToken(token);
                         event.setEmail(email);
                     }
                     EventBus.getDefault().post(event);

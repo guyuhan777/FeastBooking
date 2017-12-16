@@ -21,9 +21,11 @@ import com.iplay.feastbooking.assistance.LoginUserHolder;
 import com.iplay.feastbooking.assistance.WindowAttr;
 import com.iplay.feastbooking.basic.BasicActivity;
 import com.iplay.feastbooking.dto.UserDto;
+import com.iplay.feastbooking.gson.cashBack.CashBackMessageEvent;
 import com.iplay.feastbooking.gson.selfInfo.SelfInfo;
 import com.iplay.feastbooking.messageEvent.selfInfo.ChangePortraitMessageEvent;
 import com.iplay.feastbooking.messageEvent.selfInfo.SelfInfoMessageEvent;
+import com.iplay.feastbooking.net.utilImpl.cashBack.CashBackUtility;
 import com.iplay.feastbooking.net.utilImpl.selfDetail.ChangeSelfInfoUtility;
 import com.iplay.feastbooking.ui.home.HomeActivity;
 
@@ -124,7 +126,7 @@ public class SelfInfoActivity extends BasicActivity implements View.OnClickListe
 
         user_name_tv = (TextView) findViewById(R.id.user_name);
         user_email_tv = (TextView) findViewById(R.id.email);
-        user_phone_tv = (TextView) findViewById(R.id.phone);
+        user_phone_tv = (TextView) findViewById(R.id.phone_tv);
 
         refreshSelfInfo();
     }
@@ -201,6 +203,7 @@ public class SelfInfoActivity extends BasicActivity implements View.OnClickListe
 
     @Override
     public void getData() {
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

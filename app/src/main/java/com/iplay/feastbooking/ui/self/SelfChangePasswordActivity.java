@@ -10,10 +10,23 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.iplay.feastbooking.R;
 import com.iplay.feastbooking.assistance.WindowAttr;
 import com.iplay.feastbooking.basic.BasicActivity;
+import com.iplay.feastbooking.dao.UserDao;
+import com.iplay.feastbooking.dto.UserDto;
+import com.iplay.feastbooking.gson.selfInfo.SelfInfo;
+import com.iplay.feastbooking.messageEvent.selfInfo.ChangePasswordMessageEvent;
+import com.iplay.feastbooking.messageEvent.selfInfo.ChangePhoneMessageEvent;
+import com.iplay.feastbooking.messageEvent.selfInfo.SelfInfoMessageEvent;
+import com.iplay.feastbooking.net.utilImpl.selfDetail.ChangeSelfInfoUtility;
+import com.iplay.feastbooking.ui.home.HomeActivity;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 /**
  * Created by gu_y-pc on 2017/12/16.
@@ -36,8 +49,25 @@ public class SelfChangePasswordActivity extends BasicActivity implements View.On
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        //isRegistered = true;
+        isRegistered = true;
         super.onCreate(savedInstanceState);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onChangePasswordMessageEvent(ChangePasswordMessageEvent event){
+        if(event.getType() == ChangePasswordMessageEvent.TYPE.FAILURE){
+            Toast.makeText(this, event.getFailureResult(), Toast.LENGTH_SHORT).show();
+        }else if(event.getType() == ChangePasswordMessageEvent.TYPE.SUCCESS){
+            String password = event.getPassword();
+            UserDto currentUser = UserDao.getInstance().getLoginUser();
+            if(currentUser != null) {
+                currentUser.setPassword(password);
+                currentUser.save();
+            }
+            Toast.makeText(this, "修改成功", Toast.LENGTH_SHORT).show();
+            HomeActivity.startHomeActivity(this, HomeActivity.START_TYPE.SELF);
+        }
+        submit_tv.setEnabled(true);
     }
 
     @Override
@@ -76,7 +106,28 @@ public class SelfChangePasswordActivity extends BasicActivity implements View.On
                 imm.hideSoftInputFromWindow(v.getWindowToken(),0);
                 break;
             case R.id.submit_tv:
-                submit_tv.setEnabled(false);
+                String oldPW = old_pw_et.getText().toString().trim();
+                String newPW = new_pw_et.getText().toString().trim();
+                String confirmPW = confirm_pw_et.getText().toString().trim();
+                Toast toast = null;
+                if(oldPW.equals("")){
+                    toast = Toast.makeText(this, "原密碼不能爲空", Toast.LENGTH_SHORT);
+                }else{
+                    if(newPW.equals("")){
+                        toast = Toast.makeText(this, "新密碼不能爲空", Toast.LENGTH_SHORT);
+                    }else {
+                        if(!newPW.equals(confirmPW)){
+                            toast = Toast.makeText(this, "重複密碼錯誤", Toast.LENGTH_SHORT);
+                        }else {
+                            ChangeSelfInfoUtility.getInstance(this).updatePassword(newPW, oldPW, this);
+                        }
+                    }
+                }
+                if(toast != null){
+                    toast.show();
+                }else {
+                    submit_tv.setEnabled(false);
+                }
                 break;
             case R.id.back_iv:
                 runOnUiThread(new Runnable() {

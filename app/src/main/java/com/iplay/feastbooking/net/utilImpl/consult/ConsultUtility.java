@@ -5,7 +5,7 @@ import android.content.Context;
 import com.google.gson.Gson;
 import com.iplay.feastbooking.assistance.LoginUserHolder;
 import com.iplay.feastbooking.assistance.ProperTies;
-import com.iplay.feastbooking.gson.consult.ConsultResult;
+import com.iplay.feastbooking.gson.consult.CommonStateResponse;
 import com.iplay.feastbooking.gson.consult.ConsultVO;
 import com.iplay.feastbooking.messageEvent.consult.ConsultOrderMessageEvent;
 import com.iplay.feastbooking.messageEvent.register.CodeValidMessageEvent;
@@ -130,7 +130,7 @@ public class ConsultUtility {
                     event.setType(ConsultOrderMessageEvent.TYPE_FAILURE);
                     event.setFailureReason("未知错误");
                 }else {
-                    ConsultResult result = gson.fromJson(response.body().string(), ConsultResult.class);
+                    CommonStateResponse result = gson.fromJson(response.body().string(), CommonStateResponse.class);
                     if(!result.success){
                         event.setType(ConsultOrderMessageEvent.TYPE_FAILURE);
                         event.setFailureReason((String) result.data);

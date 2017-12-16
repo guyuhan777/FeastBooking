@@ -1,6 +1,6 @@
 package com.iplay.feastbooking.messageEvent.consult;
 
-import com.iplay.feastbooking.gson.consult.ConsultResult;
+import com.iplay.feastbooking.gson.consult.CommonStateResponse;
 
 /**
  * Created by gu_y-pc on 2017/10/23.
@@ -16,13 +16,13 @@ public class ConsultOrderMessageEvent {
 
     private int type;
 
-    private ConsultResult result;
+    private CommonStateResponse result;
 
-    public ConsultResult getResult() {
+    public CommonStateResponse getResult() {
         return result;
     }
 
-    public void setResult(ConsultResult result) {
+    public void setResult(CommonStateResponse result) {
         this.result = result;
     }
 

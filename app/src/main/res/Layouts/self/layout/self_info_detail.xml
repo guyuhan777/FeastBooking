@@ -179,7 +179,7 @@
                         android:textSize="@dimen/app_text_normal" />
 
                     <ImageView
-                        android:visibility="gone"
+                        android:visibility="invisible"
                         android:id="@+id/username_forwards"
                         android:layout_width="@dimen/app_back_small"
                         android:layout_height="@dimen/app_back_small"
@@ -254,13 +254,12 @@
                         android:src="@drawable/forwards" />
 
                     <TextView
-                        android:id="@+id/phone"
+                        android:id="@+id/phone_tv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="@dimen/app_body_margin"
-                        android:layout_toLeftOf="@id/phone_forwards"
-                        android:text="15365363655" />
+                        android:layout_toLeftOf="@id/phone_forwards" />
                 </RelativeLayout>
 
                 <include layout="@layout/seperateline_horizontal" />

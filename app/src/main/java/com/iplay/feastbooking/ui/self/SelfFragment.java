@@ -16,8 +16,10 @@ import com.iplay.feastbooking.assistance.WindowAttr;
 import com.iplay.feastbooking.basic.BasicFragment;
 import com.iplay.feastbooking.component.view.bar.FunctionBar;
 import com.iplay.feastbooking.dto.UserDto;
+import com.iplay.feastbooking.gson.cashBack.CashBackMessageEvent;
 import com.iplay.feastbooking.gson.selfInfo.SelfInfo;
 import com.iplay.feastbooking.messageEvent.selfInfo.SelfInfoMessageEvent;
+import com.iplay.feastbooking.net.utilImpl.cashBack.CashBackUtility;
 import com.iplay.feastbooking.net.utilImpl.selfDetail.ChangeSelfInfoUtility;
 import com.iplay.feastbooking.ui.order.OrderListActivity;
 
@@ -58,11 +60,17 @@ public class SelfFragment extends BasicFragment implements View.OnClickListener{
 
     private TextView user_email_tv;
 
+    private TextView total_cash_back_tv, pending_cash_back_tv, completed_cash_back_tv;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.self_main_page,container,false);
         mContext = getActivity();
+
+        total_cash_back_tv = (TextView) view.findViewById(R.id.total_cash_back_tv);
+        pending_cash_back_tv = (TextView) view.findViewById(R.id.pending_cash_back_tv);
+        completed_cash_back_tv = (TextView) view.findViewById(R.id.completed_cash_back_tv);
 
         statusView = view.findViewById(R.id.status_bar_fix);
         statusView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, WindowAttr.getStatusBarHeight(getActivity())));
@@ -102,6 +110,19 @@ public class SelfFragment extends BasicFragment implements View.OnClickListener{
         return view;
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onCashBackMessageEvent(CashBackMessageEvent event){
+        int userId = event.getUserId();
+        UserDto currentUser = LoginUserHolder.getInstance().getCurrentUser();
+        if(currentUser != null){
+            if(userId == currentUser.getUserId()){
+                completed_cash_back_tv.setText("$" + event.getCompletedCashback());
+                total_cash_back_tv.setText("$" + event.getTotalCashback());
+                pending_cash_back_tv.setText("$" + event.getPendingCashback());
+            }
+        }
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         isRegisteredNeed = true;
@@ -127,6 +148,7 @@ public class SelfFragment extends BasicFragment implements View.OnClickListener{
 
     private void refreshSelfInfo(){
         ChangeSelfInfoUtility.getInstance(mContext).updateSelfInfo(mContext);
+        CashBackUtility.getInstance(mContext).getCashBack(mContext);
     }
 
     @Override

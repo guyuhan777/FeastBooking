@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,6 +20,7 @@ import com.iplay.feastbooking.dto.UserDto;
 import com.iplay.feastbooking.gson.selfInfo.SelfInfo;
 import com.iplay.feastbooking.messageEvent.selfInfo.ChangePhoneMessageEvent;
 import com.iplay.feastbooking.messageEvent.selfInfo.SelfInfoMessageEvent;
+import com.iplay.feastbooking.net.utilImpl.selfDetail.ChangeSelfInfoUtility;
 import com.iplay.feastbooking.ui.home.HomeActivity;
 
 import org.greenrobot.eventbus.EventBus;
@@ -32,6 +34,8 @@ import org.greenrobot.eventbus.ThreadMode;
 public class SelfChangePhoneActivity extends BasicActivity implements View.OnClickListener{
 
     private TextView submit_tv;
+
+    private EditText phone_et;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,6 +56,7 @@ public class SelfChangePhoneActivity extends BasicActivity implements View.OnCli
         findViewById(R.id.back_iv).setOnClickListener(this);
         submit_tv = (TextView) findViewById(R.id.submit_tv);
         submit_tv.setOnClickListener(this);
+        phone_et = (EditText) findViewById(R.id.new_phone_et);
     }
 
     public static void start(Context context){
@@ -107,7 +112,13 @@ public class SelfChangePhoneActivity extends BasicActivity implements View.OnCli
                 });
                 break;
             case R.id.submit_tv:
+                String phone = phone_et.getText().toString().trim();
+                if(phone.equals("")){
+                    Toast.makeText(this, "請輸入手機號", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 submit_tv.setEnabled(false);
+                ChangeSelfInfoUtility.getInstance(this).updatePhone(phone, this);
                 break;
             default:
                 break;

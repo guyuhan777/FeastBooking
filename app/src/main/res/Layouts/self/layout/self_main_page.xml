@@ -110,11 +110,39 @@
                         android:textSize="@dimen/app_text_normal" />
 
                     <TextView
-                        android:id="@+id/zong_fan_xian_tv"
+                        android:id="@+id/total_cash_back_tv"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="6000.0"
+                        android:textSize="@dimen/app_text_normal" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent">
+
+                    <include layout="@layout/seperateline_vertical" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="已完成"
+                        android:textColor="@color/app_title_color"
+                        android:textSize="@dimen/app_text_normal" />
+
+                    <TextView
+                        android:id="@+id/completed_cash_back_tv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
                         android:textSize="@dimen/app_text_normal" />
                 </LinearLayout>
 
@@ -140,39 +168,10 @@
                         android:textSize="@dimen/app_text_normal" />
 
                     <TextView
+                        android:id="@+id/pending_cash_back_tv"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="6000.0"
-                        android:textSize="@dimen/app_text_normal" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent">
-
-                    <include layout="@layout/seperateline_vertical" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="处理中返现"
-                        android:textColor="@color/app_title_color"
-                        android:textSize="@dimen/app_text_normal" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="6000.0"
                         android:textSize="@dimen/app_text_normal" />
                 </LinearLayout>
             </LinearLayout>

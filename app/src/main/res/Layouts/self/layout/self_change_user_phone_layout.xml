@@ -70,7 +70,7 @@
                 android:layout_height="wrap_content">
                 <EditText
                     android:inputType="phone"
-                    android:id="@+id/new_email_et"
+                    android:id="@+id/new_phone_et"
                     android:background="@null"
                     android:textSize="@dimen/app_text_normal"
                     android:hint="填寫新號嗎"

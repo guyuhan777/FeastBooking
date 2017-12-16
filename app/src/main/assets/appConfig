@@ -24,5 +24,6 @@ user=user
 profile=profile
 avatar=avatar
 email=email
-password=password
 phone=phone
+password=password
+cashBack=cashback
