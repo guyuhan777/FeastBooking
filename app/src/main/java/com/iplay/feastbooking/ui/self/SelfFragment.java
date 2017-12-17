@@ -84,6 +84,7 @@ public class SelfFragment extends BasicFragment implements View.OnClickListener{
 
         functionBars[ORDER_HISTORY_INDEX] = (FunctionBar) view.findViewById(R.id.order_history_fb);
         functionBars[ORDER_HISTORY_INDEX].function_name_tv.setText("歷史訂單");
+        functionBars[ORDER_HISTORY_INDEX].setOnClickListener(this);
 
         functionBars[MY_COLLECTION_INDEX] = (FunctionBar) view.findViewById(R.id.my_collection_fb);
         functionBars[MY_COLLECTION_INDEX].function_name_tv.setText("我的收藏");
@@ -159,9 +160,13 @@ public class SelfFragment extends BasicFragment implements View.OnClickListener{
                 break;
             case R.id.order_under_fb:
                 functionBars[ORDER_UNDER_INDEX].disable();
-                OrderListActivity.start(mContext);
+                OrderListActivity.start(mContext, true);
                 functionBars[ORDER_UNDER_INDEX].enable();
                 break;
+            case R.id.order_history_fb:
+                functionBars[ORDER_HISTORY_INDEX].disable();
+                OrderListActivity.start(mContext, false);
+                functionBars[ORDER_HISTORY_INDEX].enable();
             default:
                 break;
         }

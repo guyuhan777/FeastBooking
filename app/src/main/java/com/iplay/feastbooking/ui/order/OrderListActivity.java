@@ -19,6 +19,7 @@ import com.iplay.feastbooking.R;
 import com.iplay.feastbooking.assistance.WindowAttr;
 import com.iplay.feastbooking.basic.BasicActivity;
 import com.iplay.feastbooking.gson.order.OrderListItem;
+import com.iplay.feastbooking.gson.order.OrderListRequireConfig;
 import com.iplay.feastbooking.messageEvent.order.OrderListMessageEvent;
 import com.iplay.feastbooking.net.NetProperties;
 import com.iplay.feastbooking.net.utilImpl.order.OrderListUtility;
@@ -41,6 +42,10 @@ public class OrderListActivity extends BasicActivity implements View.OnClickList
 
     private static final String TAG = "OrderListActivity";
 
+    private static final String STATUS_KEY = "STATUS_KEY";
+
+    private boolean unfinished;
+
     private RelativeLayout load_state_rl;
 
     private TextView load_tv;
@@ -48,8 +53,6 @@ public class OrderListActivity extends BasicActivity implements View.OnClickList
     private ProgressBar refresh_progress_bar;
 
     private RecyclerView order_list_rv;
-
-    private OrderListUtility utility;
 
     private int visibleThreshold= 1;
 
@@ -63,8 +66,9 @@ public class OrderListActivity extends BasicActivity implements View.OnClickList
 
     private Handler postHandler = new Handler();
 
-    public static void start(Context context){
+    public static void start(Context context, boolean unfinished){
         Intent intent = new Intent(context, OrderListActivity.class);
+        intent.putExtra(STATUS_KEY, unfinished);
         context.startActivity(intent);
     }
 
@@ -93,7 +97,7 @@ public class OrderListActivity extends BasicActivity implements View.OnClickList
 
     @Override
     public void getData() {
-        utility = OrderListUtility.getInstance(this);
+        unfinished = getIntent().getBooleanExtra(STATUS_KEY, false);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -126,7 +130,7 @@ public class OrderListActivity extends BasicActivity implements View.OnClickList
                             orderItemData.setContent(orderListItem.content.get(i));
                             dataList.add(orderItemData);
                         }
-                        adapter = new OrderRecyclerViewAdapter(this, dataList);
+                        adapter = new OrderRecyclerViewAdapter(this, dataList, unfinished);
                         final LinearLayoutManager manager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
                         order_list_rv.setLayoutManager(manager);
                         order_list_rv.setAdapter(adapter);
@@ -145,7 +149,7 @@ public class OrderListActivity extends BasicActivity implements View.OnClickList
                                     postHandler.post(new Runnable() {
                                         @Override
                                         public void run() {
-                                            adapter.loadMoreData(utility);
+                                            adapter.loadMoreData(OrderListUtility.getInstance(getApplicationContext()));
                                         }
                                     });
                                 }
@@ -205,7 +209,9 @@ public class OrderListActivity extends BasicActivity implements View.OnClickList
             load_tv.setText("網絡不給力");
             refresh_progress_bar.setVisibility(View.GONE);
         }else {
-            utility.initOrderList();
+            OrderListRequireConfig.STATUS status = unfinished ?
+                    OrderListRequireConfig.STATUS.UNFINISHED : OrderListRequireConfig.STATUS.FINISHED;
+            OrderListUtility.getInstance(this).initOrderList(status);
         }
     }
 

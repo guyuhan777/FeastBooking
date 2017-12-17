@@ -1,11 +1,13 @@
 package com.iplay.feastbooking.net.utilImpl.order;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
 import com.iplay.feastbooking.assistance.LoginUserHolder;
 import com.iplay.feastbooking.assistance.ProperTies;
 import com.iplay.feastbooking.gson.order.OrderListItem;
+import com.iplay.feastbooking.gson.order.OrderListRequireConfig;
 import com.iplay.feastbooking.messageEvent.order.OrderListMessageEvent;
 
 import org.greenrobot.eventbus.EventBus;
@@ -55,24 +57,24 @@ public class OrderListUtility {
         return utility;
     }
 
-    public void loadMore(int page, final boolean isInit){
+    public void loadMore(@NonNull final OrderListRequireConfig config){
         OkHttpClient client = new OkHttpClient.Builder().connectTimeout(5, TimeUnit.SECONDS).build();
         String token = LoginUserHolder.getInstance().getCurrentUser().getToken();
         if(token == null || token.equals("")){
             return;
         }
         token = tokenPrefix + " " +  token;
-
+        String url = serverUrl
+                + urlSeperator + getOrderListAPI
+                + "?status=" + config.getStatus().toString() + "&page=" + config.getPage();
         Request request = new Request.Builder().
-                url(serverUrl + urlSeperator + getOrderListAPI + "?status=UNFINISHED&page=" + page).
+                url(url).
                 header("Authorization", token).build();
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 OrderListMessageEvent event = new OrderListMessageEvent();
-                if(isInit) {
-                    event.setInit(true);
-                }
+                event.setInit(config.isInit());
                 event.setType(OrderListMessageEvent.TYPE_NO_INTERNET);
                 EventBus.getDefault().post(event);
             }
@@ -80,9 +82,7 @@ public class OrderListUtility {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 OrderListMessageEvent event = new OrderListMessageEvent();
-                if(isInit) {
-                    event.setInit(true);
-                }
+                event.setInit(config.isInit());
                 if(!response.isSuccessful()){
                     event.setType(OrderListMessageEvent.TYPE_FAILURE);
                     if(response.code() == 401){
@@ -101,7 +101,11 @@ public class OrderListUtility {
         });
     }
 
-    public void initOrderList(){
-        loadMore(0,true);
+    public void initOrderList(OrderListRequireConfig.STATUS status){
+        OrderListRequireConfig config = new OrderListRequireConfig();
+        config.setInit(true);
+        config.setPage(0);
+        config.setStatus(status);
+        loadMore(config);
     }
 }

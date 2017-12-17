@@ -9,6 +9,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hannesdorfmann.adapterdelegates3.AdapterDelegatesManager;
+import com.iplay.feastbooking.gson.order.OrderListRequireConfig;
 import com.iplay.feastbooking.net.NetProperties;
 import com.iplay.feastbooking.net.utilImpl.order.OrderListUtility;
 import com.iplay.feastbooking.ui.order.data.FootStateData;
@@ -28,6 +29,8 @@ import java.util.List;
  */
 
 public class OrderRecyclerViewAdapter extends RecyclerView.Adapter implements InitCLMListener{
+
+    private boolean unfinished;
 
     private List<BasicData> orderBasics;
 
@@ -58,7 +61,8 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter implements In
         return false;
     }
 
-    public OrderRecyclerViewAdapter(Activity activity, List<BasicData> orderBasics) {
+    public OrderRecyclerViewAdapter(Activity activity, List<BasicData> orderBasics, boolean unfinished) {
+        this.unfinished = unfinished;
         delegatesManager = new AdapterDelegatesManager<>();
         delegatesManager.addDelegate(new OrderItemAdapterDelegate(activity));
         delegatesManager.addDelegate(new FooterStateAdapterDelegate(activity));
@@ -124,7 +128,13 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter implements In
         data.setType(FootStateData.TYPE_LOADING);
         addData(data);
         int page = numOfOrders/numPerPage;
-        utility.loadMore(page, false);
+        OrderListRequireConfig.STATUS status = unfinished ?
+                OrderListRequireConfig.STATUS.UNFINISHED : OrderListRequireConfig.STATUS.FINISHED;
+        OrderListRequireConfig config = new OrderListRequireConfig();
+        config.setStatus(status);
+        config.setPage(page);
+        config.setInit(false);
+        utility.loadMore(config);
     }
 
     public boolean isAllLoaded(){
