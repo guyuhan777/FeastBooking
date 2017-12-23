@@ -17,6 +17,7 @@ import com.hannesdorfmann.adapterdelegates3.AdapterDelegate;
 import com.iplay.feastbooking.R;
 import com.iplay.feastbooking.entity.IdentityMatrix;
 import com.iplay.feastbooking.gson.order.OrderListItem;
+import com.iplay.feastbooking.ui.order.HistoryOrderDetailActivity;
 import com.iplay.feastbooking.ui.order.OrderDetailActivity;
 import com.iplay.feastbooking.ui.order.data.OrderItemData;
 import com.iplay.feastbooking.ui.order.data.basic.BasicData;
@@ -37,9 +38,16 @@ public class OrderItemAdapterDelegate extends AdapterDelegate<List<BasicData>> {
 
     private LayoutInflater inflater;
 
+    private boolean unfinished;
+
     public OrderItemAdapterDelegate(Activity activity) {
         inflater = LayoutInflater.from(activity);
         activityWF = new WeakReference<>(activity);
+    }
+
+    public OrderItemAdapterDelegate(Activity activity, boolean unfinished){
+        this(activity);
+        this.unfinished = unfinished;
     }
 
     @Override
@@ -81,14 +89,20 @@ public class OrderItemAdapterDelegate extends AdapterDelegate<List<BasicData>> {
                 orderItemVH.forwards_iv.setVisibility(View.GONE);
             }
         }
-        Log.d("data", content.toString());
         orderItemVH.customer_name_tv.setText(content.contact);
         orderItemVH.hotel_name_tv.setText(content.hotel);
         orderItemVH.banquet_halls_tv.setText(content.banquetHall);
         LinearLayoutManager manager = new LinearLayoutManager(activityWF.get(), LinearLayoutManager.HORIZONTAL, false);
         orderItemVH.time_line_rv.setLayoutManager(manager);
         orderItemVH.time_line_rv.setAdapter(new OrderTimeLineAdapter(content.orderStatus));
-        orderItemVH.root_view_ll.setOnClickListener(new OrderItemOnclickListener(data, activityWF.get()));
+        orderItemVH.root_view_ll.setOnClickListener(new OrderItemOnclickListener(data, activityWF.get(), unfinished));
+        if(!unfinished){
+            orderItemVH.time_line_rv.setVisibility(View.GONE);
+            orderItemVH.finished_state_ll.setVisibility(View.VISIBLE);
+        }else {
+            orderItemVH.time_line_rv.setVisibility(View.VISIBLE);
+            orderItemVH.finished_state_ll.setVisibility(View.GONE);
+        }
     }
 
     private static class OrderItemOnclickListener implements View.OnClickListener{
@@ -97,18 +111,31 @@ public class OrderItemAdapterDelegate extends AdapterDelegate<List<BasicData>> {
 
         private final Context context;
 
-        OrderItemOnclickListener(OrderItemData orderItemData, Context context){
+        private final boolean unfinished;
+
+        OrderItemOnclickListener(OrderItemData orderItemData, Context context, boolean unfinished){
             this.orderItemData = orderItemData;
             this.context = context;
+            this.unfinished = unfinished;
         }
 
         @Override
         public void onClick(View v) {
             OrderListItem.Content content = orderItemData.getContent();
-            IdentityMatrix identityMatrix;
-            if (content != null && (identityMatrix = content.getIdentityMatrix()) != null
-                    && (identityMatrix.isCustomer() || identityMatrix.isManager())) {
-                OrderDetailActivity.start(context, orderItemData.getContent());
+            IdentityMatrix identityMatrix = content == null ? null : content.getIdentityMatrix();
+            if(unfinished) {
+                if (content != null && identityMatrix != null
+                        && (identityMatrix.isCustomer() || identityMatrix.isManager())) {
+                    OrderDetailActivity.start(context, orderItemData.getContent());
+                }
+            }else {
+                if(identityMatrix != null){
+                    if(identityMatrix.isCustomer()){
+
+                    }else {
+                        HistoryOrderDetailActivity.start(content.id, context);
+                    }
+                }
             }
         }
     }
@@ -219,6 +246,8 @@ public class OrderItemAdapterDelegate extends AdapterDelegate<List<BasicData>> {
 
         private TextView customer_name_tv;
 
+        private LinearLayout finished_state_ll;
+
         OrderItemViewHolder(View itemView) {
             super(itemView);
             role_iv = (ImageView) itemView.findViewById(R.id.role_iv);
@@ -230,6 +259,7 @@ public class OrderItemAdapterDelegate extends AdapterDelegate<List<BasicData>> {
             time_line_rv = (RecyclerView) itemView.findViewById(R.id.time_line_rv);
             customer_name_tv = (TextView) itemView.findViewById(R.id.customer_name_tv);
             root_view_ll = (LinearLayout) itemView.findViewById(R.id.order_list_item_root_view);
+            finished_state_ll = (LinearLayout) itemView.findViewById(R.id.finished_state_ll);
         }
     }
 }

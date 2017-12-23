@@ -54,6 +54,8 @@ public class OrderListActivity extends BasicActivity implements View.OnClickList
 
     private RecyclerView order_list_rv;
 
+    private TextView list_title_tv;
+
     private int visibleThreshold= 1;
 
     private int totalItemCount;
@@ -88,6 +90,9 @@ public class OrderListActivity extends BasicActivity implements View.OnClickList
         View status_bar_fix = findViewById(R.id.status_bar_fix_title);
         status_bar_fix.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, WindowAttr.getStatusBarHeight(this)));
         load_state_rl = (RelativeLayout) findViewById(R.id.load_state_rl);
+
+        list_title_tv = (TextView) findViewById(R.id.order_list_title_tv);
+        list_title_tv.setText(unfinished ? "進行中的訂單" : "歷史訂單");
         load_tv = (TextView) findViewById(R.id.load_tv);
         refresh_progress_bar = (ProgressBar) findViewById(R.id.refresh_progress_bar);
         refresh_progress_bar.setIndeterminate(true);

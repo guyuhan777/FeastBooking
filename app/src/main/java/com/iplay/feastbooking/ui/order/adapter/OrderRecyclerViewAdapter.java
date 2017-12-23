@@ -64,7 +64,7 @@ public class OrderRecyclerViewAdapter extends RecyclerView.Adapter implements In
     public OrderRecyclerViewAdapter(Activity activity, List<BasicData> orderBasics, boolean unfinished) {
         this.unfinished = unfinished;
         delegatesManager = new AdapterDelegatesManager<>();
-        delegatesManager.addDelegate(new OrderItemAdapterDelegate(activity));
+        delegatesManager.addDelegate(new OrderItemAdapterDelegate(activity, unfinished));
         delegatesManager.addDelegate(new FooterStateAdapterDelegate(activity));
         delegatesManager.addDelegate(new LoadingAdapter(activity));
         delegatesManager.addDelegate(new ClickToLoadMoreAdapterDelegate(activity, this));

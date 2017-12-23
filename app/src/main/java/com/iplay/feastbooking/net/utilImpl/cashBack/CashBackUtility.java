@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import com.iplay.feastbooking.assistance.LoginUserHolder;
 import com.iplay.feastbooking.assistance.ProperTies;
 import com.iplay.feastbooking.gson.cashBack.CashBackMessageEvent;
+import com.iplay.feastbooking.gson.cashBack.OrderCashBackMessageEvent;
 import com.iplay.feastbooking.gson.consult.CommonStateResponse;
 import com.iplay.feastbooking.gson.selfInfo.ChangePasswordRequest;
 import com.iplay.feastbooking.messageEvent.selfInfo.ChangePasswordMessageEvent;
@@ -48,6 +49,8 @@ public class CashBackUtility {
 
     private final String cashBack;
 
+    private final String orders;
+
     private CashBackUtility(Context context){
         properties = ProperTies.getProperties(context);
         serverUrl = properties.getProperty("serverUrl");
@@ -55,6 +58,7 @@ public class CashBackUtility {
         tokenPrefix = properties.getProperty("tokenPrefix");
         user = properties.getProperty("user");
         cashBack = properties.getProperty("cashBack");
+        orders = properties.getProperty("postOrder");
     }
 
     public static CashBackUtility getInstance(Context context){
@@ -66,6 +70,37 @@ public class CashBackUtility {
             }
         }
         return instance;
+    }
+
+    public void getCashBackForCertainOrder(int orderId, Context context){
+        if(NetProperties.isNetworkConnected(context)){
+            String token = LoginUserHolder.getInstance().getCurrentUser().getToken();
+            if (token == null || token.equals("")) {
+                return;
+            }
+            token = tokenPrefix + " " + token;
+            OkHttpClient client = new OkHttpClient.Builder().connectTimeout(5, TimeUnit.SECONDS).build();
+            Request request = new Request
+                    .Builder()
+                    .url(serverUrl + urlSeperator + orders + urlSeperator
+                            + orderId + urlSeperator + cashBack)
+                    .header("Authorization", token).build();
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    if(response.isSuccessful()){
+                        Gson gson = new Gson();
+                        OrderCashBackMessageEvent event = gson.fromJson(response.body().string(), OrderCashBackMessageEvent.class);
+                        EventBus.getDefault().post(event);
+                    }
+                }
+            });
+        }
     }
 
     public void getCashBack(Context context) {

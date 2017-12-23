@@ -1,5 +1,7 @@
 package com.iplay.feastbooking.assistance.property;
 
+import com.iplay.feastbooking.gson.order.OrderListRequireConfig;
+
 import java.util.HashMap;
 
 /**
@@ -15,7 +17,8 @@ public class OrderStatus {
             STATUS_RESERVED = "RESERVED",
             STATUS_FEASTED = "FEASTED",
             STATUS_CASHBACK = "CASHBACK",
-            STATUS_TO_BE_REVIEWD = "TO_BE_REVIEWD";
+            STATUS_TO_BE_REVIEWD = "TO_BE_REVIEWD",
+            STATUS_DONE = "DONE";
 
     static {
         orderStatusEn2ChMap = new HashMap<>();
@@ -24,6 +27,7 @@ public class OrderStatus {
         orderStatusEn2ChMap.put(STATUS_FEASTED, "已擺酒");
         orderStatusEn2ChMap.put(STATUS_CASHBACK, "等待返現");
         orderStatusEn2ChMap.put(STATUS_TO_BE_REVIEWD, "待評價");
+        orderStatusEn2ChMap.put(STATUS_DONE, "完成");
     }
 
     public static String getOrderStatusCh(String enKey){

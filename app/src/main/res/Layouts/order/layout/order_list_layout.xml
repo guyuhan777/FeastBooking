@@ -21,6 +21,7 @@
             android:layout_width="@dimen/app_back_size"
             android:layout_height="@dimen/app_back_size" />
         <TextView
+            android:id="@+id/order_list_title_tv"
             android:layout_centerHorizontal="true"
             android:text="進行中的訂單"
             android:layout_centerVertical="true"

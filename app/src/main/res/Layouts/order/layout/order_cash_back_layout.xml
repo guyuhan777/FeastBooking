@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <View
+        android:id="@+id/status_bar_fix_title"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/white" />
+    <RelativeLayout
+        android:background="@color/white"
+        android:padding="@dimen/app_body_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:layout_centerVertical="true"
+            android:src="@drawable/back_sm"
+            android:id="@id/back_iv"
+            android:layout_width="@dimen/app_back_size"
+            android:layout_height="@dimen/app_back_size" />
+        <TextView
+            android:layout_centerHorizontal="true"
+            android:text="返現詳情"
+            android:layout_centerVertical="true"
+            android:textColor="@color/app_title_color"
+            android:textSize="@dimen/app_text_title_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+    <include layout="@layout/title_sepertae_horizontal" />
+    <RelativeLayout
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:padding="@dimen/app_body_margin">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="預計返現"
+            android:textSize="@dimen/app_recycle_view_text_size" />
+        <TextView
+            android:layout_alignParentEnd="true"
+            android:id="@+id/expected_cash_back_tv"
+            android:textSize="@dimen/app_recycle_view_text_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+    <include layout="@layout/seperateline_horizontal" />
+
+    <ScrollView
+        android:id="@+id/order_detail_sv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/customer_cash_back_bar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:gravity="center_vertical"
+                android:padding="@dimen/app_body_margin">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="消費者返現比例"
+                    android:textSize="@dimen/app_recycle_view_text_size" />
+
+                <TextView
+                    android:id="@+id/customer_cash_back_rate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:textSize="@dimen/app_recycle_view_text_size" />
+            </RelativeLayout>
+
+            <include layout="@layout/seperateline_horizontal" />
+
+            <RelativeLayout
+                android:id="@+id/manager_cash_back_bar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:gravity="center_vertical"
+                android:padding="@dimen/app_body_margin">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="經理人返現比例"
+                    android:textSize="@dimen/app_recycle_view_text_size" />
+
+                <TextView
+                    android:id="@+id/manager_cash_back_rate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:textSize="@dimen/app_recycle_view_text_size" />
+            </RelativeLayout>
+
+            <include layout="@layout/seperateline_horizontal" />
+
+            <RelativeLayout
+                android:id="@+id/recommender_cash_back_bar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:gravity="center_vertical"
+                android:padding="@dimen/app_body_margin">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="推介人返現比例"
+                    android:textSize="@dimen/app_recycle_view_text_size" />
+
+                <TextView
+                    android:id="@+id/recommender_cash_back_rate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:textSize="@dimen/app_recycle_view_text_size" />
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
