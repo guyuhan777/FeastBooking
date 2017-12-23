@@ -133,7 +133,7 @@ public class OrderItemAdapterDelegate extends AdapterDelegate<List<BasicData>> {
                     if(identityMatrix.isCustomer()){
 
                     }else {
-                        HistoryOrderDetailActivity.start(content.id, context);
+                        HistoryOrderDetailActivity.start(content.id, content.getIdentityMatrix(), context);
                     }
                 }
             }
