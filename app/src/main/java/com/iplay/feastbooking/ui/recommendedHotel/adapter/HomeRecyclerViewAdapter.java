@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.hannesdorfmann.adapterdelegates3.AdapterDelegatesManager;
 import com.iplay.feastbooking.net.NetProperties;
 import com.iplay.feastbooking.net.utilImpl.recommendHotelUtil.RecommendHotelListUtility;
+import com.iplay.feastbooking.ui.order.data.basic.BasicData;
 import com.iplay.feastbooking.ui.recommendedHotel.data.AdvertisementHomeData;
 import com.iplay.feastbooking.ui.recommendedHotel.data.ClickToLoadMoreHomeData;
 import com.iplay.feastbooking.ui.recommendedHotel.data.HotelHomeData;
@@ -19,7 +20,6 @@ import com.iplay.feastbooking.ui.recommendedHotel.data.PlaceHolderHomeData;
 import com.iplay.feastbooking.ui.recommendedHotel.data.RecommendHotelHomeData;
 import com.iplay.feastbooking.ui.recommendedHotel.data.TitleHomeData;
 import com.iplay.feastbooking.ui.recommendedHotel.data.UnderLoadingHomeData;
-import com.iplay.feastbooking.ui.recommendedHotel.data.basic.BasicHomeData;
 import com.iplay.feastbooking.ui.recommendedHotel.delegates.AdvertisementAdapterDelegate;
 import com.iplay.feastbooking.ui.recommendedHotel.delegates.AllLoadedAdapterDelegate;
 import com.iplay.feastbooking.ui.recommendedHotel.delegates.ClickToLoadMoreAdapterDelegate;
@@ -67,9 +67,9 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter {
 
     private int numOfHotels = 0;
 
-    private List<BasicHomeData> items = new ArrayList<>();
+    private List<BasicData> items = new ArrayList<>();
 
-    private AdapterDelegatesManager<List<BasicHomeData>> delegatesManager;
+    private AdapterDelegatesManager<List<BasicData>> delegatesManager;
 
     private WeakReference<Context> contextWeakReference;
 
@@ -145,7 +145,7 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter {
         }
     }
 
-    public void addData(BasicHomeData data){
+    public void addData(BasicData data){
         if(data instanceof AdvertisementHomeData){
             items.remove(AD_INDEX);
             items.add(AD_INDEX,data);

@@ -12,8 +12,8 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.hannesdorfmann.adapterdelegates3.AdapterDelegate;
 import com.iplay.feastbooking.R;
+import com.iplay.feastbooking.ui.order.data.basic.BasicData;
 import com.iplay.feastbooking.ui.recommendedHotel.data.RecommendHotelHomeData;
-import com.iplay.feastbooking.ui.recommendedHotel.data.basic.BasicHomeData;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -22,7 +22,7 @@ import java.util.List;
  * Created by gu_y-pc on 2017/10/23.
  */
 
-public class RecommendHotelAdapterDelegate extends AdapterDelegate<List<BasicHomeData>> {
+public class RecommendHotelAdapterDelegate extends AdapterDelegate<List<BasicData>> {
 
     private LayoutInflater inflater;
 
@@ -34,7 +34,7 @@ public class RecommendHotelAdapterDelegate extends AdapterDelegate<List<BasicHom
     }
 
     @Override
-    protected boolean isForViewType(@NonNull List<BasicHomeData> items, int position) {
+    protected boolean isForViewType(@NonNull List<BasicData> items, int position) {
         return items.get(position) instanceof RecommendHotelHomeData;
     }
 
@@ -45,7 +45,7 @@ public class RecommendHotelAdapterDelegate extends AdapterDelegate<List<BasicHom
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull List<BasicHomeData> items, int position, @NonNull RecyclerView.ViewHolder holder, @NonNull List<Object> payloads) {
+    protected void onBindViewHolder(@NonNull List<BasicData> items, int position, @NonNull RecyclerView.ViewHolder holder, @NonNull List<Object> payloads) {
         RecommendHotelHomeData data = (RecommendHotelHomeData) items.get(position);
         RecommendHotelViewHolder recommendHotelViewHolder = (RecommendHotelViewHolder) holder;
         Glide.with(contextWeakReference.get()).load(data.getRecommendGrid().getUrl()).placeholder(R.drawable.loading_reco).into(recommendHotelViewHolder.icon);

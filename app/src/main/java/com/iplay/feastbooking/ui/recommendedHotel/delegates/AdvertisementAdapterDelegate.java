@@ -13,8 +13,8 @@ import com.bumptech.glide.Glide;
 import com.hannesdorfmann.adapterdelegates3.AdapterDelegate;
 import com.iplay.feastbooking.R;
 import com.iplay.feastbooking.entity.Advertisement;
+import com.iplay.feastbooking.ui.order.data.basic.BasicData;
 import com.iplay.feastbooking.ui.recommendedHotel.data.AdvertisementHomeData;
-import com.iplay.feastbooking.ui.recommendedHotel.data.basic.BasicHomeData;
 import com.jude.rollviewpager.RollPagerView;
 import com.jude.rollviewpager.adapter.LoopPagerAdapter;
 
@@ -25,7 +25,7 @@ import java.util.List;
  * Created by gu_y-pc on 2017/10/23.
  */
 
-public class AdvertisementAdapterDelegate extends AdapterDelegate<List<BasicHomeData>> {
+public class AdvertisementAdapterDelegate extends AdapterDelegate<List<BasicData>> {
 
     private LayoutInflater inflater;
 
@@ -34,7 +34,7 @@ public class AdvertisementAdapterDelegate extends AdapterDelegate<List<BasicHome
     }
 
     @Override
-    protected boolean isForViewType(@NonNull List<BasicHomeData> items, int position) {
+    protected boolean isForViewType(@NonNull List<BasicData> items, int position) {
         return items.get(position) instanceof AdvertisementHomeData;
     }
 
@@ -45,7 +45,7 @@ public class AdvertisementAdapterDelegate extends AdapterDelegate<List<BasicHome
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull List<BasicHomeData> items, int position, @NonNull RecyclerView.ViewHolder holder, @NonNull List<Object> payloads) {
+    protected void onBindViewHolder(@NonNull List<BasicData> items, int position, @NonNull RecyclerView.ViewHolder holder, @NonNull List<Object> payloads) {
         AdvertisementHomeData data = (AdvertisementHomeData) items.get(position);
         RollPagerView rollPagerView = ((AdvertisementViewHolder) holder).rollPagerView;
         rollPagerView.setAdapter(new AdvertisementLooperAdapter(rollPagerView, data.getAdvertisements()));

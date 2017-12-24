@@ -20,7 +20,9 @@ import com.iplay.feastbooking.gson.cashBack.CashBackMessageEvent;
 import com.iplay.feastbooking.gson.selfInfo.SelfInfo;
 import com.iplay.feastbooking.messageEvent.selfInfo.SelfInfoMessageEvent;
 import com.iplay.feastbooking.net.utilImpl.cashBack.CashBackUtility;
+import com.iplay.feastbooking.net.utilImpl.favourite.FavouriteHotelUtility;
 import com.iplay.feastbooking.net.utilImpl.selfDetail.ChangeSelfInfoUtility;
+import com.iplay.feastbooking.ui.favourite.FavouriteHotelActivity;
 import com.iplay.feastbooking.ui.order.OrderListActivity;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -88,6 +90,7 @@ public class SelfFragment extends BasicFragment implements View.OnClickListener{
 
         functionBars[MY_COLLECTION_INDEX] = (FunctionBar) view.findViewById(R.id.my_collection_fb);
         functionBars[MY_COLLECTION_INDEX].function_name_tv.setText("我的收藏");
+        functionBars[MY_COLLECTION_INDEX].setOnClickListener(this);
 
         functionBars[PROBLEM_INDEX] = (FunctionBar) view.findViewById(R.id.problem_fb);
         functionBars[PROBLEM_INDEX].function_name_tv.setText("常見為題");
@@ -167,6 +170,12 @@ public class SelfFragment extends BasicFragment implements View.OnClickListener{
                 functionBars[ORDER_HISTORY_INDEX].disable();
                 OrderListActivity.start(mContext, false);
                 functionBars[ORDER_HISTORY_INDEX].enable();
+                break;
+            case R.id.my_collection_fb:
+                functionBars[MY_COLLECTION_INDEX].disable();
+                FavouriteHotelActivity.start(mContext);
+                functionBars[MY_COLLECTION_INDEX].enable();
+                break;
             default:
                 break;
         }

@@ -11,9 +11,9 @@ import android.widget.TextView;
 
 import com.hannesdorfmann.adapterdelegates3.AdapterDelegate;
 import com.iplay.feastbooking.R;
+import com.iplay.feastbooking.ui.order.data.basic.BasicData;
 import com.iplay.feastbooking.ui.recommendedHotel.adapter.HomeRecyclerViewAdapter;
 import com.iplay.feastbooking.ui.recommendedHotel.data.ClickToLoadMoreHomeData;
-import com.iplay.feastbooking.ui.recommendedHotel.data.basic.BasicHomeData;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -22,7 +22,7 @@ import java.util.List;
  * Created by gu_y-pc on 2017/10/23.
  */
 
-public class ClickToLoadMoreAdapterDelegate extends AdapterDelegate<List<BasicHomeData>> {
+public class ClickToLoadMoreAdapterDelegate extends AdapterDelegate<List<BasicData>> {
     private LayoutInflater inflater;
 
     private WeakReference<Context> contextWeakReference;
@@ -36,7 +36,7 @@ public class ClickToLoadMoreAdapterDelegate extends AdapterDelegate<List<BasicHo
     }
 
     @Override
-    protected boolean isForViewType(@NonNull List<BasicHomeData> items, int position) {
+    protected boolean isForViewType(@NonNull List<BasicData> items, int position) {
         return items.get(position) instanceof ClickToLoadMoreHomeData;
     }
 
@@ -47,7 +47,7 @@ public class ClickToLoadMoreAdapterDelegate extends AdapterDelegate<List<BasicHo
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull List<BasicHomeData> items, int position, @NonNull RecyclerView.ViewHolder holder, @NonNull List<Object> payloads) {
+    protected void onBindViewHolder(@NonNull List<BasicData> items, int position, @NonNull RecyclerView.ViewHolder holder, @NonNull List<Object> payloads) {
         TextView tv = ((ClickToLoadMoreViewHolder) holder).click_to_load_tv;
         adapterWeakReference.get().initListenerOnCLM(tv, contextWeakReference.get());
     }

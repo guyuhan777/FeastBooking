@@ -1,4 +1,4 @@
-package com.iplay.feastbooking.ui.review;
+package com.iplay.feastbooking.ui.favourite;
 
 import android.content.Context;
 import android.content.Intent;
@@ -19,15 +19,15 @@ import android.widget.Toast;
 import com.iplay.feastbooking.R;
 import com.iplay.feastbooking.assistance.WindowAttr;
 import com.iplay.feastbooking.basic.BasicActivity;
-import com.iplay.feastbooking.gson.order.OrderListItem;
+import com.iplay.feastbooking.messageEvent.favourite.FavouriteHotelMessageEvent;
 import com.iplay.feastbooking.messageEvent.review.ReviewListMessageEvent;
 import com.iplay.feastbooking.net.NetProperties;
-import com.iplay.feastbooking.net.utilImpl.order.OrderListUtility;
+import com.iplay.feastbooking.net.utilImpl.favourite.FavouriteHotelUtility;
 import com.iplay.feastbooking.net.utilImpl.reviewUtil.ReviewUtility;
-import com.iplay.feastbooking.ui.order.adapter.OrderRecyclerViewAdapter;
+import com.iplay.feastbooking.ui.favourite.adapter.FavouriteHotelAdapter;
 import com.iplay.feastbooking.ui.order.data.FootStateData;
-import com.iplay.feastbooking.ui.order.data.OrderItemData;
 import com.iplay.feastbooking.ui.order.data.basic.BasicData;
+import com.iplay.feastbooking.ui.recommendedHotel.data.HotelHomeData;
 import com.iplay.feastbooking.ui.review.adapter.ReviewRecyclerViewAdapter;
 import com.iplay.feastbooking.ui.review.data.ReviewData;
 
@@ -38,16 +38,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by gu_y-pc on 2017/11/27.
+ * Created by gu_y-pc on 2017/12/24.
  */
 
-public class HotelReviewActivity extends BasicActivity implements View.OnClickListener{
-
-    private static final String TAG = "HotelReviewActivity";
-
-    private int hotelId;
-
-    private static final String HOTEL_KEY = "HOTEL_KEY";
+public class FavouriteHotelActivity extends BasicActivity implements View.OnClickListener{
 
     private TextView load_state;
 
@@ -55,7 +49,7 @@ public class HotelReviewActivity extends BasicActivity implements View.OnClickLi
 
     private RelativeLayout load_state_rl;
 
-    private RecyclerView review_rv;
+    private RecyclerView hotel_rv;
 
     private int visibleThreshold= 1;
 
@@ -63,23 +57,26 @@ public class HotelReviewActivity extends BasicActivity implements View.OnClickLi
 
     private int lastVisibleItemPosition;
 
-    private ReviewRecyclerViewAdapter adapter;
+    private FavouriteHotelAdapter adapter;
 
     private  volatile boolean isInit = false;
 
     private Handler postHandler = new Handler();
 
     @Override
-    public void setContentView() {
-        setContentView(R.layout.hotel_review_layout);
-    }
-
-
-
-    @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         isRegistered = true;
         super.onCreate(savedInstanceState);
+    }
+
+    public static void start(Context context){
+        Intent intent = new Intent(context, FavouriteHotelActivity.class);
+        context.startActivity(intent);
+    }
+
+    @Override
+    public void setContentView() {
+        setContentView(R.layout.favourite_hotel_layout);
     }
 
     @Override
@@ -91,44 +88,37 @@ public class HotelReviewActivity extends BasicActivity implements View.OnClickLi
         load_state.setOnClickListener(this);
         progressBar = (ProgressBar) findViewById(R.id.refresh_progress_bar) ;
         load_state_rl = (RelativeLayout) findViewById(R.id.load_state_rl);
-        review_rv = (RecyclerView) findViewById(R.id.comment_list_rv);
+        hotel_rv = (RecyclerView) findViewById(R.id.hotel_list_rv);
         progressBar.setIndeterminate(true);
     }
 
-    public static void start(Context context, int orderId){
-        Intent intent = new Intent(context, HotelReviewActivity.class);
-        intent.putExtra(HOTEL_KEY, orderId);
-        context.startActivity(intent);
-    }
-
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onReviewListMessageEvent(ReviewListMessageEvent event){
+    public void onFavouriteHotelMessageEvent(FavouriteHotelMessageEvent event){
         if(event.isInit()){
-            if(event.getType() == ReviewListMessageEvent.TYPE_FAILURE){
+            if(event.getType() == FavouriteHotelMessageEvent.TYPE_FAILURE){
                 initFailure(event.getFailureReason());
-            }else if(event.getType() == ReviewListMessageEvent.TYPE_SUCCESS){
-                List<ReviewData> reviews = event.getReviews();
-                List<BasicData> reviewDatas = new ArrayList<>();
-                reviewDatas.addAll(reviews);
-                if(reviews == null || reviews.size() == 0){
-                    review_rv.setVisibility(View.GONE);
+            }else if(event.getType() == FavouriteHotelMessageEvent.TYPE_SUCCESS){
+                List<HotelHomeData> hotels = event.getHomeDatas();
+                List<BasicData> hotelDatas = new ArrayList<>();
+                hotelDatas.addAll(hotels);
+                if(hotels == null || hotels.size() == 0){
+                    hotel_rv.setVisibility(View.GONE);
                     load_state_rl.setVisibility(View.VISIBLE);
-                    Log.d(TAG, "here");
                     load_state.setEnabled(false);
-                    load_state.setText("暫無評論");
+                    load_state.setText("暫無收藏");
                     progressBar.setIndeterminate(false);
                     progressBar.setVisibility(View.INVISIBLE);
                 }else {
                     load_state.setEnabled(false);
                     load_state_rl.setVisibility(View.GONE);
-                    review_rv.setVisibility(View.VISIBLE);
+                    hotel_rv.setVisibility(View.VISIBLE);
                     if(adapter == null){
-                        adapter = new ReviewRecyclerViewAdapter(this, reviewDatas, hotelId);
+                        adapter = new FavouriteHotelAdapter(this, hotelDatas);
                         final LinearLayoutManager manager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
-                        review_rv.setLayoutManager(manager);
-                        review_rv.setAdapter(adapter);
+                        hotel_rv.setLayoutManager(manager);
+                        hotel_rv.setAdapter(adapter);
                         isInit = true;
-                        review_rv.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                        hotel_rv.addOnScrollListener(new RecyclerView.OnScrollListener() {
                             @Override
                             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                                 super.onScrolled(recyclerView, dx, dy);
@@ -162,18 +152,18 @@ public class HotelReviewActivity extends BasicActivity implements View.OnClickLi
                 adapter.setLoaded();
             }else {
                 adapter.cancelLoading();
-                List<ReviewData> reviews;
-                if(event.getReviews() == null){
+                List<HotelHomeData> hotelHomeDatas;
+                if(event.getHomeDatas() == null){
                     return;
                 }else {
-                    reviews = event.getReviews();
-                    if(reviews == null || reviews.size() == 0){
+                    hotelHomeDatas = event.getHomeDatas();
+                    if(hotelHomeDatas == null || hotelHomeDatas.size() == 0){
                         FootStateData footStateData = new FootStateData();
                         footStateData.setType(FootStateData.TYPE_ALL_LOADED);
                         adapter.addData(footStateData);
                     }else {
-                        for(int i=0; i<reviews.size(); i++){
-                            adapter.addData(reviews.get(i));
+                        for(int i=0; i<hotelHomeDatas.size(); i++){
+                            adapter.addData(hotelHomeDatas.get(i));
                         }
                         if(adapter.isAllLoaded()){
                             FootStateData footStateData = new FootStateData();
@@ -187,8 +177,13 @@ public class HotelReviewActivity extends BasicActivity implements View.OnClickLi
         }
     }
 
+    @Override
+    public void getData() {
+
+    }
+
     private void initFailure(String failureReason){
-        review_rv.setVisibility(View.GONE);
+        hotel_rv.setVisibility(View.GONE);
         load_state_rl.setVisibility(View.VISIBLE);
         load_state.setEnabled(true);
         load_state.setText(failureReason + ", 點我重試");
@@ -197,21 +192,16 @@ public class HotelReviewActivity extends BasicActivity implements View.OnClickLi
     }
 
     @Override
-    public void getData() {
-        hotelId = getIntent().getIntExtra(HOTEL_KEY, -1);
-    }
-
-    @Override
     public void showContent() {
         if(!NetProperties.isNetworkConnected(this)){
-            review_rv.setVisibility(View.GONE);
+            hotel_rv.setVisibility(View.GONE);
             load_state_rl.setVisibility(View.VISIBLE);
             load_state.setEnabled(true);
             load_state.setText("網絡不給力,點我重試");
             progressBar.setIndeterminate(false);
             progressBar.setVisibility(View.INVISIBLE);
         }else {
-            ReviewUtility.getInstance(this).load(0, true, hotelId);
+            FavouriteHotelUtility.getInstance(this).load(0, true);
         }
     }
 
@@ -231,7 +221,9 @@ public class HotelReviewActivity extends BasicActivity implements View.OnClickLi
                 load_state.setText("正在努力加載中");
                 progressBar.setIndeterminate(true);
                 progressBar.setVisibility(View.VISIBLE);
-                ReviewUtility.getInstance(this).load(0, true, hotelId);
+                FavouriteHotelUtility.getInstance(this).load(0, true);
+                break;
+            default:
                 break;
         }
     }

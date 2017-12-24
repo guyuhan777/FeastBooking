@@ -15,8 +15,8 @@ import com.hannesdorfmann.adapterdelegates3.AdapterDelegate;
 import com.iplay.feastbooking.R;
 import com.iplay.feastbooking.gson.homepage.hotelList.RecommendHotelGO;
 import com.iplay.feastbooking.ui.hotelDetail.NewHotelDetailActivity;
+import com.iplay.feastbooking.ui.order.data.basic.BasicData;
 import com.iplay.feastbooking.ui.recommendedHotel.data.HotelHomeData;
-import com.iplay.feastbooking.ui.recommendedHotel.data.basic.BasicHomeData;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -25,7 +25,7 @@ import java.util.List;
  * Created by gu_y-pc on 2017/10/23.
  */
 
-public class HotelAdapterDelegate extends AdapterDelegate<List<BasicHomeData>> {
+public class HotelAdapterDelegate extends AdapterDelegate<List<BasicData>> {
 
     private LayoutInflater inflater;
 
@@ -37,7 +37,7 @@ public class HotelAdapterDelegate extends AdapterDelegate<List<BasicHomeData>> {
     }
 
     @Override
-    protected boolean isForViewType(@NonNull List<BasicHomeData> items, int position) {
+    protected boolean isForViewType(@NonNull List<BasicData> items, int position) {
         return items.get(position) instanceof HotelHomeData;
     }
 
@@ -48,7 +48,7 @@ public class HotelAdapterDelegate extends AdapterDelegate<List<BasicHomeData>> {
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull List<BasicHomeData> items, int position, @NonNull RecyclerView.ViewHolder holder, @NonNull List<Object> payloads) {
+    protected void onBindViewHolder(@NonNull List<BasicData> items, int position, @NonNull RecyclerView.ViewHolder holder, @NonNull List<Object> payloads) {
         HotelHomeData data = (HotelHomeData) items.get(position);
         if(data.getHotel()!= null){
             RecommendHotelGO go = data.getHotel();

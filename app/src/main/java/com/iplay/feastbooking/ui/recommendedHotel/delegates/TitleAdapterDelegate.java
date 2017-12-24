@@ -10,8 +10,8 @@ import android.widget.TextView;
 
 import com.hannesdorfmann.adapterdelegates3.AdapterDelegate;
 import com.iplay.feastbooking.R;
+import com.iplay.feastbooking.ui.order.data.basic.BasicData;
 import com.iplay.feastbooking.ui.recommendedHotel.data.TitleHomeData;
-import com.iplay.feastbooking.ui.recommendedHotel.data.basic.BasicHomeData;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ import java.util.List;
  * Created by gu_y-pc on 2017/10/23.
  */
 
-public class TitleAdapterDelegate extends AdapterDelegate<List<BasicHomeData>> {
+public class TitleAdapterDelegate extends AdapterDelegate<List<BasicData>> {
     private LayoutInflater inflater;
 
     public TitleAdapterDelegate(Activity activity){
@@ -27,7 +27,7 @@ public class TitleAdapterDelegate extends AdapterDelegate<List<BasicHomeData>> {
     }
 
     @Override
-    protected boolean isForViewType(@NonNull List<BasicHomeData> items, int position) {
+    protected boolean isForViewType(@NonNull List<BasicData> items, int position) {
         return items.get(position) instanceof TitleHomeData;
     }
 
@@ -38,7 +38,7 @@ public class TitleAdapterDelegate extends AdapterDelegate<List<BasicHomeData>> {
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull List<BasicHomeData> items, int position, @NonNull RecyclerView.ViewHolder holder, @NonNull List<Object> payloads) {
+    protected void onBindViewHolder(@NonNull List<BasicData> items, int position, @NonNull RecyclerView.ViewHolder holder, @NonNull List<Object> payloads) {
         TitleHomeData titleHomeData = (TitleHomeData) items.get(position);
         ((TitleViewHolder) holder).title_tv.setText(titleHomeData.getTitle().toString());
     }

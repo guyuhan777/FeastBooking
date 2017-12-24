@@ -4,19 +4,24 @@ import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.iplay.feastbooking.assistance.LoginUserHolder;
 import com.iplay.feastbooking.assistance.ProperTies;
 import com.iplay.feastbooking.gson.favourite.FavouriteHotelRequest;
 import com.iplay.feastbooking.gson.homepage.hotelList.RecommendHotelGO;
-import com.iplay.feastbooking.messageEvent.common.CommonMessageEvent;
+import com.iplay.feastbooking.messageEvent.favourite.FavouriteHotelMessageEvent;
 import com.iplay.feastbooking.messageEvent.favourite.FavouriteIfExistMessageEvent;
 import com.iplay.feastbooking.net.NetProperties;
 import com.iplay.feastbooking.net.message.UtilMessage;
 import com.iplay.feastbooking.net.utilImpl.consult.ConsultUtility;
+import com.iplay.feastbooking.ui.recommendedHotel.data.HotelHomeData;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
@@ -49,7 +54,9 @@ public class FavouriteHotelUtility {
 
     private final String user;
 
-    private final String restUrl;
+    private final String certainHotelUrl;
+
+    private final String hotelByPageUrl;
 
     private FavouriteHotelUtility(Context context){
         properties = ProperTies.getProperties(context);
@@ -59,8 +66,10 @@ public class FavouriteHotelUtility {
         hotels = properties.getProperty("listHotelsForUser");
         favourites = properties.getProperty("favourites");
         user = properties.getProperty("user");
-        restUrl = serverUrl + urlSeperator
+        certainHotelUrl = serverUrl + urlSeperator
                 + user + urlSeperator + favourites + urlSeperator + hotels;
+        hotelByPageUrl = serverUrl + urlSeperator
+                + user + urlSeperator + favourites;
     }
 
     public static FavouriteHotelUtility getInstance(Context context){
@@ -72,6 +81,58 @@ public class FavouriteHotelUtility {
             }
         }
         return instance;
+    }
+
+    public void load(int page, final boolean isInit){
+        OkHttpClient client = new OkHttpClient.Builder().connectTimeout(5, TimeUnit.SECONDS).build();
+        String token = LoginUserHolder.getInstance().getCurrentUser().getToken();
+        if(token == null || token.equals("")){
+            FavouriteHotelMessageEvent event = new FavouriteHotelMessageEvent();
+            event.setInit(isInit);
+            event.setType(FavouriteHotelMessageEvent.TYPE_FAILURE);
+            event.setFailureReason("尚未登錄");
+            EventBus.getDefault().post(event);
+        }
+        token = tokenPrefix + " " +  token;
+
+        Request request = new Request.Builder().
+                url(hotelByPageUrl + "?page=" + page).
+                header("Authorization", token).build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                FavouriteHotelMessageEvent event = new FavouriteHotelMessageEvent();
+                event.setInit(isInit);
+                event.setType(FavouriteHotelMessageEvent.TYPE_FAILURE);
+                event.setFailureReason("網絡不給力");
+                EventBus.getDefault().post(event);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                FavouriteHotelMessageEvent event = new FavouriteHotelMessageEvent();
+                event.setInit(isInit);
+                if (!response.isSuccessful()) {
+                    event.setType(FavouriteHotelMessageEvent.TYPE_FAILURE);
+                    event.setFailureReason("未知錯誤");
+                } else {
+                    event.setType(FavouriteHotelMessageEvent.TYPE_SUCCESS);
+                    Gson gson = new Gson();
+                    Type type = new TypeToken<List<RecommendHotelGO>>(){}.getType();
+                    List<RecommendHotelGO> recommendHotelGOs = gson.fromJson(response.body().string(), type);
+                    List<HotelHomeData> hotelHomeDatas = new ArrayList<>();
+                    if (recommendHotelGOs != null) {
+                        for (int i = 0; i < recommendHotelGOs.size(); i++) {
+                            HotelHomeData hotelHomeData = new HotelHomeData();
+                            hotelHomeData.setHotel(recommendHotelGOs.get(i));
+                            hotelHomeDatas.add(hotelHomeData);
+                        }
+                    }
+                    event.setHomeDatas(hotelHomeDatas);
+                    EventBus.getDefault().post(event);
+                }
+            }
+        });
     }
 
     public void favouriteHotel(Context context, int hotelId, boolean isDelete){
@@ -89,7 +150,7 @@ public class FavouriteHotelUtility {
 
             OkHttpClient client = new OkHttpClient.Builder().connectTimeout(3, TimeUnit.SECONDS).build();
             Request.Builder builder = new Request.Builder().header("Authorization", token)
-                    .url(restUrl + urlSeperator);
+                    .url(certainHotelUrl + urlSeperator);
             if(isDelete){
                 builder.delete(body);
             }else {
@@ -119,7 +180,7 @@ public class FavouriteHotelUtility {
             token = tokenPrefix + " " +  token;
             OkHttpClient client = new OkHttpClient.Builder().connectTimeout(3, TimeUnit.SECONDS).build();
             Request request = new Request.Builder().header("Authorization", token)
-                    .url(restUrl + urlSeperator + "?id=" + hotelId).build();
+                    .url(certainHotelUrl + urlSeperator + "?id=" + hotelId).build();
             client.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {

@@ -9,8 +9,8 @@ import android.view.ViewGroup;
 
 import com.hannesdorfmann.adapterdelegates3.AdapterDelegate;
 import com.iplay.feastbooking.R;
+import com.iplay.feastbooking.ui.order.data.basic.BasicData;
 import com.iplay.feastbooking.ui.recommendedHotel.data.AllLoadedHomeData;
-import com.iplay.feastbooking.ui.recommendedHotel.data.basic.BasicHomeData;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ import java.util.List;
  * Created by gu_y-pc on 2017/10/23.
  */
 
-public class AllLoadedAdapterDelegate extends AdapterDelegate<List<BasicHomeData>> {
+public class AllLoadedAdapterDelegate extends AdapterDelegate<List<BasicData>> {
 
     private LayoutInflater inflater;
 
@@ -27,7 +27,7 @@ public class AllLoadedAdapterDelegate extends AdapterDelegate<List<BasicHomeData
     }
 
     @Override
-    protected boolean isForViewType(@NonNull List<BasicHomeData> items, int position) {
+    protected boolean isForViewType(@NonNull List<BasicData> items, int position) {
         return items.get(position) instanceof AllLoadedHomeData;
     }
 
@@ -38,7 +38,7 @@ public class AllLoadedAdapterDelegate extends AdapterDelegate<List<BasicHomeData
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull List<BasicHomeData> items, int position, @NonNull RecyclerView.ViewHolder holder, @NonNull List<Object> payloads) {
+    protected void onBindViewHolder(@NonNull List<BasicData> items, int position, @NonNull RecyclerView.ViewHolder holder, @NonNull List<Object> payloads) {
         // do nothing
     }
 

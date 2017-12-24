@@ -12,8 +12,8 @@ import android.widget.LinearLayout;
 import com.hannesdorfmann.adapterdelegates3.AdapterDelegate;
 import com.iplay.feastbooking.R;
 import com.iplay.feastbooking.assistance.LengthUnitTranser;
+import com.iplay.feastbooking.ui.order.data.basic.BasicData;
 import com.iplay.feastbooking.ui.recommendedHotel.data.PlaceHolderHomeData;
-import com.iplay.feastbooking.ui.recommendedHotel.data.basic.BasicHomeData;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -22,7 +22,7 @@ import java.util.List;
  * Created by gu_y-pc on 2017/10/23.
  */
 
-public class PlaceHolderAdapterDelegate extends AdapterDelegate<List<BasicHomeData>> {
+public class PlaceHolderAdapterDelegate extends AdapterDelegate<List<BasicData>> {
     private LayoutInflater inflater;
 
     private WeakReference<Context> contextWeakReference;
@@ -33,7 +33,7 @@ public class PlaceHolderAdapterDelegate extends AdapterDelegate<List<BasicHomeDa
     }
 
     @Override
-    protected boolean isForViewType(@NonNull List<BasicHomeData> items, int position) {
+    protected boolean isForViewType(@NonNull List<BasicData> items, int position) {
         return items.get(position) instanceof PlaceHolderHomeData;
     }
 
@@ -44,7 +44,7 @@ public class PlaceHolderAdapterDelegate extends AdapterDelegate<List<BasicHomeDa
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull List<BasicHomeData> items, int position, @NonNull RecyclerView.ViewHolder holder, @NonNull List<Object> payloads) {
+    protected void onBindViewHolder(@NonNull List<BasicData> items, int position, @NonNull RecyclerView.ViewHolder holder, @NonNull List<Object> payloads) {
         PlaceHolderHomeData data = (PlaceHolderHomeData) items.get(position);
         int height = data.getHeight();
         Context context = contextWeakReference.get();
