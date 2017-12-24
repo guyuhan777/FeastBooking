@@ -86,12 +86,24 @@ public class OrderCashBackActivity extends BasicActivity implements View.OnClick
 
     @Override
     public void showContent() {
+        if(matrix.isRecommender()){
+            recommender_cash_back_bar.setVisibility(View.VISIBLE);
+        }
+        if(matrix.isManager()){
+            manager_cash_back_bar.setVisibility(View.VISIBLE);
+        }
+        if(matrix.isCustomer()){
+            customer_cash_back_bar.setVisibility(View.VISIBLE);
+        }
         updateInfo();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onOrderCashBackMessageEvent(OrderCashBackMessageEvent event){
-
+        expected_cash_back_tv.setText(event.getExpectedAmount(matrix));
+        customer_cash_back_rate.setText(event.getPercentageForCustomer());
+        manager_cash_back_rate.setText(event.getPercentageForManager());
+        recommender_cash_back_rate.setText(event.getPercentageForRecommender());
     }
 
     private void updateInfo(){

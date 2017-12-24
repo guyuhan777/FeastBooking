@@ -60,6 +60,7 @@
             android:orientation="vertical">
 
             <RelativeLayout
+                android:visibility="gone"
                 android:id="@+id/customer_cash_back_bar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -84,6 +85,7 @@
             <include layout="@layout/seperateline_horizontal" />
 
             <RelativeLayout
+                android:visibility="gone"
                 android:id="@+id/manager_cash_back_bar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -109,6 +111,7 @@
 
             <RelativeLayout
                 android:id="@+id/recommender_cash_back_bar"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/white"

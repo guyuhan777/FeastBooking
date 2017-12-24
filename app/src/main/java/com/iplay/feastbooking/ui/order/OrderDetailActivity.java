@@ -41,9 +41,11 @@ public class OrderDetailActivity extends BasicActivity implements View.OnClickLi
 
     private static final String TAG = "OrderDetailActivity";
 
-    private static final String contentKey = "ContentKey";
+    private static final String CONTENT_KEY = "ContentKey";
 
-    private static final String orderIdKey = "orderIdKey";
+    private static final String ORDER_ID_KEY = "ORDER_ID_KEY";
+
+    private static final String ORDER_STATUS_KEY = "ORDER_STATUS_KEY";
 
     private OrderListItem.Content content;
 
@@ -97,11 +99,15 @@ public class OrderDetailActivity extends BasicActivity implements View.OnClickLi
 
     private RelativeLayout upload_payment_bar;
 
+    private RelativeLayout cash_back_check_detail_bar;
+
     private ImageView forwards_recommender_iv;
 
     private TextView title_tv;
 
     private TextView review_tv;
+
+    private boolean unfinished;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -109,9 +115,10 @@ public class OrderDetailActivity extends BasicActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
     }
 
-    public static void start(Context context, OrderListItem.Content content){
+    public static void start(Context context, OrderListItem.Content content, boolean unfinished){
         Intent intent = new Intent(context,OrderDetailActivity.class);
-        intent.putExtra(contentKey, content);
+        intent.putExtra(CONTENT_KEY, content);
+        intent.putExtra(ORDER_STATUS_KEY, unfinished);
         context.startActivity(intent);
     }
 
@@ -160,13 +167,16 @@ public class OrderDetailActivity extends BasicActivity implements View.OnClickLi
         change_recommender_bar.setOnClickListener(this);
         forwards_recommender_iv = (ImageView) findViewById(R.id.forwards_recommender_iv);
 
+        cash_back_check_detail_bar = (RelativeLayout) findViewById(R.id.cash_back_check_detail_bar);
+        cash_back_check_detail_bar.setOnClickListener(this);
+
         review_tv = (TextView) findViewById(R.id.review_tv);
         review_tv.setOnClickListener(this);
 
-        setAccessibleByPrivilege(content.getIdentityMatrix());
+        setAccessibleByPrivilege(content.getIdentityMatrix(), unfinished);
     }
 
-    private void setAccessibleByPrivilege(IdentityMatrix identityMatrix){
+    private void setAccessibleByPrivilege(IdentityMatrix identityMatrix, boolean unfinished){
         if(identityMatrix != null){
             boolean isEnable = identityMatrix.isCustomer();
             int visibleState = identityMatrix.isCustomer()? View.VISIBLE : View.INVISIBLE;
@@ -176,13 +186,25 @@ public class OrderDetailActivity extends BasicActivity implements View.OnClickLi
             forwards_recommender_iv.setVisibility(visibleState);*/
             change_manager_bar.setEnabled(isEnable);
             forwards_manager_iv.setVisibility(visibleState);
+            if(!unfinished){
+                if(identityMatrix.isCustomer()) {
+                    cash_back_check_detail_bar.setVisibility(View.VISIBLE);
+                }
+                change_feastDate_bar.setEnabled(false);
+                change_manager_bar.setEnabled(false);
+            }
+            if(OrderStatus.STATUS_TO_BE_REVIEWD.equals(content.orderStatus)){
+                review_tv.setVisibility(View.VISIBLE);
+            }
+
         }
     }
 
     @Override
     public void getData() {
-        OrderListItem.Content content = (OrderListItem.Content) getIntent().getSerializableExtra(contentKey);
+        OrderListItem.Content content = (OrderListItem.Content) getIntent().getSerializableExtra(CONTENT_KEY);
         this.content = content;
+        this.unfinished = getIntent().getBooleanExtra(ORDER_STATUS_KEY, true);
         utility = OrderDetailUtility.getInstance(this);
     }
 
@@ -204,7 +226,7 @@ public class OrderDetailActivity extends BasicActivity implements View.OnClickLi
 
     public static void reload(Context context, int orderId){
         Intent intent = new Intent(context, OrderDetailActivity.class);
-        intent.putExtra(orderIdKey, orderId);
+        intent.putExtra(ORDER_ID_KEY, orderId);
         context.startActivity(intent);
     }
 
@@ -232,7 +254,7 @@ public class OrderDetailActivity extends BasicActivity implements View.OnClickLi
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
-        orderId = intent.getIntExtra(orderIdKey, -1);
+        orderId = intent.getIntExtra(ORDER_ID_KEY, -1);
         if(orderId != -1){
             reload(orderId);
         }
@@ -298,6 +320,9 @@ public class OrderDetailActivity extends BasicActivity implements View.OnClickLi
                                 content.getIdentityMatrix(), detail.orderStatus);
                     }
                 }
+                break;
+            case R.id.cash_back_check_detail_bar:
+                OrderCashBackActivity.start(this, content.id, content.getIdentityMatrix());
                 break;
             case R.id.change_feastDate_bar:
                 ChangeFeastDateActivity.start(this, detail);

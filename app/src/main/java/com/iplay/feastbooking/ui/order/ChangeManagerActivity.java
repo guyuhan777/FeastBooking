@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.iplay.feastbooking.R;
 import com.iplay.feastbooking.assistance.WindowAttr;
+import com.iplay.feastbooking.assistance.property.OrderStatus;
 import com.iplay.feastbooking.basic.BasicActivity;
 import com.iplay.feastbooking.gson.orderDetail.OrderDetail;
 import com.iplay.feastbooking.messageEvent.orderdetail.OrderDetailChangeMessageEvent;
@@ -37,6 +38,8 @@ public class ChangeManagerActivity extends BasicActivity implements View.OnClick
     private TextView submit_tv;
 
     private ProgressBar loading_pb;
+
+    private TextView title_tv;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

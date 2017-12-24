@@ -23,8 +23,10 @@ import com.iplay.feastbooking.component.view.gridview.UnScrollableGridView;
 import com.iplay.feastbooking.component.view.scrollview.ObservableScrollView;
 import com.iplay.feastbooking.gson.homepage.hotelList.RecommendHotelGO;
 import com.iplay.feastbooking.gson.hotelDetail.HotelDetail;
+import com.iplay.feastbooking.messageEvent.favourite.FavouriteIfExistMessageEvent;
 import com.iplay.feastbooking.messageEvent.hotelDetail.HotelDetailMessageEvent;
 import com.iplay.feastbooking.net.NetProperties;
+import com.iplay.feastbooking.net.utilImpl.favourite.FavouriteHotelUtility;
 import com.iplay.feastbooking.net.utilImpl.hotelDetail.HotelDetailUtility;
 import com.iplay.feastbooking.ui.consult.ConsultActivity;
 import com.iplay.feastbooking.ui.hotelDetail.adapter.HotelFeastGridAdapter;
@@ -51,8 +53,6 @@ public class NewHotelDetailActivity extends BasicActivity implements View.OnClic
 
     public static final String HOTEL_KEY = "HOTEL_KEY";
 
-    private HotelDetailUtility utility;
-
     private View status_bar_fix_tile;
 
     private RecommendHotelGO hotel;
@@ -77,6 +77,8 @@ public class NewHotelDetailActivity extends BasicActivity implements View.OnClic
 
     private HotelDetail hotelDetail;
 
+    private ImageView favourite_iv;
+
     private View hotel_room_ph;
 
     private UnScrollableGridView hotel_room_list;
@@ -92,6 +94,8 @@ public class NewHotelDetailActivity extends BasicActivity implements View.OnClic
     private RelativeLayout remark_bar;
 
     private TextView remark_tv;
+
+    private boolean isFavourite;
 
     public static void start(Context startActivity,RecommendHotelGO hotel){
         Intent intent = new Intent(startActivity,NewHotelDetailActivity.class);
@@ -123,6 +127,8 @@ public class NewHotelDetailActivity extends BasicActivity implements View.OnClic
         back_iv.setOnClickListener(this);
         remark_bar = (RelativeLayout) findViewById(R.id.remark_bar);
         remark_bar.setOnClickListener(this);
+        favourite_iv = (ImageView) findViewById(R.id.favourite_iv);
+        favourite_iv.setOnClickListener(this);
         if(isNetOn){
             findViewById(R.id.consult_btn).setOnClickListener(this);
             hotel_sv = (ObservableScrollView) findViewById(R.id.hotel_sv);
@@ -151,6 +157,16 @@ public class NewHotelDetailActivity extends BasicActivity implements View.OnClic
                     }
                 }
             });
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onFavouriteIfExistMessageEvent(FavouriteIfExistMessageEvent event){
+        if(event.isExist()){
+            isFavourite = true;
+            Glide.with(this).load(R.drawable.like).into(favourite_iv);
+        }else {
+            isFavourite = false;
         }
     }
 
@@ -195,13 +211,23 @@ public class NewHotelDetailActivity extends BasicActivity implements View.OnClic
     public void getData() {
         isRegistered = true;
         hotel = (RecommendHotelGO) getIntent().getSerializableExtra(HOTEL_KEY);
-        utility = HotelDetailUtility.getInstance(this);
     }
 
     @Override
     public void showContent() {
+        HotelDetailUtility.getInstance(this).initHotelDetail(hotel.id);
+        FavouriteHotelUtility.getInstance(this).checkIfFavourites(this, hotel.id);
+    }
 
-        utility.initHotelDetail(hotel.id);
+    private void onFavouriteButtonClick(){
+        if(!isFavourite){
+            FavouriteHotelUtility.getInstance(this).favouriteHotel(this, hotel.id, false);
+            Glide.with(this).load(R.drawable.like).into(favourite_iv);
+        }else {
+            FavouriteHotelUtility.getInstance(this).favouriteHotel(this, hotel.id, true);
+            Glide.with(this).load(R.drawable.like_default).into(favourite_iv);
+        }
+        isFavourite = !isFavourite;
     }
 
     @Override
@@ -227,6 +253,9 @@ public class NewHotelDetailActivity extends BasicActivity implements View.OnClic
                 break;
             case R.id.remark_bar:
                 HotelReviewActivity.start(this, hotel.id);
+                break;
+            case R.id.favourite_iv:
+                onFavouriteButtonClick();
                 break;
             default:
                 break;

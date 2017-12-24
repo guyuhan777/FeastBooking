@@ -190,6 +190,7 @@ public class PaymentManageActivity extends BasicActivity implements View.OnClick
                 !(orderStatus.equals(OrderStatus.STATUS_FEASTED) ||
                         orderStatus.equals(OrderStatus.STATUS_RESERVED))){
             submit_tv.setVisibility(View.GONE);
+            pay_amount_et.setEnabled(false);
         }
         if(orderPayment != null){
             pay_amount_et.setText(orderPayment.amountPaid + "");
@@ -223,7 +224,6 @@ public class PaymentManageActivity extends BasicActivity implements View.OnClick
     }
 
     private void showLoading(){
-
         content_ll.setVisibility(View.INVISIBLE);
         loading_rl.setVisibility(View.VISIBLE);
         back_tv.setVisibility(View.INVISIBLE);

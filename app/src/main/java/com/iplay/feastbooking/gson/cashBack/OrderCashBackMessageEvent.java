@@ -1,5 +1,7 @@
 package com.iplay.feastbooking.gson.cashBack;
 
+import android.support.annotation.NonNull;
+
 import com.iplay.feastbooking.entity.IdentityMatrix;
 
 /**
@@ -38,12 +40,34 @@ public class OrderCashBackMessageEvent {
         this.cashbackStrategy = cashbackStrategy;
     }
 
-    public double getExpectedAmount(IdentityMatrix matrix){
+    public String getPercentageForCustomer(){
+        return (cashbackStrategy == null ? 0 : cashbackStrategy.getPercentageForCustomer()) + "%";
+    }
+
+    public String getPercentageForRecommender(){
+        return (cashbackStrategy == null ? 0 : cashbackStrategy.getPercentageForRecommender()) + "%";
+    }
+
+    public String getPercentageForManager(){
+        return (cashbackStrategy == null ? 0 : cashbackStrategy.getPercentageForManager()) + "%";
+    }
+
+    public String getExpectedAmount(@NonNull IdentityMatrix matrix){
         double result = amountPaid;
         if(cashbackStrategy != null){
-
+            int seed = 0;
+            if(matrix.isCustomer()){
+                seed += cashbackStrategy.getPercentageForCustomer();
+            }
+            if(matrix.isManager()){
+                seed += cashbackStrategy.getPercentageForManager();
+            }
+            if(matrix.isRecommender()){
+                seed += cashbackStrategy.getPercentageForManager();
+            }
+            result *= (double)seed / 100;
         }
-        return result;
+        return "$" + result;
     }
 
     public static class CashbackStrategy{

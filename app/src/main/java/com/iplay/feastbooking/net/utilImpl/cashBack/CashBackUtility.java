@@ -88,7 +88,7 @@ public class CashBackUtility {
             client.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
-
+                    Log.d("reason", e.toString());
                 }
 
                 @Override
@@ -97,6 +97,8 @@ public class CashBackUtility {
                         Gson gson = new Gson();
                         OrderCashBackMessageEvent event = gson.fromJson(response.body().string(), OrderCashBackMessageEvent.class);
                         EventBus.getDefault().post(event);
+                    }else {
+                        Log.d("reason", response.body().string());
                     }
                 }
             });

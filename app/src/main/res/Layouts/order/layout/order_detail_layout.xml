@@ -29,6 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <TextView
+            android:visibility="gone"
             android:id="@+id/review_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -352,6 +353,27 @@
                     android:layout_centerVertical="true"
                     android:layout_alignParentEnd="true"
                     android:id="@+id/forwards_evidence_iv"
+                    android:src="@drawable/forwards"
+                    android:layout_width="@dimen/app_forward_size"
+                    android:layout_height="@dimen/app_forward_size" />
+            </RelativeLayout>
+            <include layout="@layout/seperateline_horizontal" />
+            <RelativeLayout
+                android:visibility="gone"
+                android:id="@+id/cash_back_check_detail_bar"
+                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="@dimen/app_body_margin">
+                <TextView
+                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="返現詳情"
+                    android:textSize="@dimen/app_recycle_view_text_size" />
+                <ImageView
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentEnd="true"
                     android:src="@drawable/forwards"
                     android:layout_width="@dimen/app_forward_size"
                     android:layout_height="@dimen/app_forward_size" />

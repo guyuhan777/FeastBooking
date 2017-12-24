@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.iplay.feastbooking.R;
 import com.iplay.feastbooking.assistance.DateFormatter;
 import com.iplay.feastbooking.assistance.WindowAttr;
+import com.iplay.feastbooking.assistance.property.OrderStatus;
 import com.iplay.feastbooking.basic.BasicActivity;
 import com.iplay.feastbooking.gson.orderDetail.OrderDetail;
 import com.iplay.feastbooking.messageEvent.orderdetail.OrderDetailChangeMessageEvent;
@@ -41,6 +42,8 @@ public class ChangeFeastDateActivity extends BasicActivity implements View.OnCli
 
     private TextView submit_tv;
 
+    private TextView title_tv;
+
     private ProgressBar loading_pb;
 
     private TimerPickerDialog dialog;
@@ -67,6 +70,7 @@ public class ChangeFeastDateActivity extends BasicActivity implements View.OnCli
         View status_bar_fix = findViewById(R.id.status_bar_fix_title);
         status_bar_fix.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, WindowAttr.getStatusBarHeight(this)));
         findViewById(R.id.back_iv).setOnClickListener(this);
+        title_tv = (TextView) findViewById(R.id.title_tv);
         submit_tv = (TextView) findViewById(R.id.submit_tv);
         submit_tv.setOnClickListener(this);
         change_fesat_date_tv = (TextView) findViewById(R.id.change_fesat_date_tv);

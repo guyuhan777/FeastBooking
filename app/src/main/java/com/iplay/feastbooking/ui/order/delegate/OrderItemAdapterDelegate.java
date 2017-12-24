@@ -17,6 +17,7 @@ import com.hannesdorfmann.adapterdelegates3.AdapterDelegate;
 import com.iplay.feastbooking.R;
 import com.iplay.feastbooking.entity.IdentityMatrix;
 import com.iplay.feastbooking.gson.order.OrderListItem;
+import com.iplay.feastbooking.gson.orderDetail.OrderDetail;
 import com.iplay.feastbooking.ui.order.HistoryOrderDetailActivity;
 import com.iplay.feastbooking.ui.order.OrderDetailActivity;
 import com.iplay.feastbooking.ui.order.data.OrderItemData;
@@ -126,12 +127,12 @@ public class OrderItemAdapterDelegate extends AdapterDelegate<List<BasicData>> {
             if(unfinished) {
                 if (content != null && identityMatrix != null
                         && (identityMatrix.isCustomer() || identityMatrix.isManager())) {
-                    OrderDetailActivity.start(context, orderItemData.getContent());
+                    OrderDetailActivity.start(context, orderItemData.getContent(), unfinished);
                 }
             }else {
                 if(identityMatrix != null){
                     if(identityMatrix.isCustomer()){
-
+                        OrderDetailActivity.start(context, orderItemData.getContent(), unfinished);
                     }else {
                         HistoryOrderDetailActivity.start(content.id, content.getIdentityMatrix(), context);
                     }

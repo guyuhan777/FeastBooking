@@ -15,6 +15,7 @@ import com.iplay.feastbooking.assistance.WindowAttr;
 import com.iplay.feastbooking.assistance.property.OrderStatus;
 import com.iplay.feastbooking.basic.BasicActivity;
 import com.iplay.feastbooking.entity.IdentityMatrix;
+import com.iplay.feastbooking.gson.cashBack.OrderCashBackMessageEvent;
 import com.iplay.feastbooking.gson.order.OrderListItem;
 import com.iplay.feastbooking.gson.orderDetail.OrderDetail;
 import com.iplay.feastbooking.messageEvent.orderdetail.OrderDetailMessageEvent;
@@ -112,6 +113,7 @@ public class HistoryOrderDetailActivity extends BasicActivity implements View.On
                 });
                 break;
             case R.id.cash_back_check_detail_bar:
+                OrderCashBackActivity.start(this, orderId, matrix);
                 break;
         }
     }
