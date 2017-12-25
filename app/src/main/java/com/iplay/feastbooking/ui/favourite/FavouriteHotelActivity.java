@@ -20,16 +20,14 @@ import com.iplay.feastbooking.R;
 import com.iplay.feastbooking.assistance.WindowAttr;
 import com.iplay.feastbooking.basic.BasicActivity;
 import com.iplay.feastbooking.messageEvent.favourite.FavouriteHotelMessageEvent;
+import com.iplay.feastbooking.messageEvent.favourite.FavouriteListUpdateMessageEvent;
 import com.iplay.feastbooking.messageEvent.review.ReviewListMessageEvent;
 import com.iplay.feastbooking.net.NetProperties;
 import com.iplay.feastbooking.net.utilImpl.favourite.FavouriteHotelUtility;
-import com.iplay.feastbooking.net.utilImpl.reviewUtil.ReviewUtility;
 import com.iplay.feastbooking.ui.favourite.adapter.FavouriteHotelAdapter;
 import com.iplay.feastbooking.ui.order.data.FootStateData;
 import com.iplay.feastbooking.ui.order.data.basic.BasicData;
 import com.iplay.feastbooking.ui.recommendedHotel.data.HotelHomeData;
-import com.iplay.feastbooking.ui.review.adapter.ReviewRecyclerViewAdapter;
-import com.iplay.feastbooking.ui.review.data.ReviewData;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -90,6 +88,23 @@ public class FavouriteHotelActivity extends BasicActivity implements View.OnClic
         load_state_rl = (RelativeLayout) findViewById(R.id.load_state_rl);
         hotel_rv = (RecyclerView) findViewById(R.id.hotel_list_rv);
         progressBar.setIndeterminate(true);
+    }
+
+    private void showLoading(){
+        isInit = false;
+        hotel_rv.setVisibility(View.GONE);
+        load_state_rl.setVisibility(View.VISIBLE);
+        load_state.setText(getResources().getText(R.string.loading_hint));
+        load_state.setEnabled(false);
+        progressBar.setVisibility(View.VISIBLE);
+        progressBar.setIndeterminate(true);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onFavouriteListUpdateMessageEvent(FavouriteListUpdateMessageEvent event){
+        showLoading();
+        adapter = null;
+        FavouriteHotelUtility.getInstance(this).load(0, true);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

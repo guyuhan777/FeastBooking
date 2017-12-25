@@ -52,74 +52,46 @@
             android:layout_marginLeft="@dimen/app_body_margin"
             android:layout_marginRight="@dimen/app_body_margin"
             android:layout_height="wrap_content">
-            <LinearLayout
-                android:id="@+id/filter_tab_1"
+            <RelativeLayout
                 android:layout_weight="1"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:gravity="center">
-                <TextView
-                    android:layout_gravity="center_vertical"
-                    android:textSize="@dimen/app_text_normal"
-                    android:text="@string/filter_tab_1"
+                android:layout_height="wrap_content">
+                <com.iplay.feastbooking.component.view.tab.ComplexSortTab
+                    android:id="@+id/complex_sort_tab"
+                    android:layout_centerHorizontal="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
-                <ImageView
-                    android:background="@drawable/sort_down"
-                    android:layout_width="@dimen/app_tab_font_size"
-                    android:layout_height="@dimen/app_tab_font_size" />
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/filter_tab_2"
+            </RelativeLayout>
+            <RelativeLayout
                 android:layout_weight="1"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:gravity="center">
-                <TextView
-                    android:layout_gravity="center_vertical"
-                    android:textSize="@dimen/app_text_normal"
-                    android:text="@string/filter_tab_2"
+                android:layout_height="wrap_content">
+                <com.iplay.feastbooking.component.view.tab.OrderSortTab
+                    android:id="@+id/order_sort_tab"
+                    android:layout_centerHorizontal="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
-                <ImageView
-                    android:background="@drawable/sort_down"
-                    android:layout_width="@dimen/app_tab_font_size"
-                    android:layout_height="@dimen/app_tab_font_size" />
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/filter_tab_3"
+            </RelativeLayout>
+            <RelativeLayout
                 android:layout_weight="1"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:gravity="center">
-                <TextView
-                    android:layout_gravity="center_vertical"
-                    android:textSize="@dimen/app_text_normal"
-                    android:text="@string/filter_tab_3"
+                android:layout_height="wrap_content">
+                <com.iplay.feastbooking.component.view.tab.PriceSortTab
+                    android:id="@+id/price_sort_tab"
+                    android:layout_centerHorizontal="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
-                <ImageView
-                    android:background="@drawable/sort_down"
-                    android:layout_width="@dimen/app_tab_font_size"
-                    android:layout_height="@dimen/app_tab_font_size" />
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/filter_tab_4"
+            </RelativeLayout>
+            <RelativeLayout
                 android:layout_weight="1"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:gravity="center">
-                <TextView
-                    android:layout_gravity="center_vertical"
-                    android:textSize="@dimen/app_text_normal"
-                    android:text="@string/filter_tab_4"
+                android:layout_height="wrap_content">
+                <com.iplay.feastbooking.component.view.tab.FilterTab
+                    android:id="@+id/filter_tab"
+                    android:layout_centerHorizontal="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
-                <ImageView
-                    android:background="@drawable/filter"
-                    android:layout_width="@dimen/app_tab_font_size"
-                    android:layout_height="@dimen/app_tab_font_size" />
-            </LinearLayout>
+            </RelativeLayout>
         </LinearLayout>
     </RelativeLayout>
     <android.support.v7.widget.RecyclerView

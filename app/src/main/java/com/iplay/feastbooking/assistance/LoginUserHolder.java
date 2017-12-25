@@ -16,8 +16,8 @@ public class LoginUserHolder {
 
     private volatile UserDto currentUser;
 
-    private LoginUserHolder(){
 
+    private LoginUserHolder(){
     }
 
     public synchronized UserDto getCurrentUser(){
@@ -42,6 +42,4 @@ public class LoginUserHolder {
         }
         return instance;
     }
-
-
 }

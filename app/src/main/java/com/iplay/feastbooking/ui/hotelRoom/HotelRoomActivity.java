@@ -3,6 +3,8 @@ package com.iplay.feastbooking.ui.hotelRoom;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,6 +71,12 @@ public class HotelRoomActivity extends BasicActivity implements View.OnClickList
     private UnScrollableGridView config_gv;
 
     @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        isRegistered = true;
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
     public void setContentView() {
         if(!NetProperties.isNetworkConnected(this)){
             setContentView(R.layout.hotel_no_internet);
@@ -131,7 +139,6 @@ public class HotelRoomActivity extends BasicActivity implements View.OnClickList
 
     @Override
     public void getData() {
-        isRegistered = true;
         Intent intent = getIntent();
         banquetHall = (BanquetHall) intent.getSerializableExtra(KEY_ROOM);
         utility = BanquetHallUtility.getInstance(this);

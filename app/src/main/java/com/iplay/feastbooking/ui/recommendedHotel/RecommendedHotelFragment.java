@@ -107,7 +107,6 @@ public class RecommendedHotelFragment extends BasicFragment{
 
 
 
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         isRegisteredNeed = true;

@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.iplay.feastbooking.R;
@@ -24,11 +25,13 @@ import com.iplay.feastbooking.component.view.scrollview.ObservableScrollView;
 import com.iplay.feastbooking.gson.homepage.hotelList.RecommendHotelGO;
 import com.iplay.feastbooking.gson.hotelDetail.HotelDetail;
 import com.iplay.feastbooking.messageEvent.favourite.FavouriteIfExistMessageEvent;
+import com.iplay.feastbooking.messageEvent.favourite.FavouriteListUpdateMessageEvent;
 import com.iplay.feastbooking.messageEvent.hotelDetail.HotelDetailMessageEvent;
 import com.iplay.feastbooking.net.NetProperties;
 import com.iplay.feastbooking.net.utilImpl.favourite.FavouriteHotelUtility;
 import com.iplay.feastbooking.net.utilImpl.hotelDetail.HotelDetailUtility;
 import com.iplay.feastbooking.ui.consult.ConsultActivity;
+import com.iplay.feastbooking.ui.favourite.FavouriteHotelActivity;
 import com.iplay.feastbooking.ui.hotelDetail.adapter.HotelFeastGridAdapter;
 import com.iplay.feastbooking.ui.hotelDetail.adapter.HotelRoomGridAdapter;
 import com.iplay.feastbooking.ui.login.LoginActivity;
@@ -36,6 +39,7 @@ import com.iplay.feastbooking.ui.review.HotelReviewActivity;
 import com.jude.rollviewpager.RollPagerView;
 import com.jude.rollviewpager.adapter.LoopPagerAdapter;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -49,9 +53,11 @@ import cn.carbs.android.expandabletextview.library.ExpandableTextView;
 
 public class NewHotelDetailActivity extends BasicActivity implements View.OnClickListener{
 
-    public static final String TAG = "NewHotelDetailActivity";
+    private static final String HOTEL_KEY = "HOTEL_KEY";
 
-    public static final String HOTEL_KEY = "HOTEL_KEY";
+    private static final String IS_FROM_FAVOURITE_LIST_KEY = "IS_FROM_FAVOURITE_LIST_KEY";
+
+    private boolean isFromFavouriteList;
 
     private View status_bar_fix_tile;
 
@@ -97,14 +103,20 @@ public class NewHotelDetailActivity extends BasicActivity implements View.OnClic
 
     private boolean isFavourite;
 
-    public static void start(Context startActivity,RecommendHotelGO hotel){
-        Intent intent = new Intent(startActivity,NewHotelDetailActivity.class);
-        intent.putExtra(HOTEL_KEY,hotel);
-        startActivity.startActivity(intent);
+    public static void start(Context context,RecommendHotelGO hotel){
+        start(context, hotel, false);
+    }
+
+    public static void start(Context context,RecommendHotelGO hotel, boolean isFromFavouriteList){
+        Intent intent = new Intent(context, NewHotelDetailActivity.class);
+        intent.putExtra(HOTEL_KEY, hotel);
+        intent.putExtra(IS_FROM_FAVOURITE_LIST_KEY, isFromFavouriteList);
+        context.startActivity(intent);
     }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        isRegistered = true;
         super.onCreate(savedInstanceState);
     }
 
@@ -209,37 +221,47 @@ public class NewHotelDetailActivity extends BasicActivity implements View.OnClic
 
     @Override
     public void getData() {
-        isRegistered = true;
         hotel = (RecommendHotelGO) getIntent().getSerializableExtra(HOTEL_KEY);
+        isFromFavouriteList = getIntent().getBooleanExtra(IS_FROM_FAVOURITE_LIST_KEY, false);
     }
 
     @Override
     public void showContent() {
         HotelDetailUtility.getInstance(this).initHotelDetail(hotel.id);
-        FavouriteHotelUtility.getInstance(this).checkIfFavourites(this, hotel.id);
+        if(LoginUserHolder.getInstance().getCurrentUser() != null) {
+            FavouriteHotelUtility.getInstance(this).checkIfFavourites(this, hotel.id);
+        }
     }
 
     private void onFavouriteButtonClick(){
-        if(!isFavourite){
-            FavouriteHotelUtility.getInstance(this).favouriteHotel(this, hotel.id, false);
-            Glide.with(this).load(R.drawable.like).into(favourite_iv);
+        if(LoginUserHolder.getInstance().getCurrentUser() == null){
+            LoginActivity.startOnBackActivity(this);
+            overridePendingTransition(R.anim.bottom2top,R.anim.hold);
         }else {
-            FavouriteHotelUtility.getInstance(this).favouriteHotel(this, hotel.id, true);
-            Glide.with(this).load(R.drawable.like_default).into(favourite_iv);
+            if (!isFavourite) {
+                FavouriteHotelUtility.getInstance(this).favouriteHotel(this, hotel.id, false);
+                Glide.with(this).load(R.drawable.like).into(favourite_iv);
+            } else {
+                FavouriteHotelUtility.getInstance(this).favouriteHotel(this, hotel.id, true);
+                Glide.with(this).load(R.drawable.like_default).into(favourite_iv);
+            }
+            isFavourite = !isFavourite;
         }
-        isFavourite = !isFavourite;
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.back_iv:
+                if(isFromFavouriteList) {
+                    EventBus.getDefault().post(new FavouriteListUpdateMessageEvent());
+                }
                 runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        onBackPressed();
-                    }
-                });
+                        @Override
+                        public void run() {
+                            onBackPressed();
+                        }
+                    });
                 break;
             case R.id.consult_btn:
                 if(LoginUserHolder.getInstance().getCurrentUser() == null){

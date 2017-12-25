@@ -3,6 +3,8 @@ package com.iplay.feastbooking.ui.feast;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -76,6 +78,12 @@ public class FeastActivity extends BasicActivity implements View.OnClickListener
     }
 
     @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        isRegistered = true;
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
     public void findViews() {
         back_iv = (ImageView) findViewById(R.id.back_iv);
         back_iv.setOnClickListener(this);
@@ -122,7 +130,6 @@ public class FeastActivity extends BasicActivity implements View.OnClickListener
 
     @Override
     public void getData() {
-        isRegistered = true;
         Intent intent = getIntent();
         feast = (Feast) intent.getSerializableExtra(KEY_FEAST);
         utility = FeastUtility.getInstance(this);

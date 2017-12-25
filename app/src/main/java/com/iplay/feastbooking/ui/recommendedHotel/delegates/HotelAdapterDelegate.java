@@ -29,11 +29,18 @@ public class HotelAdapterDelegate extends AdapterDelegate<List<BasicData>> {
 
     private LayoutInflater inflater;
 
+    private boolean isFromFavouriteList;
+
     private WeakReference<Context> contextWeakReference;
 
     public HotelAdapterDelegate(Activity activity){
+       this(activity, false);
+    }
+
+    public HotelAdapterDelegate(Activity activity, boolean isFromFavouriteList){
         inflater = LayoutInflater.from(activity);
         contextWeakReference = new WeakReference<Context>(activity);
+        this.isFromFavouriteList = isFromFavouriteList;
     }
 
     @Override
@@ -54,16 +61,19 @@ public class HotelAdapterDelegate extends AdapterDelegate<List<BasicData>> {
             RecommendHotelGO go = data.getHotel();
             HotelViewHolder hotelHolder = (HotelViewHolder) holder;
             if(go.pictureUrl == null || go.pictureUrl.equals("")){
-                Glide.with(contextWeakReference.get()).load(R.drawable.placeholder).into(hotelHolder.hotel_icon_iv);
+                Glide.with(contextWeakReference.get()).load(R.drawable.placeholder)
+                        .into(hotelHolder.hotel_icon_iv);
             }else {
-                Glide.with(contextWeakReference.get()).load(go.pictureUrl).placeholder(R.drawable.loading_reco).into(hotelHolder.hotel_icon_iv);
+                Glide.with(contextWeakReference.get()).load(go.pictureUrl)
+                        .placeholder(R.drawable.loading_reco).into(hotelHolder.hotel_icon_iv);
             }
             hotelHolder.hotel_name_iv.setText(go.name);
             hotelHolder.price_range_iv.setText(go.getPriceRange());
             hotelHolder.table_num_iv.setText(go.getTableRange());
             hotelHolder.remark_num_iv.setText(go.getNumOfReviews());
             hotelHolder.loc_iv.setText(go.districtOfAddress);
-            hotelHolder.itemView.setOnClickListener(new HotelItemOnClickListener(go, contextWeakReference.get()));
+            hotelHolder.itemView.setOnClickListener(new HotelItemOnClickListener(go,
+                    contextWeakReference.get(), isFromFavouriteList));
         }
     }
 
@@ -73,15 +83,18 @@ public class HotelAdapterDelegate extends AdapterDelegate<List<BasicData>> {
 
         private WeakReference<Context> contextWeakReference;
 
-        HotelItemOnClickListener(RecommendHotelGO go, Context context) {
+        private boolean isFromFavouriteList;
+
+        HotelItemOnClickListener(RecommendHotelGO go, Context context, boolean isFromFavouriteList) {
             this.go = go;
             contextWeakReference = new WeakReference<>(context);
+            this.isFromFavouriteList = isFromFavouriteList;
         }
 
         @Override
         public void onClick(View v) {
             if(go != null && contextWeakReference.get() != null) {
-                NewHotelDetailActivity.start(contextWeakReference.get(),go);
+                NewHotelDetailActivity.start(contextWeakReference.get(), go, isFromFavouriteList);
             }
         }
     }
@@ -107,7 +120,6 @@ public class HotelAdapterDelegate extends AdapterDelegate<List<BasicData>> {
             table_num_iv = (TextView) itemView.findViewById(R.id.table_num_tv);
             remark_num_iv = (TextView) itemView.findViewById(R.id.remark_tv);
             loc_iv = (TextView) itemView.findViewById(R.id.loc_tv);
-
         }
     }
 }

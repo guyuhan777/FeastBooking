@@ -40,8 +40,6 @@ import java.util.List;
 
 public class OrderListActivity extends BasicActivity implements View.OnClickListener{
 
-    private static final String TAG = "OrderListActivity";
-
     private static final String STATUS_KEY = "STATUS_KEY";
 
     private boolean unfinished;

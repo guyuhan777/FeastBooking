@@ -2,8 +2,10 @@ package com.iplay.feastbooking.basic;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -18,18 +20,11 @@ public abstract class BasicActivity extends AppCompatActivity {
     protected volatile boolean isRegistered = false;
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         if(isRegistered){
             EventBus.getDefault().register(this);
         }
-    }
-
-
-
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
             setTranslucentStatus(true);
         }
@@ -68,9 +63,9 @@ public abstract class BasicActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-        if(isRegistered) {
+    protected void onDestroy() {
+        super.onDestroy();
+        if(isRegistered){
             EventBus.getDefault().unregister(this);
         }
     }

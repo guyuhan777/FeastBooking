@@ -25,6 +25,7 @@ import com.iplay.feastbooking.ui.review.data.ReviewData;
 import com.iplay.feastbooking.ui.uiListener.InitCLMListener;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -67,7 +68,7 @@ public class FavouriteHotelAdapter extends RecyclerView.Adapter implements InitC
     public FavouriteHotelAdapter(Activity activity, List<BasicData> hotelBasics) {
         contextWeakReference = new WeakReference<>(activity);
         delegatesManager = new AdapterDelegatesManager<>();
-        delegatesManager.addDelegate(new HotelAdapterDelegate(activity));
+        delegatesManager.addDelegate(new HotelAdapterDelegate(activity, true));
         delegatesManager.addDelegate(new FooterStateAdapterDelegate(activity));
         delegatesManager.addDelegate(new LoadingAdapter(activity));
         delegatesManager.addDelegate(new ClickToLoadMoreAdapterDelegate(activity, this));
