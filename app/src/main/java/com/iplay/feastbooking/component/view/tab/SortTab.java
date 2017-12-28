@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.iplay.feastbooking.R;
+import com.iplay.feastbooking.gson.homepage.hotelList.HotelListFilterRequireConfig;
 import com.iplay.feastbooking.gson.homepage.hotelList.HotelListRequireConfig;
 
 /**
@@ -22,11 +23,11 @@ public abstract class SortTab extends LinearLayout implements View.OnClickListen
 
     private ImageView sort_iv;
 
-    private boolean asc;
+    private boolean isNextSortAsc;
 
-    private HotelListRequireConfig config;
+    protected HotelListFilterRequireConfig config;
 
-    public void setConfig(HotelListRequireConfig hotelListRequireConfig){
+    public void setConfig(HotelListFilterRequireConfig hotelListRequireConfig){
         config = config == null ? hotelListRequireConfig : config;
     }
 
@@ -40,6 +41,7 @@ public abstract class SortTab extends LinearLayout implements View.OnClickListen
         sort_label_tv = (TextView) findViewById(R.id.filter_label_tv);
         sort_iv = (ImageView) findViewById(R.id.sort_iv);
         setOnClickListener(this);
+        isNextSortAsc = true;
     }
 
     public SortTab(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
@@ -58,8 +60,13 @@ public abstract class SortTab extends LinearLayout implements View.OnClickListen
 
     private void onFilterSelect() {
         sort_label_tv.setTextColor(getResources().getColor(R.color.pink));
-        //Todo change color and forwards of sort arrow
+        if(isNextSortAsc){
+            sort_label_tv.setBackground(getContext().getResources().getDrawable(R.drawable.sort_active_up));
+        }else {
+            sort_label_tv.setBackground(getContext().getResources().getDrawable(R.drawable.sort_active_down));
+        }
         onFilterSelectAction();
+        isNextSortAsc = !isNextSortAsc;
     }
 
     @Override

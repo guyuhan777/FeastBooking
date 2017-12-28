@@ -16,8 +16,13 @@ import android.widget.Toast;
 import com.iplay.feastbooking.R;
 import com.iplay.feastbooking.assistance.WindowAttr;
 import com.iplay.feastbooking.basic.BasicFragment;
+import com.iplay.feastbooking.component.view.tab.ComplexSortTab;
+import com.iplay.feastbooking.component.view.tab.FilterTab;
+import com.iplay.feastbooking.component.view.tab.OrderSortTab;
+import com.iplay.feastbooking.component.view.tab.PriceSortTab;
 import com.iplay.feastbooking.entity.Advertisement;
 import com.iplay.feastbooking.entity.RecommendGrid;
+import com.iplay.feastbooking.gson.homepage.hotelList.HotelListRequireConfig;
 import com.iplay.feastbooking.gson.homepage.hotelList.RecommendHotelGO;
 import com.iplay.feastbooking.messageEvent.home.AdvertisementMessageEvent;
 import com.iplay.feastbooking.messageEvent.home.HotelListMessageEvent;
@@ -42,13 +47,9 @@ import java.util.List;
 
 public class RecommendedHotelFragment extends BasicFragment{
 
-    private RecommendHotelListUtility utility;
-
     public static final String TAG = "recommendHotelFragment";
 
     private  volatile boolean isInit = false;
-
-    private View statusView;
 
     private View view;
 
@@ -64,19 +65,36 @@ public class RecommendedHotelFragment extends BasicFragment{
 
     private HomeRecyclerViewAdapter adapter;
 
+    private HotelListRequireConfig config;
+
     private boolean isListInit = false;
 
     private Handler postHandler = new Handler();
+
+    private ComplexSortTab complexSortTab;
+
+    private OrderSortTab orderSortTab;
+
+    private PriceSortTab priceSortTab;
+
+    private FilterTab filterTab;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.special_recommend_layout,container,false);
+        config = HotelListRequireConfig.getDefaultRequireConfig();
 
-        statusView = view.findViewById(R.id.status_bar_fix);
-        statusView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, WindowAttr.getStatusBarHeight(getActivity())));
+        view.findViewById(R.id.status_bar_fix)
+                .setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                        WindowAttr.getStatusBarHeight(getActivity())));
 
         mainView = (RecyclerView) view.findViewById(R.id.main_recycler_view);
+
+        complexSortTab = (ComplexSortTab) view.findViewById(R.id.complex_sort_tab);
+        orderSortTab = (OrderSortTab) view.findViewById(R.id.order_sort_tab);
+        priceSortTab = (PriceSortTab) view.findViewById(R.id.price_sort_tab);
+        filterTab = (FilterTab) view.findViewById(R.id.filter_tab);
 
         final GridLayoutManager manager = new GridLayoutManager(mainView.getContext(),6,GridLayoutManager.VERTICAL,false);
         mainView.setLayoutManager(manager);
@@ -96,7 +114,7 @@ public class RecommendedHotelFragment extends BasicFragment{
                     postHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            adapter.loadMoreData(utility);
+                            adapter.loadMoreData();
                         }
                     });
                 }
@@ -115,10 +133,10 @@ public class RecommendedHotelFragment extends BasicFragment{
             return;
         }else{
             mContext = getActivity();
-            adapter = new HomeRecyclerViewAdapter(getActivity());
-            utility = RecommendHotelListUtility.getInstance(mContext);
+            adapter = new HomeRecyclerViewAdapter(getActivity(), config);
+
             isInit = true;
-            utility.asyncInit(mContext);
+
         }
     }
 
@@ -163,11 +181,10 @@ public class RecommendedHotelFragment extends BasicFragment{
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onHotelListMessageEvent(final HotelListMessageEvent event){
+    public void onHotelListMessageEvent(HotelListMessageEvent event){
         int type = event.getType();
         if(type == HotelListMessageEvent.TYPE_INIT){
             List<RecommendHotelGO> hotels = event.getHotels();
-            Log.d(TAG, hotels.toString());
             if(hotels == null || hotels.size() == 0){
                 return;
             }
@@ -183,7 +200,6 @@ public class RecommendedHotelFragment extends BasicFragment{
         }else if(type == HotelListMessageEvent.TYPE_LOAD){
             adapter.cancelLoading();
             List<RecommendHotelGO> hotels = event.getHotels();
-            Log.d(TAG,"loadMore" + hotels.toString());
             if(hotels == null || hotels.size() == 0){
                 adapter.addData(new AllLoadedHomeData());
             }else {

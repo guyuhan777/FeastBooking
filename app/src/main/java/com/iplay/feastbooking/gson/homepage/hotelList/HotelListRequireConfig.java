@@ -1,48 +1,84 @@
 package com.iplay.feastbooking.gson.homepage.hotelList;
 
 /**
- * Created by gu_y-pc on 2017/12/25.
+ * Created by gu_y-pc on 2017/12/26.
  */
 
 public class HotelListRequireConfig {
 
-    private double minRating;
+    public enum SortType{COMPLEX, ORDER, PRICE};
 
-    private double minPrice;
+    private HotelListFilterRequireConfig filterRequireConfig;
 
-    private double maxPrice;
+    private SortType sortType = SortType.COMPLEX;
 
-    private String hotelNameKeywords;
+    private int page;
 
-    public double getMinRating() {
-        return minRating;
+    public int getPage() {
+        return page;
     }
 
-    public void setMinRating(double minRating) {
-        this.minRating = minRating;
+    public void setPage(int page) {
+        this.page = page;
     }
 
-    public double getMinPrice() {
-        return minPrice;
+    private boolean asc = false;
+
+    public HotelListFilterRequireConfig getFilterRequireConfig() {
+        return filterRequireConfig;
     }
 
-    public void setMinPrice(double minPrice) {
-        this.minPrice = minPrice;
+    private HotelListRequireConfig(){
+
     }
 
-    public double getMaxPrice() {
-        return maxPrice;
+    public static HotelListRequireConfig getDefaultRequireConfig(){
+        HotelListRequireConfig config = new HotelListRequireConfig();
+        config.setFilterRequireConfig(new HotelListFilterRequireConfig());
+        return config;
     }
 
-    public void setMaxPrice(double maxPrice) {
-        this.maxPrice = maxPrice;
+    public String getQueryString() {
+        String query = "?page=" + page + "&sort=";
+        if (sortType == SortType.PRICE) {
+            if (asc) {
+                query += "minimumPrice,desc";
+            } else {
+                query += "maximumPrice,desc";
+            }
+        } else if (sortType == SortType.ORDER) {
+            query += "numOfOrders";
+        } else if (sortType == SortType.COMPLEX) {
+            query += "rating";
+        }
+        if (asc) {
+            query += ",asc";
+        } else {
+            query += ",desc";
+        }
+        if(filterRequireConfig != null && !filterRequireConfig.getQueryString().equals("")){
+            query += "&" + filterRequireConfig.getQueryString();
+        }
+        return query;
     }
 
-    public String getHotelNameKeywords() {
-        return hotelNameKeywords;
+    public void setFilterRequireConfig(HotelListFilterRequireConfig filterRequireConfig) {
+        this.filterRequireConfig = filterRequireConfig;
     }
 
-    public void setHotelNameKeywords(String hotelNameKeywords) {
-        this.hotelNameKeywords = hotelNameKeywords;
+    public SortType getSortType() {
+        return sortType;
+    }
+
+    public void setSortType(SortType sortType) {
+        this.sortType = sortType;
+    }
+
+    public boolean isAsc() {
+        return asc;
+    }
+
+    public void setAsc(boolean asc) {
+        this.asc = asc;
     }
 }

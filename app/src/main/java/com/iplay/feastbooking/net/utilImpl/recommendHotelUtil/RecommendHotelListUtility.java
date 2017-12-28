@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.iplay.feastbooking.R;
 import com.iplay.feastbooking.assistance.ProperTies;
 import com.iplay.feastbooking.dto.AdvertisementDto;
 import com.iplay.feastbooking.dto.RecommendGridDto;
@@ -11,6 +12,7 @@ import com.iplay.feastbooking.entity.Advertisement;
 import com.iplay.feastbooking.entity.RecommendGrid;
 import com.iplay.feastbooking.gson.homepage.RecommendGridGO;
 import com.iplay.feastbooking.gson.homepage.advertisement.AdvertisementGO;
+import com.iplay.feastbooking.gson.homepage.hotelList.HotelListRequireConfig;
 import com.iplay.feastbooking.gson.homepage.hotelList.RecommendHotelGO;
 import com.iplay.feastbooking.messageEvent.home.AdvertisementMessageEvent;
 import com.iplay.feastbooking.messageEvent.home.HotelListMessageEvent;
@@ -57,6 +59,8 @@ public class RecommendHotelListUtility {
 
     private final String listHotelsForUserAPI;
 
+    private final String hotelListUrl;
+
     private RecommendHotelListUtility(Context context){
         properties = ProperTies.getProperties(context);
         serverUrl = properties.getProperty("serverUrl");
@@ -66,12 +70,13 @@ public class RecommendHotelListUtility {
         urlSeperator = properties.getProperty("urlSeperator");
         resourcePath = properties.getProperty("resource");
         basicPath = serverUrl + urlSeperator + resourcePath + urlSeperator;
+        hotelListUrl = serverUrl + urlSeperator + listHotelsForUserAPI;
     }
 
-    public void asyncInit(Context context){
+    public void asyncInit(Context context, HotelListRequireConfig config){
         asyncInitAdvertisements(context);
         asyncInitSpecialRecommend(context);
-        asyncInitAllHotel(context);
+        asyncInitAllHotel(context, config);
     }
 
     private void asyncInitAdvertisements(Context context){
@@ -163,73 +168,44 @@ public class RecommendHotelListUtility {
         }
     }
 
-    private void asyncInitAllHotel(Context context){
-        if(!NetProperties.isNetworkConnected(context)){
-            HotelListNoInternetMessageEvent messageEvent = new HotelListNoInternetMessageEvent();
-            messageEvent.setType(HotelListNoInternetMessageEvent.TYPE_INIT);
-            EventBus.getDefault().post(messageEvent);
-        }else {
-            OkHttpClient client = new OkHttpClient.Builder().connectTimeout(5, TimeUnit.SECONDS).build();
-            final Request request = new Request.Builder().url(serverUrl + urlSeperator + listHotelsForUserAPI + "?page=0").build();
-            client.newCall(request).enqueue(new Callback() {
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    HotelListNoInternetMessageEvent messageEvent = new HotelListNoInternetMessageEvent();
-                    messageEvent.setType(HotelListNoInternetMessageEvent.TYPE_INIT);
-                    EventBus.getDefault().post(messageEvent);
-                }
-
-                @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    if(!response.isSuccessful()){
-                        HotelListNoInternetMessageEvent messageEvent = new HotelListNoInternetMessageEvent();
-                        messageEvent.setType(HotelListNoInternetMessageEvent.TYPE_INIT);
-                        EventBus.getDefault().post(messageEvent);
-                    }else{
-                        Gson gson = new Gson();
-                        Type type = new TypeToken<List<RecommendHotelGO>>(){}.getType();
-                        String json = response.body().string();
-                        List<RecommendHotelGO> gos =  gson.fromJson(json,type);
-                        HotelListMessageEvent event = new HotelListMessageEvent();
-                        event.setType(HotelListMessageEvent.TYPE_INIT);
-                        event.setHotels(gos);
-                        EventBus.getDefault().post(event);
-                    }
-                }
-            });
-        }
+    private void asyncInitAllHotel(Context context, HotelListRequireConfig config){
+        load(context, true, config);
     }
 
-    public void loadMore(int page, Context context){
+    public void load(final Context context, final boolean isInit, HotelListRequireConfig config){
         if(!NetProperties.isNetworkConnected(context)){
-            HotelListNoInternetMessageEvent messageEvent = new HotelListNoInternetMessageEvent();
-            messageEvent.setType(HotelListNoInternetMessageEvent.TYPE_LOAD_MORE);
-            EventBus.getDefault().post(messageEvent);
+            HotelListMessageEvent event = new HotelListMessageEvent();
+            event.setInit(isInit);
+            event.setStatus(HotelListMessageEvent.Status.FAILURE);
+            event.setFailureReason(context.getResources().getString(R.string.failure_reason_no_internet));
+            EventBus.getDefault().post(event);
         }else{
             OkHttpClient client = new OkHttpClient.Builder().connectTimeout(3, TimeUnit.SECONDS).build();
-            final Request request = new Request.Builder().url(serverUrl + urlSeperator + listHotelsForUserAPI + "?page=" + page).build();
+            String requireUrl = hotelListUrl + config.getQueryString();
+            Request request = new Request.Builder().url(requireUrl).build();
             client.newCall(request).enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
-                    HotelListNoInternetMessageEvent messageEvent = new HotelListNoInternetMessageEvent();
-                    messageEvent.setType(HotelListNoInternetMessageEvent.TYPE_LOAD_MORE);
-                    EventBus.getDefault().post(messageEvent);
+                    HotelListMessageEvent event = new HotelListMessageEvent();
+                    event.setInit(isInit);
+                    event.setStatus(HotelListMessageEvent.Status.FAILURE);
+                    event.setFailureReason(context.getResources().getString(R.string.failure_reason_no_internet));
+                    EventBus.getDefault().post(event);
                 }
+
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
+                    HotelListMessageEvent event = new HotelListMessageEvent();
+                    event.setInit(isInit);
                     if(!response.isSuccessful()){
-                        HotelListNoInternetMessageEvent messageEvent = new HotelListNoInternetMessageEvent();
-                        messageEvent.setType(HotelListNoInternetMessageEvent.TYPE_LOAD_MORE);
-                        EventBus.getDefault().post(messageEvent);
+                        event.setStatus(HotelListMessageEvent.Status.FAILURE);
+                        event.setFailureReason(context.getResources().getString(R.string.failure_reason_unknown_reason));
                     }else {
+                        event.setStatus(HotelListMessageEvent.Status.SUCCESS);
                         Gson gson = new Gson();
                         Type type = new TypeToken<List<RecommendHotelGO>>(){}.getType();
                         List<RecommendHotelGO> gos =  gson.fromJson(response.body().string(),type);
-
-                        HotelListMessageEvent event = new HotelListMessageEvent();
-                        event.setType(HotelListMessageEvent.TYPE_LOAD);
                         event.setHotels(gos);
-                        EventBus.getDefault().post(event);
                     }
                 }
             });

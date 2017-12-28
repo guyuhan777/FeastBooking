@@ -10,13 +10,23 @@ import java.util.List;
 
 public class HotelListMessageEvent {
 
-    public static final int TYPE_INIT = 1;
+    public Status getStatus() {
+        return status;
+    }
 
-    public static final int TYPE_LOAD = 2;
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public enum Status{SUCCESS, FAILURE};
 
     private List<RecommendHotelGO> hotels;
 
-    private int type;
+    private boolean isInit;
+
+    private Status status;
+
+    private String failureReason;
 
     public List<RecommendHotelGO> getHotels() {
         return hotels;
@@ -26,11 +36,19 @@ public class HotelListMessageEvent {
         this.hotels = hotels;
     }
 
-    public int getType() {
-        return type;
+    public boolean isInit() {
+        return isInit;
     }
 
-    public void setType(int type) {
-        this.type = type;
+    public void setInit(boolean init) {
+        isInit = init;
+    }
+
+    public String getFailureReason() {
+        return failureReason;
+    }
+
+    public void setFailureReason(String failureReason) {
+        this.failureReason = failureReason;
     }
 }

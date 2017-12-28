@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hannesdorfmann.adapterdelegates3.AdapterDelegatesManager;
+import com.iplay.feastbooking.gson.homepage.hotelList.HotelListRequireConfig;
 import com.iplay.feastbooking.net.NetProperties;
 import com.iplay.feastbooking.net.utilImpl.recommendHotelUtil.RecommendHotelListUtility;
 import com.iplay.feastbooking.ui.order.data.basic.BasicData;
@@ -73,8 +74,11 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter {
 
     private WeakReference<Context> contextWeakReference;
 
-    public HomeRecyclerViewAdapter(Activity activity) {
+    private final HotelListRequireConfig config;
+
+    public HomeRecyclerViewAdapter(Activity activity, HotelListRequireConfig config) {
         contextWeakReference = new WeakReference<Context>(activity);
+        this.config = config;
         delegatesManager = new AdapterDelegatesManager<>();
         delegatesManager.addDelegate(TYPE_ADS, new AdvertisementAdapterDelegate(activity));
         delegatesManager.addDelegate(TYPE_ALL_LOADED, new AllLoadedAdapterDelegate(activity));
@@ -174,14 +178,14 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter {
         }
     }
 
-    public synchronized void loadMoreData(RecommendHotelListUtility utility){
-        if(utility == null){
+    public synchronized void loadMoreData(){
+        Context context = contextWeakReference.get();
+        if(context == null){
             return;
         }
         setLoading();
         addData(new UnderLoadingHomeData());
-        int page = numOfHotels/numPerPage;
-        utility.loadMore(page,contextWeakReference.get());
+        RecommendHotelListUtility.getInstance(context).load(context, false, config);
     }
 
     public boolean isLoading(){
@@ -218,11 +222,8 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter {
 
         private WeakReference<Context> contextWeakReference;
 
-        private RecommendHotelListUtility utility;
-
         ClickToLoadMoreListener(Context context){
             contextWeakReference = new WeakReference<>(context);
-            utility = RecommendHotelListUtility.getInstance(contextWeakReference.get());
         }
 
         @Override
@@ -233,7 +234,7 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter {
             }
             int lastIndex = items.size() - 1;
             items.remove(lastIndex);
-            loadMoreData(utility);
+            loadMoreData();
         }
     }
 }

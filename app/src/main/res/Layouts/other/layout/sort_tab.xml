@@ -14,7 +14,7 @@
     <ImageView
         android:id="@+id/sort_iv"
         android:layout_gravity="center_vertical"
-        android:background="@drawable/sort_down"
+        android:background="@drawable/sort_not_active"
         android:layout_width="@dimen/app_tab_font_size"
         android:layout_height="@dimen/app_tab_font_size" />
 </LinearLayout>
