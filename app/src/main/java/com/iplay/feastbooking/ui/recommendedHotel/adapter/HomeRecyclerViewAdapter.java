@@ -10,11 +10,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hannesdorfmann.adapterdelegates3.AdapterDelegatesManager;
+import com.iplay.feastbooking.R;
+import com.iplay.feastbooking.exception.DataInconsistentException;
 import com.iplay.feastbooking.gson.homepage.hotelList.HotelListRequireConfig;
 import com.iplay.feastbooking.net.NetProperties;
 import com.iplay.feastbooking.net.utilImpl.recommendHotelUtil.RecommendHotelListUtility;
 import com.iplay.feastbooking.ui.order.data.basic.BasicData;
 import com.iplay.feastbooking.ui.recommendedHotel.data.AdvertisementHomeData;
+import com.iplay.feastbooking.ui.recommendedHotel.data.AllLoadedHomeData;
 import com.iplay.feastbooking.ui.recommendedHotel.data.ClickToLoadMoreHomeData;
 import com.iplay.feastbooking.ui.recommendedHotel.data.HotelHomeData;
 import com.iplay.feastbooking.ui.recommendedHotel.data.PlaceHolderHomeData;
@@ -32,6 +35,7 @@ import com.iplay.feastbooking.ui.recommendedHotel.delegates.UnderLoadingAdapterD
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -178,14 +182,37 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter {
         }
     }
 
-    public synchronized void loadMoreData(){
+    private boolean isHotelOrFooter(BasicData data){
+        return data instanceof HotelHomeData
+                || data instanceof ClickToLoadMoreHomeData
+                || data instanceof AllLoadedHomeData;
+    }
+
+    public void clear() throws DataInconsistentException {
+        Iterator<BasicData> iter = items.iterator();
+        while(iter.hasNext()){
+            BasicData data = iter.next();
+            if(isHotelOrFooter(data)){
+                iter.remove();
+                if(data instanceof HotelHomeData){
+                    numOfHotels--;
+                };
+            }
+        }
+        notifyDataSetChanged();
+        if (numOfHotels != 0) {
+            throw new DataInconsistentException("number of hotels doesn't consistent!");
+        }
+    }
+
+    public synchronized void loadMoreData(boolean isInit){
         Context context = contextWeakReference.get();
         if(context == null){
             return;
         }
         setLoading();
         addData(new UnderLoadingHomeData());
-        RecommendHotelListUtility.getInstance(context).load(context, false, config);
+        RecommendHotelListUtility.getInstance(context).load(context, isInit, config);
     }
 
     public boolean isLoading(){
@@ -228,13 +255,17 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter {
 
         @Override
         public void onClick(View v) {
-            if(!NetProperties.isNetworkConnected(contextWeakReference.get())){
-                Toast.makeText(contextWeakReference.get(),"網絡不給力",Toast.LENGTH_SHORT).show();
+            Context context = contextWeakReference.get();
+            if(context == null){
+                return;
+            }
+            if(!NetProperties.isNetworkConnected(context)){
+                Toast.makeText(context,context.getResources().getString(R.string.failure_reason_no_internet),Toast.LENGTH_SHORT).show();
                 return;
             }
             int lastIndex = items.size() - 1;
             items.remove(lastIndex);
-            loadMoreData();
+            loadMoreData(false);
         }
     }
 }

@@ -22,6 +22,7 @@ import com.iplay.feastbooking.component.view.tab.OrderSortTab;
 import com.iplay.feastbooking.component.view.tab.PriceSortTab;
 import com.iplay.feastbooking.entity.Advertisement;
 import com.iplay.feastbooking.entity.RecommendGrid;
+import com.iplay.feastbooking.exception.DataInconsistentException;
 import com.iplay.feastbooking.gson.homepage.hotelList.HotelListRequireConfig;
 import com.iplay.feastbooking.gson.homepage.hotelList.RecommendHotelGO;
 import com.iplay.feastbooking.messageEvent.home.AdvertisementMessageEvent;
@@ -45,7 +46,7 @@ import java.util.List;
  * Created by admin on 2017/7/14.
  */
 
-public class RecommendedHotelFragment extends BasicFragment{
+public class RecommendedHotelFragment extends BasicFragment implements OnSortLabelClickListener{
 
     public static final String TAG = "recommendHotelFragment";
 
@@ -83,8 +84,6 @@ public class RecommendedHotelFragment extends BasicFragment{
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.special_recommend_layout,container,false);
-        config = HotelListRequireConfig.getDefaultRequireConfig();
-
         view.findViewById(R.id.status_bar_fix)
                 .setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                         WindowAttr.getStatusBarHeight(getActivity())));
@@ -92,8 +91,17 @@ public class RecommendedHotelFragment extends BasicFragment{
         mainView = (RecyclerView) view.findViewById(R.id.main_recycler_view);
 
         complexSortTab = (ComplexSortTab) view.findViewById(R.id.complex_sort_tab);
+        complexSortTab.setConfig(config);
+        complexSortTab.setListener(this);
+
         orderSortTab = (OrderSortTab) view.findViewById(R.id.order_sort_tab);
+        orderSortTab.setConfig(config);
+        orderSortTab.setListener(this);
+
         priceSortTab = (PriceSortTab) view.findViewById(R.id.price_sort_tab);
+        priceSortTab.setConfig(config);
+        priceSortTab.setListener(this);
+
         filterTab = (FilterTab) view.findViewById(R.id.filter_tab);
 
         final GridLayoutManager manager = new GridLayoutManager(mainView.getContext(),6,GridLayoutManager.VERTICAL,false);
@@ -114,7 +122,7 @@ public class RecommendedHotelFragment extends BasicFragment{
                     postHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            adapter.loadMoreData();
+                            adapter.loadMoreData(false);
                         }
                     });
                 }
@@ -123,8 +131,6 @@ public class RecommendedHotelFragment extends BasicFragment{
         return view;
     }
 
-
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         isRegisteredNeed = true;
@@ -132,11 +138,11 @@ public class RecommendedHotelFragment extends BasicFragment{
         if(isInit){
             return;
         }else{
+            config = HotelListRequireConfig.getDefaultRequireConfig();
             mContext = getActivity();
             adapter = new HomeRecyclerViewAdapter(getActivity(), config);
-
+            RecommendHotelListUtility.getInstance(mContext).asyncInit(mContext, config);
             isInit = true;
-
         }
     }
 
@@ -165,56 +171,65 @@ public class RecommendedHotelFragment extends BasicFragment{
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onHotelListNoInternetMessageEvent(HotelListNoInternetMessageEvent event){
-        int type = event.getType();
-        if(type == HotelListNoInternetMessageEvent.TYPE_INIT){
-            isListInit = true;
-            adapter.addData(new ClickToLoadMoreHomeData());
-            adapter.notifyDataSetChanged();
-        }else if(type == HotelListNoInternetMessageEvent.TYPE_LOAD_MORE){
-            Toast.makeText(mContext,"網絡不給力",Toast.LENGTH_SHORT).show();
-            adapter.cancelLoading();
-            adapter.addData(new ClickToLoadMoreHomeData());
-            adapter.notifyDataSetChanged();
-            adapter.setLoaded();
+    public void onHotelListMessageEvent(HotelListMessageEvent event){
+        if(event.isInit()){
+            if(event.getStatus() == HotelListMessageEvent.Status.SUCCESS) {
+                onLoadMoreActionSuccess(event.getHotels(), true);
+            }else if(event.getStatus() == HotelListMessageEvent.Status.FAILURE){
+                onLoadMoreActionFailure(event.getFailureReason());
+            }
+        }else {
+            if(event.getStatus() == HotelListMessageEvent.Status.SUCCESS){
+                onLoadMoreActionSuccess(event.getHotels(), false);
+            }else if(event.getStatus() == HotelListMessageEvent.Status.FAILURE){
+                onLoadMoreActionFailure(event.getFailureReason());
+            }
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onHotelListMessageEvent(HotelListMessageEvent event){
-        int type = event.getType();
-        if(type == HotelListMessageEvent.TYPE_INIT){
-            List<RecommendHotelGO> hotels = event.getHotels();
-            if(hotels == null || hotels.size() == 0){
-                return;
-            }
-            for(int i=0;i<hotels.size();i++ ){
+    private void onLoadMoreActionFailure(String failureReason){
+        adapter.cancelLoading();
+        Toast.makeText(getActivity(), failureReason, Toast.LENGTH_SHORT).show();
+        adapter.addData(new ClickToLoadMoreHomeData());
+        adapter.setLoaded();
+    }
+
+    private void onLoadMoreActionSuccess(List<RecommendHotelGO> hotels, boolean initList){
+        adapter.cancelLoading();
+        if(hotels == null || hotels.size() == 0){
+            adapter.addData(new AllLoadedHomeData());
+        }else {
+            for(int i=0; i<hotels.size(); i++){
                 HotelHomeData data = new HotelHomeData();
                 data.setHotel(hotels.get(i));
                 adapter.addData(data);
             }
-            if(adapter.isAllLoaded() ){
+            if(adapter.isAllLoaded()){
                 adapter.addData(new AllLoadedHomeData());
             }
-            isListInit = true;
-        }else if(type == HotelListMessageEvent.TYPE_LOAD){
-            adapter.cancelLoading();
-            List<RecommendHotelGO> hotels = event.getHotels();
-            if(hotels == null || hotels.size() == 0){
-                adapter.addData(new AllLoadedHomeData());
-            }else {
-                for(int i=0; i<hotels.size(); i++){
-                    HotelHomeData data = new HotelHomeData();
-                    data.setHotel(hotels.get(i));
-                    adapter.addData(data);
-                }
-                if(adapter.isAllLoaded()){
-                    adapter.addData(new AllLoadedHomeData());
-                }
-            }
-            adapter.setLoaded();
         }
-
+        adapter.setLoaded();
+        isListInit = initList;
     }
 
+    @Override
+    public boolean postClick() {
+        if(adapter.isLoading()){
+            return false;
+        }else {
+            isListInit = false;
+            try {
+                adapter.clear();
+            }catch (DataInconsistentException e){
+                return false;
+            }
+            return true;
+        }
+    }
+
+    @Override
+    public boolean afterClick() {
+        adapter.loadMoreData(true);
+        return true;
+    }
 }

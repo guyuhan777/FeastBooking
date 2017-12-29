@@ -48,13 +48,18 @@ public class HotelListRequireConfig {
             }
         } else if (sortType == SortType.ORDER) {
             query += "numOfOrders";
+            if (asc) {
+                query += ",asc";
+            } else {
+                query += ",desc";
+            }
         } else if (sortType == SortType.COMPLEX) {
             query += "rating";
-        }
-        if (asc) {
-            query += ",asc";
-        } else {
-            query += ",desc";
+            if (asc) {
+                query += ",asc";
+            } else {
+                query += ",desc";
+            }
         }
         if(filterRequireConfig != null && !filterRequireConfig.getQueryString().equals("")){
             query += "&" + filterRequireConfig.getQueryString();

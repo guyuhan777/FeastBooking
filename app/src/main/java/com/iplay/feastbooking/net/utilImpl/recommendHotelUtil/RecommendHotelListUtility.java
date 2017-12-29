@@ -1,6 +1,7 @@
 package com.iplay.feastbooking.net.utilImpl.recommendHotelUtil;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -207,6 +208,7 @@ public class RecommendHotelListUtility {
                         List<RecommendHotelGO> gos =  gson.fromJson(response.body().string(),type);
                         event.setHotels(gos);
                     }
+                    EventBus.getDefault().post(event);
                 }
             });
         }

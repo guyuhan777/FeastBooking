@@ -5,12 +5,16 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 
 import com.iplay.feastbooking.R;
+import com.iplay.feastbooking.gson.homepage.hotelList.HotelListRequireConfig;
+import com.iplay.feastbooking.net.utilImpl.recommendHotelUtil.RecommendHotelListUtility;
+import com.iplay.feastbooking.ui.recommendedHotel.OnSortLabelClickListener;
 
 /**
  * Created by gu_y-pc on 2017/12/25.
  */
 
 public class OrderSortTab extends SortTab {
+
     public OrderSortTab(Context context) {
         super(context);
     }
@@ -30,7 +34,7 @@ public class OrderSortTab extends SortTab {
     }
 
     @Override
-    void onFilterSelectAction() {
-
+    void onFilterSelectAction(){
+        config.setSortType(HotelListRequireConfig.SortType.ORDER);
     }
 }
