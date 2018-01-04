@@ -45,8 +45,6 @@ public class FeastActivity extends BasicActivity implements View.OnClickListener
 
     private View status_bar_fix_tile;
 
-    private FeastUtility utility;
-
     private Feast feast;
 
     private ScrollView feast_sv;
@@ -132,12 +130,11 @@ public class FeastActivity extends BasicActivity implements View.OnClickListener
     public void getData() {
         Intent intent = getIntent();
         feast = (Feast) intent.getSerializableExtra(KEY_FEAST);
-        utility = FeastUtility.getInstance(this);
     }
 
     @Override
     public void showContent() {
-        utility.initFeast(feast.id);
+        FeastUtility.getInstance(this).initFeast(feast.id);
     }
 
     @Override

@@ -38,6 +38,7 @@ import com.iplay.feastbooking.ui.recommendedHotel.data.AllLoadedHomeData;
 import com.iplay.feastbooking.ui.recommendedHotel.data.ClickToLoadMoreHomeData;
 import com.iplay.feastbooking.ui.recommendedHotel.data.HotelHomeData;
 import com.iplay.feastbooking.ui.recommendedHotel.data.RecommendHotelHomeData;
+import com.iplay.feastbooking.ui.search.SearchActivity;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -51,7 +52,8 @@ import java.util.Set;
  * Created by admin on 2017/7/14.
  */
 
-public class RecommendedHotelFragment extends BasicFragment implements OnSortLabelClickListener{
+public class RecommendedHotelFragment extends BasicFragment
+        implements OnSortLabelClickListener, View.OnClickListener{
 
     private  volatile boolean isInit = false;
 
@@ -92,6 +94,7 @@ public class RecommendedHotelFragment extends BasicFragment implements OnSortLab
         view.findViewById(R.id.status_bar_fix)
                 .setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                         WindowAttr.getStatusBarHeight(getActivity())));
+        view.findViewById(R.id.search).setOnClickListener(this);
 
         mainView = (RecyclerView) view.findViewById(R.id.main_recycler_view);
 
@@ -265,6 +268,14 @@ public class RecommendedHotelFragment extends BasicFragment implements OnSortLab
             if(currentTab != sortTab){
                 currentTab.unSelectSort();
             }
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.search:
+                SearchActivity.start(mContext);
         }
     }
 }

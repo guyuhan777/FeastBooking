@@ -1,11 +1,12 @@
 <litepal>
     <dbname value="feast_booking"/>
 
-    <version value ="20"/>
+    <version value ="21"/>
 
     <list>
         <mapping class="com.iplay.feastbooking.dto.UserDto"/>
         <mapping class="com.iplay.feastbooking.dto.AdvertisementDto" />
         <mapping class="com.iplay.feastbooking.dto.RecommendGridDto" />
+        <mapping class="com.iplay.feastbooking.dto.HistorySearchItemDto" />
     </list>
 </litepal>
