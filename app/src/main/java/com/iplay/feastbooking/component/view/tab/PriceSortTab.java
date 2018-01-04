@@ -26,12 +26,12 @@ public class PriceSortTab extends SortTab {
     }
 
     @Override
-    void onFilterUnSelectAction() {
+    void onSortUnSelectAction() {
 
     }
 
     @Override
-    void onFilterSelectAction() {
+    void onSortSelectAction() {
         config.setSortType(HotelListRequireConfig.SortType.PRICE);
     }
 }

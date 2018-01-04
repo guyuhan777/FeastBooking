@@ -232,7 +232,7 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter {
     }
 
     public boolean isAllLoaded(){
-        return numOfHotels!=0 && numOfHotels%numPerPage!=0;
+        return (numOfHotels!=0 && numOfHotels%numPerPage!=0) || numOfHotels == 0;
     }
 
     public void initListenerOnCLM(TextView clickToLoadMore, Context context){

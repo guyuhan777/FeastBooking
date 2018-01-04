@@ -1,12 +1,12 @@
 package com.iplay.feastbooking.ui.recommendedHotel;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,14 +20,16 @@ import com.iplay.feastbooking.component.view.tab.ComplexSortTab;
 import com.iplay.feastbooking.component.view.tab.FilterTab;
 import com.iplay.feastbooking.component.view.tab.OrderSortTab;
 import com.iplay.feastbooking.component.view.tab.PriceSortTab;
+import com.iplay.feastbooking.component.view.tab.SortTab;
 import com.iplay.feastbooking.entity.Advertisement;
 import com.iplay.feastbooking.entity.RecommendGrid;
 import com.iplay.feastbooking.exception.DataInconsistentException;
+import com.iplay.feastbooking.gson.homepage.hotelList.HotelListFilterRequireConfig;
 import com.iplay.feastbooking.gson.homepage.hotelList.HotelListRequireConfig;
 import com.iplay.feastbooking.gson.homepage.hotelList.RecommendHotelGO;
 import com.iplay.feastbooking.messageEvent.home.AdvertisementMessageEvent;
+import com.iplay.feastbooking.messageEvent.home.FilterMessageEvent;
 import com.iplay.feastbooking.messageEvent.home.HotelListMessageEvent;
-import com.iplay.feastbooking.messageEvent.home.HotelListNoInternetMessageEvent;
 import com.iplay.feastbooking.messageEvent.home.RecommendGridMessageEvent;
 import com.iplay.feastbooking.net.utilImpl.recommendHotelUtil.RecommendHotelListUtility;
 import com.iplay.feastbooking.ui.recommendedHotel.adapter.HomeRecyclerViewAdapter;
@@ -40,15 +42,16 @@ import com.iplay.feastbooking.ui.recommendedHotel.data.RecommendHotelHomeData;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by admin on 2017/7/14.
  */
 
 public class RecommendedHotelFragment extends BasicFragment implements OnSortLabelClickListener{
-
-    public static final String TAG = "recommendHotelFragment";
 
     private  volatile boolean isInit = false;
 
@@ -80,6 +83,8 @@ public class RecommendedHotelFragment extends BasicFragment implements OnSortLab
 
     private FilterTab filterTab;
 
+    private Set<SortTab> sortTabGroup = new HashSet<>();
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -93,16 +98,21 @@ public class RecommendedHotelFragment extends BasicFragment implements OnSortLab
         complexSortTab = (ComplexSortTab) view.findViewById(R.id.complex_sort_tab);
         complexSortTab.setConfig(config);
         complexSortTab.setListener(this);
+        sortTabGroup.add(complexSortTab);
 
         orderSortTab = (OrderSortTab) view.findViewById(R.id.order_sort_tab);
         orderSortTab.setConfig(config);
         orderSortTab.setListener(this);
+        sortTabGroup.add(orderSortTab);
 
         priceSortTab = (PriceSortTab) view.findViewById(R.id.price_sort_tab);
         priceSortTab.setConfig(config);
         priceSortTab.setListener(this);
+        sortTabGroup.add(priceSortTab);
 
         filterTab = (FilterTab) view.findViewById(R.id.filter_tab);
+        filterTab.setConfig(config);
+        filterTab.setListener(this);
 
         final GridLayoutManager manager = new GridLayoutManager(mainView.getContext(),6,GridLayoutManager.VERTICAL,false);
         mainView.setLayoutManager(manager);
@@ -187,6 +197,20 @@ public class RecommendedHotelFragment extends BasicFragment implements OnSortLab
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onFilterMessageEvent(FilterMessageEvent event){
+        HotelListFilterRequireConfig filterRequireConfig = config.getFilterRequireConfig();
+        if (filterRequireConfig != null){
+            filterTab.activeFilter();
+            filterRequireConfig.setMaxPrice(event.getMaxPrice());
+            filterRequireConfig.setMinPrice(event.getMinPrice());
+            filterRequireConfig.setMinRating(event.getMinRate());
+            if(postClick()){
+                afterClick();
+            }
+        }
+    }
+
     private void onLoadMoreActionFailure(String failureReason){
         adapter.cancelLoading();
         Toast.makeText(getActivity(), failureReason, Toast.LENGTH_SHORT).show();
@@ -231,5 +255,16 @@ public class RecommendedHotelFragment extends BasicFragment implements OnSortLab
     public boolean afterClick() {
         adapter.loadMoreData(true);
         return true;
+    }
+
+    @Override
+    public void unSelectOther(SortTab sortTab) {
+        Iterator<SortTab> iterator = sortTabGroup.iterator();
+        while (iterator.hasNext()){
+            SortTab currentTab = iterator.next();
+            if(currentTab != sortTab){
+                currentTab.unSelectSort();
+            }
+        }
     }
 }

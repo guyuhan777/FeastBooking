@@ -107,6 +107,8 @@ public class NewHotelDetailActivity extends BasicActivity implements View.OnClic
         start(context, hotel, false);
     }
 
+
+
     public static void start(Context context,RecommendHotelGO hotel, boolean isFromFavouriteList){
         Intent intent = new Intent(context, NewHotelDetailActivity.class);
         intent.putExtra(HOTEL_KEY, hotel);

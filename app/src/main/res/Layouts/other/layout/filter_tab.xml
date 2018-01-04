@@ -6,12 +6,15 @@
     android:layout_height="wrap_content"
     android:gravity="center">
     <TextView
+        android:id="@+id/filter_label_tv"
         android:layout_gravity="center_vertical"
+        android:textColor="@color/grey"
         android:textSize="@dimen/app_text_normal"
         android:text="@string/filter_tab_filter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
     <ImageView
+        android:id="@+id/filter_iv"
         android:layout_gravity="clip_vertical"
         android:background="@drawable/filter"
         android:layout_width="@dimen/app_tab_font_size"

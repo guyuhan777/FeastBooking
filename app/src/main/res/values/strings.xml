@@ -1,4 +1,10 @@
 <resources>
+    <string name="cancel">取消</string>
+    <string name="rate_range_label">評分範圍</string>
+    <string name="price_range_label">價格範圍</string>
+    <string name="min_price">最低價($)</string>
+    <string name="max_price">最高價($)</string>
+    <string name="confirm">確定</string>
     <string name="failure_reason_no_internet">網絡不給力</string>
     <string name="failure_reason_unknown_reason">未知錯誤</string>
     <string name="uploading_hint">上傳中</string>

@@ -12,6 +12,8 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.hannesdorfmann.adapterdelegates3.AdapterDelegate;
 import com.iplay.feastbooking.R;
+import com.iplay.feastbooking.gson.homepage.hotelList.RecommendHotelGO;
+import com.iplay.feastbooking.ui.hotelDetail.NewHotelDetailActivity;
 import com.iplay.feastbooking.ui.order.data.basic.BasicData;
 import com.iplay.feastbooking.ui.recommendedHotel.data.RecommendHotelHomeData;
 
@@ -46,9 +48,24 @@ public class RecommendHotelAdapterDelegate extends AdapterDelegate<List<BasicDat
 
     @Override
     protected void onBindViewHolder(@NonNull List<BasicData> items, int position, @NonNull RecyclerView.ViewHolder holder, @NonNull List<Object> payloads) {
-        RecommendHotelHomeData data = (RecommendHotelHomeData) items.get(position);
+        final RecommendHotelHomeData data = (RecommendHotelHomeData) items.get(position);
         RecommendHotelViewHolder recommendHotelViewHolder = (RecommendHotelViewHolder) holder;
-        Glide.with(contextWeakReference.get()).load(data.getRecommendGrid().getUrl()).placeholder(R.drawable.loading_reco).into(recommendHotelViewHolder.icon);
+        ImageView iconIv = recommendHotelViewHolder.icon;
+        Glide.with(contextWeakReference.get()).load(data.getRecommendGrid().getUrl())
+                .placeholder(R.drawable.loading_reco)
+                .into(iconIv);
+        iconIv.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                Context context = contextWeakReference.get();
+                if(context != null){
+                    RecommendHotelGO hotelGO = new RecommendHotelGO();
+                    hotelGO.id = data.getRecommendGrid().getHotelId();
+                    NewHotelDetailActivity.start(context, hotelGO);
+                }
+            }
+        });
     }
 
     private static class RecommendHotelViewHolder extends RecyclerView.ViewHolder{

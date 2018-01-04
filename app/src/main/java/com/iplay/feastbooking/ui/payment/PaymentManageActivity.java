@@ -145,7 +145,6 @@ public class PaymentManageActivity extends BasicActivity implements View.OnClick
     public static void start(Context context, int orderId,
                              @NonNull OrderDetail.OrderPayment orderPayment,
                              IdentityMatrix identityMatrix, String orderStatus){
-        Log.d(TAG, orderStatus);
         Intent intent = new Intent(context, PaymentManageActivity.class);
         intent.putExtra(order_id_key, orderId);
         intent.putExtra(payment_key, orderPayment);

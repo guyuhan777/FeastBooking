@@ -10,7 +10,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.iplay.feastbooking.R;
-import com.iplay.feastbooking.gson.homepage.hotelList.HotelListFilterRequireConfig;
 import com.iplay.feastbooking.gson.homepage.hotelList.HotelListRequireConfig;
 import com.iplay.feastbooking.ui.recommendedHotel.OnSortLabelClickListener;
 
@@ -59,18 +58,18 @@ public abstract class SortTab extends LinearLayout implements View.OnClickListen
         super(context, attrs, defStyleAttr);
     }
 
-    public void unSelectFilter() {
+    public void unSelectSort() {
         sort_label_tv.setTextColor(getResources().getColor(R.color.grey));
         isNextSortAsc = true;
         sort_iv.setBackground(getContext().getResources().getDrawable(R.drawable.sort_not_active));
-        onFilterUnSelectAction();
+        onSortUnSelectAction();
     }
 
-    abstract void onFilterUnSelectAction();
+    abstract void onSortUnSelectAction();
 
-    abstract void onFilterSelectAction();
+    abstract void onSortSelectAction();
 
-    private void onFilterSelect() {
+    private void onSortSelect() {
         if(listener == null || !listener.postClick()){
             return;
         }
@@ -81,13 +80,14 @@ public abstract class SortTab extends LinearLayout implements View.OnClickListen
         }else {
             sort_iv.setBackground(getContext().getResources().getDrawable(R.drawable.sort_active_down));
         }
-        onFilterSelectAction();
+        onSortSelectAction();
         listener.afterClick();
         isNextSortAsc = !isNextSortAsc;
+        listener.unSelectOther(this);
     }
 
     @Override
     public void onClick(View v) {
-        onFilterSelect();
+        onSortSelect();
     }
 }

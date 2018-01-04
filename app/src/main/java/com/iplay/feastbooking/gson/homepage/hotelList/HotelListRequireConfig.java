@@ -32,6 +32,12 @@ public class HotelListRequireConfig {
 
     }
 
+    public void resetFilter(){
+        if(filterRequireConfig != null){
+            filterRequireConfig.reset();
+        }
+    }
+
     public static HotelListRequireConfig getDefaultRequireConfig(){
         HotelListRequireConfig config = new HotelListRequireConfig();
         config.setFilterRequireConfig(new HotelListFilterRequireConfig());
@@ -41,25 +47,16 @@ public class HotelListRequireConfig {
     public String getQueryString() {
         String query = "?page=" + page + "&sort=";
         if (sortType == SortType.PRICE) {
-            if (asc) {
-                query += "minimumPrice,desc";
-            } else {
-                query += "maximumPrice,desc";
-            }
+            query += "minimumPrice";
         } else if (sortType == SortType.ORDER) {
             query += "numOfOrders";
-            if (asc) {
-                query += ",asc";
-            } else {
-                query += ",desc";
-            }
         } else if (sortType == SortType.COMPLEX) {
             query += "rating";
-            if (asc) {
-                query += ",asc";
-            } else {
-                query += ",desc";
-            }
+        }
+        if (asc) {
+            query += ",asc";
+        } else {
+            query += ",desc";
         }
         if(filterRequireConfig != null && !filterRequireConfig.getQueryString().equals("")){
             query += "&" + filterRequireConfig.getQueryString();

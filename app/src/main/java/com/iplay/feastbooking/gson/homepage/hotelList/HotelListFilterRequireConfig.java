@@ -58,8 +58,15 @@ public class HotelListFilterRequireConfig {
             query += ("max_price=" + maxPrice + "&");
         }
         if(hotelNameKeywords != null){
-            query += ("name=" + hotelNameKeywords + "&");
+            query += ("name=" + hotelNameKeywords);
         }
         return query;
+    }
+
+    public void reset(){
+        this.minRating = null;
+        this.minPrice = null;
+        this.maxPrice = null;
+        this.hotelNameKeywords = null;
     }
 }
