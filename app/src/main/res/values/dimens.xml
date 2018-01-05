@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="padding_sm">3dp</dimen>
     <dimen name="time_line_circle_size">24dp</dimen>
     <dimen name="time_line_width">40dp</dimen>
     <dimen name="review_portrait_size">30dp</dimen>

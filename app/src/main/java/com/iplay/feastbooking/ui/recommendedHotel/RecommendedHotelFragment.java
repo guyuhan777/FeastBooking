@@ -21,6 +21,7 @@ import com.iplay.feastbooking.component.view.tab.FilterTab;
 import com.iplay.feastbooking.component.view.tab.OrderSortTab;
 import com.iplay.feastbooking.component.view.tab.PriceSortTab;
 import com.iplay.feastbooking.component.view.tab.SortTab;
+import com.iplay.feastbooking.dto.HistorySearchItemDto;
 import com.iplay.feastbooking.entity.Advertisement;
 import com.iplay.feastbooking.entity.RecommendGrid;
 import com.iplay.feastbooking.exception.DataInconsistentException;
@@ -31,6 +32,7 @@ import com.iplay.feastbooking.messageEvent.home.AdvertisementMessageEvent;
 import com.iplay.feastbooking.messageEvent.home.FilterMessageEvent;
 import com.iplay.feastbooking.messageEvent.home.HotelListMessageEvent;
 import com.iplay.feastbooking.messageEvent.home.RecommendGridMessageEvent;
+import com.iplay.feastbooking.messageEvent.search.SearchMessageEvent;
 import com.iplay.feastbooking.net.utilImpl.recommendHotelUtil.RecommendHotelListUtility;
 import com.iplay.feastbooking.ui.recommendedHotel.adapter.HomeRecyclerViewAdapter;
 import com.iplay.feastbooking.ui.recommendedHotel.data.AdvertisementHomeData;
@@ -42,6 +44,7 @@ import com.iplay.feastbooking.ui.search.SearchActivity;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.litepal.crud.DataSupport;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -148,9 +151,7 @@ public class RecommendedHotelFragment extends BasicFragment
     public void onCreate(@Nullable Bundle savedInstanceState) {
         isRegisteredNeed = true;
         super.onCreate(savedInstanceState);
-        if(isInit){
-            return;
-        }else{
+        if(!isInit){
             config = HotelListRequireConfig.getDefaultRequireConfig();
             mContext = getActivity();
             adapter = new HomeRecyclerViewAdapter(getActivity(), config);
@@ -210,6 +211,32 @@ public class RecommendedHotelFragment extends BasicFragment
             filterRequireConfig.setMinRating(event.getMinRate());
             if(postClick()){
                 afterClick();
+            }
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSearchMessageEvent(SearchMessageEvent event){
+        String keyword = event.getKeyword();
+        config.getFilterRequireConfig().setHotelNameKeywords(keyword);
+        if(postClick()){
+            afterClick();
+        }
+        filterTab.activeFilter();
+        List<HistorySearchItemDto> expectedZeoItems = DataSupport
+                .where("keyword = ?", keyword)
+                .find(HistorySearchItemDto.class);
+        if(expectedZeoItems.size() == 1) {
+            expectedZeoItems.get(0).delete();
+        }
+        HistorySearchItemDto latestItem = new HistorySearchItemDto();
+        latestItem.setKeyword(keyword);
+        latestItem.save();
+        List<HistorySearchItemDto> allItems = DataSupport
+                .order("id desc").find(HistorySearchItemDto.class);
+        for(int i=0; i<allItems.size(); i++){
+            if(i >= 10){
+                allItems.get(i).delete();
             }
         }
     }
@@ -276,6 +303,9 @@ public class RecommendedHotelFragment extends BasicFragment
         switch (v.getId()){
             case R.id.search:
                 SearchActivity.start(mContext);
+                break;
+            default:
+                break;
         }
     }
 }
