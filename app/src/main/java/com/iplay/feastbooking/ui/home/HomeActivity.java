@@ -5,6 +5,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -15,10 +16,18 @@ import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 import com.bumptech.glide.Glide;
 import com.iplay.feastbooking.R;
 import com.iplay.feastbooking.assistance.LoginUserHolder;
+import com.iplay.feastbooking.assistance.SecurityUtility;
 import com.iplay.feastbooking.basic.BasicActivity;
+import com.iplay.feastbooking.dao.UserDao;
+import com.iplay.feastbooking.dto.UserDto;
 import com.iplay.feastbooking.ui.login.LoginActivity;
 import com.iplay.feastbooking.ui.recommendedHotel.RecommendedHotelFragment;
 import com.iplay.feastbooking.ui.self.SelfFragment;
+
+import org.litepal.crud.DataSupport;
+
+import cn.jpush.im.android.api.JMessageClient;
+import cn.jpush.im.api.BasicCallback;
 
 /**
  * Created by admin on 2017/7/14.
@@ -34,7 +43,7 @@ public class HomeActivity extends BasicActivity implements BottomNavigationBar.O
 
     private static final String KEY_SELF_PAGE = "KEY_SELF_PAGE";
 
-    public enum START_TYPE{HOME, SELF};
+    public enum START_TYPE{HOME, SELF}
 
     private RecommendedHotelFragment recommendedFragment;
 
@@ -127,6 +136,11 @@ public class HomeActivity extends BasicActivity implements BottomNavigationBar.O
 
     public static void startActivity(Context context){
         Intent intent = new Intent(context, HomeActivity.class);
+        UserDto currentUser = UserDao.getInstance().getLoginUser();
+        if(currentUser != null){
+            String md5Password = SecurityUtility.md5(currentUser.getPassword());
+            JMessageClient.login(currentUser.getUsername(), md5Password, null);
+        }
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }

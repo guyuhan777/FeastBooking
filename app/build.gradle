@@ -10,6 +10,11 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        manifestPlaceholders = [
+                JPUSH_PKGNAME : applicationId,
+                JPUSH_APPKEY : "a9d87fcaed2bcfcc393783aa",
+                JPUSH_CHANNEL : "developer-default",
+        ]
     }
     buildTypes {
         release {
@@ -55,6 +60,8 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
+    compile 'cn.jiguang.sdk:jmessage:2.4.1'
+    compile 'cn.jiguang.sdk:jcore:1.1.8'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'me.iwf.photopicker:PhotoPicker:0.9.5@aar'
     compile 'com.nineoldandroids:library:2.4.0'

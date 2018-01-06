@@ -2,6 +2,10 @@ package com.iplay.feastbooking.assistance;
 
 import android.util.Base64;
 
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
@@ -11,35 +15,39 @@ import javax.crypto.spec.SecretKeySpec;
  */
 
 public class SecurityUtility {
+    public static String md5(String string) {
 
-    private static final String CipherMode = "AES/CFB/NoPadding";
+        byte[] hash;
 
-    public static final String key = "123456789";
-
-    public static String encrypt(String key, String data) throws Exception {
         try {
-                Cipher cipher = Cipher.getInstance(CipherMode);
-                SecretKeySpec keyspec = new SecretKeySpec(key.getBytes(), "AES");
-                cipher.init(Cipher.ENCRYPT_MODE, keyspec, new IvParameterSpec(new byte[cipher.getBlockSize()]));
-                byte[] encrypted = cipher.doFinal(data.getBytes());
-                return Base64.encodeToString(encrypted, Base64.DEFAULT);
-            } catch (Exception e) {
-                e.printStackTrace();
-                return null;
-        }
-    }
 
-    public static String decrypt(String key, String data) throws Exception {
-        try {
-            byte[] encrypted1 = Base64.decode(data.getBytes(), Base64.DEFAULT);
-            Cipher cipher = Cipher.getInstance(CipherMode);
-            SecretKeySpec keyspec = new SecretKeySpec(key.getBytes(), "AES");
-            cipher.init(Cipher.DECRYPT_MODE, keyspec, new IvParameterSpec(new byte[cipher.getBlockSize()]));
-            byte[] original = cipher.doFinal(encrypted1);
-            return new String(original, "UTF-8");
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+            hash = MessageDigest.getInstance("MD5").digest(string.getBytes("UTF-8"));
+
+        } catch (NoSuchAlgorithmException e) {
+
+            throw new RuntimeException("Huh, MD5 should be supported?", e);
+
+        } catch (UnsupportedEncodingException e) {
+
+            throw new RuntimeException("Huh, UTF-8 should be supported?", e);
+
         }
+
+
+
+        StringBuilder hex = new StringBuilder(hash.length * 2);
+
+        for (byte b : hash) {
+
+            if ((b & 0xFF) < 0x10)
+
+                hex.append("0");
+
+            hex.append(Integer.toHexString(b & 0xFF));
+
+        }
+
+        return hex.toString();
+
     }
 }
