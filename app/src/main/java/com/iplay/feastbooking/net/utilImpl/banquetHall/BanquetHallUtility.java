@@ -68,7 +68,9 @@ public class BanquetHallUtility {
     public static BanquetHallUtility getInstance(Context context){
         if(utility == null){
             synchronized (BanquetHallUtility.class){
-                utility = new BanquetHallUtility(context);
+                if(utility == null) {
+                    utility = new BanquetHallUtility(context);
+                }
             }
         }
         return utility;

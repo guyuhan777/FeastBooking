@@ -25,11 +25,29 @@ public class ProperTies {
             synchronized (ProperTies.class){
                 if(instance == null){
                     instance = new Properties();
+                    InputStream in = null;
                     try {
-                        InputStream in = context.getApplicationContext().getAssets().open("appConfig");
+                        in = context.getApplicationContext().getAssets().open("appConfig");
                         instance.load(in);
                     } catch (IOException e) {
                         e.printStackTrace();
+                        if(in != null){
+                            try {
+                                in.close();
+                            } catch (IOException e1) {
+                                e1.printStackTrace();
+                            }
+                        }
+                        in = null;
+                    }finally {
+                        if(in != null){
+                            try {
+                                in.close();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        in = null;
                     }
                 }
             }

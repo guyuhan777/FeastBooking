@@ -66,7 +66,9 @@ public class HotelDetailUtility {
     public static HotelDetailUtility getInstance(Context context){
         if(utility == null){
             synchronized (HotelDetailUtility.class){
-                utility = new HotelDetailUtility(context);
+                if(utility == null) {
+                    utility = new HotelDetailUtility(context);
+                }
             }
         }
         return utility;

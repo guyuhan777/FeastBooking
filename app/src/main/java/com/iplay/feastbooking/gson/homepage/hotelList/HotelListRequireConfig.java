@@ -14,12 +14,8 @@ public class HotelListRequireConfig {
 
     private int page;
 
-    public int getPage() {
-        return page;
-    }
-
-    public void setPage(int page) {
-        this.page = page;
+    private void resetPage(){
+        page = 0;
     }
 
     private boolean asc = false;
@@ -32,7 +28,12 @@ public class HotelListRequireConfig {
 
     }
 
+    public void increasePage(){
+        page++;
+    }
+
     public void resetFilter(){
+        resetPage();
         if(filterRequireConfig != null){
             filterRequireConfig.reset();
         }
@@ -73,6 +74,7 @@ public class HotelListRequireConfig {
     }
 
     public void setSortType(SortType sortType) {
+        resetPage();
         this.sortType = sortType;
     }
 

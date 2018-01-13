@@ -15,12 +15,14 @@ import com.iplay.feastbooking.assistance.LoginUserHolder;
 import com.iplay.feastbooking.assistance.WindowAttr;
 import com.iplay.feastbooking.basic.BasicFragment;
 import com.iplay.feastbooking.component.view.bar.FunctionBar;
+import com.iplay.feastbooking.component.view.messageIcon.MessageIcon;
 import com.iplay.feastbooking.dto.UserDto;
 import com.iplay.feastbooking.gson.cashBack.CashBackMessageEvent;
 import com.iplay.feastbooking.gson.selfInfo.SelfInfo;
 import com.iplay.feastbooking.messageEvent.selfInfo.SelfInfoMessageEvent;
 import com.iplay.feastbooking.net.utilImpl.cashBack.CashBackUtility;
 import com.iplay.feastbooking.net.utilImpl.favourite.FavouriteHotelUtility;
+import com.iplay.feastbooking.net.utilImpl.jMessage.JMessageUtility;
 import com.iplay.feastbooking.net.utilImpl.selfDetail.ChangeSelfInfoUtility;
 import com.iplay.feastbooking.ui.favourite.FavouriteHotelActivity;
 import com.iplay.feastbooking.ui.order.OrderListActivity;
@@ -28,6 +30,10 @@ import com.iplay.feastbooking.ui.order.OrderListActivity;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.List;
+
+import cn.jpush.im.android.api.JMessageClient;
+import cn.jpush.im.android.api.model.Conversation;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
@@ -64,6 +70,8 @@ public class SelfFragment extends BasicFragment implements View.OnClickListener{
 
     private TextView total_cash_back_tv, pending_cash_back_tv, completed_cash_back_tv;
 
+    private MessageIcon icon;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -80,6 +88,8 @@ public class SelfFragment extends BasicFragment implements View.OnClickListener{
         user_name_tv = (TextView) view.findViewById(R.id.user_name);
         user_email_tv = (TextView) view.findViewById(R.id.user_email);
         avatar = (CircleImageView) view.findViewById(R.id.user_portrait);
+
+        icon = (MessageIcon) view.findViewById(R.id.message_icon);
 
         functionBars[ORDER_UNDER_INDEX] = (FunctionBar) view.findViewById(R.id.order_under_fb);
         functionBars[ORDER_UNDER_INDEX].setOnClickListener(this);
@@ -127,6 +137,15 @@ public class SelfFragment extends BasicFragment implements View.OnClickListener{
         }
     }
 
+    private void updateUnreadIcon() {
+        int unReadMsgCnt = JMessageUtility.getInstance(mContext).getUnreadMessageCount();
+        if (unReadMsgCnt > 0) {
+            icon.setRedDotVisible(true);
+        } else {
+            icon.setRedDotVisible(false);
+        }
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         isRegisteredNeed = true;
@@ -151,6 +170,7 @@ public class SelfFragment extends BasicFragment implements View.OnClickListener{
     }
 
     private void refreshSelfInfo(){
+        updateUnreadIcon();
         ChangeSelfInfoUtility.getInstance(mContext).updateSelfInfo(mContext);
         CashBackUtility.getInstance(mContext).getCashBack(mContext);
     }

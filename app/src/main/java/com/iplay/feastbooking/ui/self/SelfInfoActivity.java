@@ -26,6 +26,7 @@ import com.iplay.feastbooking.gson.selfInfo.SelfInfo;
 import com.iplay.feastbooking.messageEvent.selfInfo.ChangePortraitMessageEvent;
 import com.iplay.feastbooking.messageEvent.selfInfo.SelfInfoMessageEvent;
 import com.iplay.feastbooking.net.utilImpl.cashBack.CashBackUtility;
+import com.iplay.feastbooking.net.utilImpl.jMessage.JMessageUtility;
 import com.iplay.feastbooking.net.utilImpl.selfDetail.ChangeSelfInfoUtility;
 import com.iplay.feastbooking.ui.home.HomeActivity;
 
@@ -38,6 +39,8 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 
+import cn.jpush.im.android.api.JMessageClient;
+import cn.jpush.im.android.api.model.Conversation;
 import de.hdodenhof.circleimageview.CircleImageView;
 import me.iwf.photopicker.PhotoPicker;
 

@@ -133,7 +133,9 @@ public class RegisterValidUtility {
     public static RegisterValidUtility getInstance(Context context){
         if(utility == null){
             synchronized (RegisterValidUtility.class){
-                utility = new RegisterValidUtility(context);
+                if(utility == null) {
+                    utility = new RegisterValidUtility(context);
+                }
             }
         }
         return utility;

@@ -66,7 +66,9 @@ public class FeastUtility {
     public static FeastUtility getInstance(Context context){
         if(utility == null){
             synchronized (FeastUtility.class){
-                utility = new FeastUtility(context);
+                if(utility == null) {
+                    utility = new FeastUtility(context);
+                }
             }
         }
         return utility;

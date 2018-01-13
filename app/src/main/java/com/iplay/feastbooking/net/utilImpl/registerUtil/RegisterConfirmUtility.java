@@ -117,7 +117,9 @@ public class RegisterConfirmUtility {
     public static RegisterConfirmUtility getInstance(Context context){
         if(utility == null){
             synchronized (RegisterConfirmUtility.class){
-                utility = new RegisterConfirmUtility(context);
+                if(utility == null) {
+                    utility = new RegisterConfirmUtility(context);
+                }
             }
         }
         return utility;

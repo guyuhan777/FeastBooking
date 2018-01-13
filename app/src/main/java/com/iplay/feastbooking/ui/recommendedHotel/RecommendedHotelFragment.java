@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +52,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import cn.jpush.im.android.api.JMessageClient;
+
 /**
  * Created by admin on 2017/7/14.
  */
@@ -75,8 +78,6 @@ public class RecommendedHotelFragment extends BasicFragment
     private HomeRecyclerViewAdapter adapter;
 
     private HotelListRequireConfig config;
-
-    private boolean isListInit = false;
 
     private Handler postHandler = new Handler();
 
@@ -128,7 +129,7 @@ public class RecommendedHotelFragment extends BasicFragment
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                if(adapter.isAllLoaded() || !isInit || !isListInit || adapter.isClickToLoadMoreExist()){
+                if(adapter.isAllLoaded() || !isInit || adapter.isClickToLoadMoreExist()){
                     return;
                 }
                 totalItemCount = manager.getItemCount();
@@ -185,19 +186,11 @@ public class RecommendedHotelFragment extends BasicFragment
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onHotelListMessageEvent(HotelListMessageEvent event){
-        if(event.isInit()){
-            if(event.getStatus() == HotelListMessageEvent.Status.SUCCESS) {
-                onLoadMoreActionSuccess(event.getHotels(), true);
-            }else if(event.getStatus() == HotelListMessageEvent.Status.FAILURE){
-                onLoadMoreActionFailure(event.getFailureReason());
-            }
-        }else {
-            if(event.getStatus() == HotelListMessageEvent.Status.SUCCESS){
-                onLoadMoreActionSuccess(event.getHotels(), false);
-            }else if(event.getStatus() == HotelListMessageEvent.Status.FAILURE){
-                onLoadMoreActionFailure(event.getFailureReason());
-            }
+    public void onHotelListMessageEvent(HotelListMessageEvent event) {
+        if (event.getStatus() == HotelListMessageEvent.Status.SUCCESS) {
+            onLoadMoreActionSuccess(event.getHotels());
+        } else if (event.getStatus() == HotelListMessageEvent.Status.FAILURE) {
+            onLoadMoreActionFailure(event.getFailureReason());
         }
     }
 
@@ -248,7 +241,7 @@ public class RecommendedHotelFragment extends BasicFragment
         adapter.setLoaded();
     }
 
-    private void onLoadMoreActionSuccess(List<RecommendHotelGO> hotels, boolean initList){
+    private void onLoadMoreActionSuccess(List<RecommendHotelGO> hotels){
         adapter.cancelLoading();
         if(hotels == null || hotels.size() == 0){
             adapter.addData(new AllLoadedHomeData());
@@ -262,8 +255,8 @@ public class RecommendedHotelFragment extends BasicFragment
                 adapter.addData(new AllLoadedHomeData());
             }
         }
+        config.increasePage();
         adapter.setLoaded();
-        isListInit = initList;
     }
 
     @Override
@@ -271,7 +264,6 @@ public class RecommendedHotelFragment extends BasicFragment
         if(adapter.isLoading()){
             return false;
         }else {
-            isListInit = false;
             try {
                 adapter.clear();
             }catch (DataInconsistentException e){

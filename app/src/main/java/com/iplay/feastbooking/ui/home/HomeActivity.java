@@ -20,6 +20,7 @@ import com.iplay.feastbooking.assistance.SecurityUtility;
 import com.iplay.feastbooking.basic.BasicActivity;
 import com.iplay.feastbooking.dao.UserDao;
 import com.iplay.feastbooking.dto.UserDto;
+import com.iplay.feastbooking.net.utilImpl.jMessage.JMessageUtility;
 import com.iplay.feastbooking.ui.login.LoginActivity;
 import com.iplay.feastbooking.ui.recommendedHotel.RecommendedHotelFragment;
 import com.iplay.feastbooking.ui.self.SelfFragment;
@@ -136,11 +137,7 @@ public class HomeActivity extends BasicActivity implements BottomNavigationBar.O
 
     public static void startActivity(Context context){
         Intent intent = new Intent(context, HomeActivity.class);
-        UserDto currentUser = UserDao.getInstance().getLoginUser();
-        if(currentUser != null){
-            String md5Password = SecurityUtility.md5(currentUser.getPassword());
-            JMessageClient.login(currentUser.getUsername(), md5Password, null);
-        }
+        JMessageUtility.getInstance(context).login();
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
     }

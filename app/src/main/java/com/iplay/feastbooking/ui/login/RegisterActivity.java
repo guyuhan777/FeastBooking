@@ -73,7 +73,7 @@ public class RegisterActivity extends BasicActivity implements View.OnClickListe
 
     @Override
     public void findViews() {
-        status_bar_fix = (View) findViewById(R.id.status_bar_fix_title);
+        status_bar_fix = findViewById(R.id.status_bar_fix_title);
         status_bar_fix.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, WindowAttr.getStatusBarHeight(this)));
         valid_code_btn = (Button) findViewById(R.id.valid_code_btn);
         valid_code_btn.setOnClickListener(this);

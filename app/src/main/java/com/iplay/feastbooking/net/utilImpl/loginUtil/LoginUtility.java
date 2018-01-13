@@ -110,7 +110,9 @@ public class LoginUtility {
     public static LoginUtility getInstance(Context context){
         if(utility == null){
             synchronized (LoginUtility.class){
-                utility = new LoginUtility(context);
+                if(utility == null) {
+                    utility = new LoginUtility(context);
+                }
             }
         }
         return utility;
