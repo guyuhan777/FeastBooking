@@ -25,6 +25,7 @@ import com.iplay.feastbooking.net.utilImpl.favourite.FavouriteHotelUtility;
 import com.iplay.feastbooking.net.utilImpl.jMessage.JMessageUtility;
 import com.iplay.feastbooking.net.utilImpl.selfDetail.ChangeSelfInfoUtility;
 import com.iplay.feastbooking.ui.favourite.FavouriteHotelActivity;
+import com.iplay.feastbooking.ui.message.MessageActivity;
 import com.iplay.feastbooking.ui.order.OrderListActivity;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -90,6 +91,7 @@ public class SelfFragment extends BasicFragment implements View.OnClickListener{
         avatar = (CircleImageView) view.findViewById(R.id.user_portrait);
 
         icon = (MessageIcon) view.findViewById(R.id.message_icon);
+        icon.setOnClickListener(this);
 
         functionBars[ORDER_UNDER_INDEX] = (FunctionBar) view.findViewById(R.id.order_under_fb);
         functionBars[ORDER_UNDER_INDEX].setOnClickListener(this);
@@ -195,6 +197,9 @@ public class SelfFragment extends BasicFragment implements View.OnClickListener{
                 functionBars[MY_COLLECTION_INDEX].disable();
                 FavouriteHotelActivity.start(mContext);
                 functionBars[MY_COLLECTION_INDEX].enable();
+                break;
+            case R.id.message_icon:
+                MessageActivity.start(mContext);
                 break;
             default:
                 break;

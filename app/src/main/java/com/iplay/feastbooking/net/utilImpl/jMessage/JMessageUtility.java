@@ -8,6 +8,8 @@ import com.iplay.feastbooking.dao.UserDao;
 import com.iplay.feastbooking.dto.UserDto;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Properties;
 
@@ -63,9 +65,11 @@ public class JMessageUtility {
     public List<Message> getAllMessages(){
         List<Message> messages = new ArrayList<>();
         List<Conversation> conversations = JMessageClient.getConversationList();
-        for(Conversation conversation : conversations){
-            if(conversation != null){
-                messages.addAll(conversation.getAllMessage());
+        if(conversations != null) {
+            for (Conversation conversation : conversations) {
+                if (conversation != null) {
+                    messages.addAll(conversation.getAllMessage());
+                }
             }
         }
         return messages;

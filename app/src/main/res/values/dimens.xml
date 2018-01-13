@@ -24,6 +24,7 @@
     <dimen name="app_text_title_size">20sp</dimen>
     <dimen name="app_text_small">12sp</dimen>
     <dimen name="app_text_normal">15sp</dimen>
+    <dimen name="app_text_md_1">17sp</dimen>
     <dimen name="app_text_big">25sp</dimen>
     <dimen name="app_button_font_size">25sp</dimen>
     <dimen name="app_tab_font_size">20sp</dimen>

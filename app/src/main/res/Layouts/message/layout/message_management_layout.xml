@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <View
+        android:id="@+id/status_bar_fix_title"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/white" />
+    <RelativeLayout
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/app_body_margin">
+
+        <ImageView
+            android:id="@+id/back_iv"
+            android:layout_width="@dimen/app_back_size"
+            android:layout_height="@dimen/app_back_size"
+            android:layout_centerVertical="true"
+            android:src="@drawable/back_sm" />
+
+        <TextView
+            android:id="@+id/title_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="@string/message_manage_title"
+            android:textColor="@color/app_title_color"
+            android:textSize="@dimen/app_text_title_size" />
+
+    </RelativeLayout>
+
+    <include layout="@layout/title_sepertae_horizontal" />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/message_rv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </android.support.v7.widget.RecyclerView>
+</LinearLayout>
