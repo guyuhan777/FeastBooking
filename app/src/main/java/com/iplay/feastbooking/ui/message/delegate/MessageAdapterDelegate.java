@@ -3,6 +3,7 @@ package com.iplay.feastbooking.ui.message.delegate;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,7 +44,7 @@ public class MessageAdapterDelegate extends AdapterDelegate<List<BasicData>> {
 
     @Override
     protected boolean isForViewType(@NonNull List<BasicData> items, int position) {
-        return items != null && items.get(position) instanceof BasicMessage;
+        return items.get(position) instanceof BasicMessage;
     }
 
     @NonNull
@@ -92,7 +93,6 @@ public class MessageAdapterDelegate extends AdapterDelegate<List<BasicData>> {
             red_dot = (LinearLayout) itemView.findViewById(R.id.red_dot);
             date_tv = (TextView) itemView.findViewById(R.id.date_tv);
             content_tv = (TextView) itemView.findViewById(R.id.content_tv);
-
         }
     }
 }

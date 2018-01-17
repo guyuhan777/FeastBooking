@@ -6,6 +6,7 @@ import com.iplay.feastbooking.assistance.ProperTies;
 import com.iplay.feastbooking.assistance.SecurityUtility;
 import com.iplay.feastbooking.dao.UserDao;
 import com.iplay.feastbooking.dto.UserDto;
+import com.iplay.feastbooking.ui.message.data.BasicMessage;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -68,15 +69,49 @@ public class JMessageUtility {
         if(conversations != null) {
             for (Conversation conversation : conversations) {
                 if (conversation != null) {
-                    messages.addAll(conversation.getAllMessage());
+                    List<Message> conversationMessages = conversation.getAllMessage();
+                    for(int i=0; i< conversationMessages.size(); i++){
+                        Message message = conversationMessages.get(i);
+                        if(BasicMessage.isMessageValid(message)){
+                            messages.add(message);
+                        }else {
+                            conversation.deleteMessage(message.getId());
+                        }
+                    }
                 }
             }
         }
+        Collections.sort(messages, new Comparator<Message>() {
+            @Override
+            public int compare(Message o1, Message o2) {
+                return o1.getCreateTime() < o2.getCreateTime() ? 1 : -1;
+            }
+        });
         return messages;
     }
 
     public int getUnreadMessageCount(){
-        return JMessageClient.getAllUnReadMsgCount();
+        int unreadCtn = 0;
+        List<Conversation> conversations = JMessageClient.getConversationList();
+        if(conversations != null) {
+            for (Conversation conversation : conversations) {
+                if (conversation != null) {
+                    List<Message> messages = conversation.getAllMessage();
+                    if(messages != null){
+                        for(Message message : messages){
+                            if(BasicMessage.isMessageValid(message)){
+                                if(!message.haveRead()){
+                                    ++unreadCtn;
+                                }
+                            }else {
+                                conversation.deleteMessage(message.getId());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return unreadCtn;
     }
 
     public List<Conversation> getAllConversations(){

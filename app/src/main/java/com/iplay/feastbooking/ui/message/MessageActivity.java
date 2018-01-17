@@ -2,14 +2,13 @@ package com.iplay.feastbooking.ui.message;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.view.ScrollingView;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.iplay.feastbooking.R;
@@ -19,12 +18,12 @@ import com.iplay.feastbooking.net.utilImpl.jMessage.JMessageUtility;
 import com.iplay.feastbooking.ui.message.adapter.MessageAdapter;
 import com.iplay.feastbooking.ui.message.data.BasicMessage;
 import com.iplay.feastbooking.ui.order.data.basic.BasicData;
-import com.iplay.feastbooking.ui.recommendedHotel.data.AllLoadedHomeData;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import cn.jpush.im.android.api.JMessageClient;
+import cn.jpush.im.android.api.event.MessageEvent;
 import cn.jpush.im.android.api.model.Message;
 
 /**
@@ -33,9 +32,17 @@ import cn.jpush.im.android.api.model.Message;
 
 public class MessageActivity extends BasicActivity implements View.OnClickListener{
 
-    private RecyclerView message_sv;
+    private RecyclerView message_rv;
 
     private TextView title_tv;
+
+    private MessageAdapter adapter;
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        JMessageClient.registerEventReceiver(this);
+    }
 
     @Override
     public void setContentView() {
@@ -48,13 +55,19 @@ public class MessageActivity extends BasicActivity implements View.OnClickListen
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        JMessageClient.unRegisterEventReceiver(this);
+    }
+
+    @Override
     public void findViews() {
         View status_bar_fix = findViewById(R.id.status_bar_fix_title);
         status_bar_fix.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, WindowAttr.getStatusBarHeight(this)));
         List<BasicData> datas = new ArrayList<>();
         findViewById(R.id.back_iv).setOnClickListener(this);
         title_tv = (TextView) findViewById(R.id.title_tv);
-        message_sv = (RecyclerView) findViewById(R.id.message_rv);
+        message_rv = (RecyclerView) findViewById(R.id.message_rv);
         List<Message> messages = JMessageUtility.getInstance(this).getAllMessages();
         for(Message message : messages){
             if(message != null){
@@ -63,13 +76,25 @@ public class MessageActivity extends BasicActivity implements View.OnClickListen
                 datas.add(basicMessage);
             }
         }
-        MessageAdapter adapter = new MessageAdapter(datas, this);
+        adapter = new MessageAdapter(datas, this);
         LinearLayoutManager manager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
-        message_sv.setLayoutManager(manager);
-        message_sv.setAdapter(adapter);
+        message_rv.setLayoutManager(manager);
+        message_rv.setAdapter(adapter);
+        refreshMessageTitle();
+    }
+
+    private void refreshMessageTitle(){
         int unreadCount = JMessageUtility.getInstance(this).getUnreadMessageCount();
         if(unreadCount >= 0){
             title_tv.setText(getText(R.string.message_manage_title) + "(" + unreadCount + ")");
+        }
+    }
+
+    public void onEventMainThread(MessageEvent event){
+        Message message = event.getMessage();
+        if(adapter != null && BasicMessage.isMessageValid(message)){
+            adapter.addMessage(message);
+            refreshMessageTitle();
         }
     }
 
