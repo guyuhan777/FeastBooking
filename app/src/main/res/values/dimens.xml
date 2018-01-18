@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="message_delete_width">80dp</dimen>
+    <dimen name="message_item_height">100dp</dimen>
     <dimen name="padding_md">5dp</dimen>
     <dimen name="padding_sm">3dp</dimen>
     <dimen name="time_line_circle_size">24dp</dimen>

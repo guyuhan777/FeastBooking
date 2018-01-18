@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.hannesdorfmann.adapterdelegates3.AdapterDelegate;
 import com.iplay.feastbooking.R;
 import com.iplay.feastbooking.assistance.DateFormatter;
+import com.iplay.feastbooking.ui.message.adapter.MessageAdapter;
 import com.iplay.feastbooking.ui.message.data.BasicMessage;
 import com.iplay.feastbooking.ui.order.data.basic.BasicData;
 
@@ -20,9 +21,11 @@ import java.lang.ref.WeakReference;
 import java.util.Date;
 import java.util.List;
 
+import cn.jpush.im.android.api.JMessageClient;
 import cn.jpush.im.android.api.content.MessageContent;
 import cn.jpush.im.android.api.content.TextContent;
 import cn.jpush.im.android.api.enums.ContentType;
+import cn.jpush.im.android.api.model.Conversation;
 import cn.jpush.im.android.api.model.Message;
 import cn.jpush.im.android.api.model.UserInfo;
 
@@ -36,10 +39,13 @@ public class MessageAdapterDelegate extends AdapterDelegate<List<BasicData>> {
 
     private LayoutInflater inflater;
 
-    public MessageAdapterDelegate(Context context) {
+    private MessageAdapter adapter;
+
+    public MessageAdapterDelegate(Context context, MessageAdapter adapter) {
         super();
         this.contextWeakReference = new WeakReference<>(context);
         inflater = LayoutInflater.from(context);
+        this.adapter = adapter;
     }
 
     @Override
@@ -55,8 +61,8 @@ public class MessageAdapterDelegate extends AdapterDelegate<List<BasicData>> {
 
     @Override
     protected void onBindViewHolder(@NonNull List<BasicData> items, int position, @NonNull RecyclerView.ViewHolder holder, @NonNull List<Object> payloads) {
-        BasicMessage basicMessage = (BasicMessage) items.get(position);
-        Message message = basicMessage.getMessage();
+        final BasicMessage basicMessage = (BasicMessage) items.get(position);
+        final Message message = basicMessage.getMessage();
         MessageViewHolder messageViewHolder = (MessageViewHolder) holder;
         if(message.haveRead()){
             messageViewHolder.red_dot.setVisibility(View.INVISIBLE);
@@ -75,6 +81,14 @@ public class MessageAdapterDelegate extends AdapterDelegate<List<BasicData>> {
             Date createdTime = new Date(message.getCreateTime());
             messageViewHolder.date_tv.setText(DateFormatter.formatDate(createdTime));
         }
+        messageViewHolder.delete_tv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(adapter != null){
+                    adapter.removeMessage(basicMessage);
+                }
+            }
+        });
     }
 
     private static class MessageViewHolder extends RecyclerView.ViewHolder{
@@ -87,12 +101,15 @@ public class MessageAdapterDelegate extends AdapterDelegate<List<BasicData>> {
 
         private TextView content_tv;
 
+        private TextView delete_tv;
+
         MessageViewHolder(View itemView) {
             super(itemView);
             title_tv = (TextView) itemView.findViewById(R.id.title_tv);
             red_dot = (LinearLayout) itemView.findViewById(R.id.red_dot);
             date_tv = (TextView) itemView.findViewById(R.id.date_tv);
             content_tv = (TextView) itemView.findViewById(R.id.content_tv);
+            delete_tv = (TextView) itemView.findViewById(R.id.btnDelete);
         }
     }
 }

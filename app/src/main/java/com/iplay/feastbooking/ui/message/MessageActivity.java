@@ -14,10 +14,14 @@ import android.widget.TextView;
 import com.iplay.feastbooking.R;
 import com.iplay.feastbooking.assistance.WindowAttr;
 import com.iplay.feastbooking.basic.BasicActivity;
+import com.iplay.feastbooking.messageEvent.notification.MessageDeleteMessageEvent;
 import com.iplay.feastbooking.net.utilImpl.jMessage.JMessageUtility;
 import com.iplay.feastbooking.ui.message.adapter.MessageAdapter;
 import com.iplay.feastbooking.ui.message.data.BasicMessage;
 import com.iplay.feastbooking.ui.order.data.basic.BasicData;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +44,7 @@ public class MessageActivity extends BasicActivity implements View.OnClickListen
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        isRegistered = true;
         super.onCreate(savedInstanceState);
         JMessageClient.registerEventReceiver(this);
     }
@@ -68,14 +73,8 @@ public class MessageActivity extends BasicActivity implements View.OnClickListen
         findViewById(R.id.back_iv).setOnClickListener(this);
         title_tv = (TextView) findViewById(R.id.title_tv);
         message_rv = (RecyclerView) findViewById(R.id.message_rv);
-        List<Message> messages = JMessageUtility.getInstance(this).getAllMessages();
-        for(Message message : messages){
-            if(message != null){
-                BasicMessage basicMessage = new BasicMessage();
-                basicMessage.setMessage(message);
-                datas.add(basicMessage);
-            }
-        }
+        List<BasicMessage> messages = JMessageUtility.getInstance(this).getAllMessages();
+        datas.addAll(messages);
         adapter = new MessageAdapter(datas, this);
         LinearLayoutManager manager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
         message_rv.setLayoutManager(manager);
@@ -88,6 +87,11 @@ public class MessageActivity extends BasicActivity implements View.OnClickListen
         if(unreadCount >= 0){
             title_tv.setText(getText(R.string.message_manage_title) + "(" + unreadCount + ")");
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageDeleteMessageEvent(MessageDeleteMessageEvent event){
+        refreshMessageTitle();
     }
 
     public void onEventMainThread(MessageEvent event){

@@ -1,4 +1,5 @@
 <resources>
+    <string name="item_delete">刪除</string>
     <string name="check_detail">查看詳情</string>
     <string name="message_manage_title">消息列表</string>
     <string name="welcome_background">背景圖片</string>

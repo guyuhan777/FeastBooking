@@ -5,13 +5,18 @@ import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import com.hannesdorfmann.adapterdelegates3.AdapterDelegatesManager;
+import com.iplay.feastbooking.messageEvent.notification.MessageDeleteMessageEvent;
 import com.iplay.feastbooking.ui.message.data.BasicMessage;
 import com.iplay.feastbooking.ui.message.delegate.MessageAdapterDelegate;
 import com.iplay.feastbooking.ui.order.data.basic.BasicData;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.lang.ref.WeakReference;
 import java.util.List;
 
+import cn.jpush.im.android.api.JMessageClient;
+import cn.jpush.im.android.api.model.Conversation;
 import cn.jpush.im.android.api.model.Message;
 
 /**
@@ -31,14 +36,31 @@ public class MessageAdapter extends RecyclerView.Adapter {
         this.messageBasics = messageBasics;
         this.contextWeakReference = new WeakReference<>(context);
         delegatesManager = new AdapterDelegatesManager<>();
-        delegatesManager.addDelegate(new MessageAdapterDelegate(context));
+        delegatesManager.addDelegate(new MessageAdapterDelegate(context, this));
     }
 
     public void addMessage(Message message){
         BasicMessage basicMessage = new BasicMessage();
         basicMessage.setMessage(message);
         messageBasics.add(0, basicMessage);
-        notifyItemChanged(0);
+        notifyItemInserted(0);
+    }
+
+    public void removeMessage(BasicMessage basicMessage){
+        if(messageBasics != null){
+            for(int i=0; i<messageBasics.size(); i++){
+                if(messageBasics.get(i) == basicMessage){
+                    Conversation conversation;
+                    if((conversation = basicMessage.getConversation()) != null){
+                        conversation.deleteMessage(basicMessage.getMessage().getId());
+                    }
+                    messageBasics.remove(i);
+                    notifyItemRemoved(i);
+                    EventBus.getDefault().post(new MessageDeleteMessageEvent());
+                    break;
+                }
+            }
+        }
     }
 
     @Override

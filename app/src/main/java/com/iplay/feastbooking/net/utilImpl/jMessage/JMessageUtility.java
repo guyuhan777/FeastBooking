@@ -63,8 +63,8 @@ public class JMessageUtility {
         }
     }
 
-    public List<Message> getAllMessages(){
-        List<Message> messages = new ArrayList<>();
+    public List<BasicMessage> getAllMessages(){
+        final List<BasicMessage> basicMessages = new ArrayList<>();
         List<Conversation> conversations = JMessageClient.getConversationList();
         if(conversations != null) {
             for (Conversation conversation : conversations) {
@@ -73,7 +73,10 @@ public class JMessageUtility {
                     for(int i=0; i< conversationMessages.size(); i++){
                         Message message = conversationMessages.get(i);
                         if(BasicMessage.isMessageValid(message)){
-                            messages.add(message);
+                            BasicMessage basicMessage = new BasicMessage();
+                            basicMessage.setMessage(message);
+                            basicMessage.setConversation(conversation);
+                            basicMessages.add(basicMessage);
                         }else {
                             conversation.deleteMessage(message.getId());
                         }
@@ -81,13 +84,13 @@ public class JMessageUtility {
                 }
             }
         }
-        Collections.sort(messages, new Comparator<Message>() {
+        Collections.sort(basicMessages, new Comparator<BasicMessage>() {
             @Override
-            public int compare(Message o1, Message o2) {
-                return o1.getCreateTime() < o2.getCreateTime() ? 1 : -1;
+            public int compare(BasicMessage o1, BasicMessage o2) {
+                return o1.getMessage().getCreateTime() > o2.getMessage().getCreateTime() ? -1 : 1;
             }
         });
-        return messages;
+        return basicMessages;
     }
 
     public int getUnreadMessageCount(){
