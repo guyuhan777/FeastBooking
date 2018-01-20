@@ -13,9 +13,18 @@ import android.widget.TextView;
 import com.hannesdorfmann.adapterdelegates3.AdapterDelegate;
 import com.iplay.feastbooking.R;
 import com.iplay.feastbooking.assistance.DateFormatter;
+import com.iplay.feastbooking.entity.IdentityMatrix;
+import com.iplay.feastbooking.gson.orderDetail.OrderDetail;
+import com.iplay.feastbooking.messageEvent.notification.MessageStatusChangedMessageEvent;
+import com.iplay.feastbooking.net.utilImpl.jMessage.JMessageUtility;
 import com.iplay.feastbooking.ui.message.adapter.MessageAdapter;
 import com.iplay.feastbooking.ui.message.data.BasicMessage;
+import com.iplay.feastbooking.ui.order.HistoryOrderDetailActivity;
+import com.iplay.feastbooking.ui.order.OrderDetailActivity;
+import com.iplay.feastbooking.ui.order.OrderListActivity;
 import com.iplay.feastbooking.ui.order.data.basic.BasicData;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.lang.ref.WeakReference;
 import java.util.Date;
@@ -28,6 +37,7 @@ import cn.jpush.im.android.api.enums.ContentType;
 import cn.jpush.im.android.api.model.Conversation;
 import cn.jpush.im.android.api.model.Message;
 import cn.jpush.im.android.api.model.UserInfo;
+import cn.jpush.im.api.BasicCallback;
 
 /**
  * Created by gu_y-pc on 2018/1/13.
@@ -69,7 +79,7 @@ public class MessageAdapterDelegate extends AdapterDelegate<List<BasicData>> {
         }else {
             messageViewHolder.red_dot.setVisibility(View.VISIBLE);
         }
-        MessageContent content;
+        final MessageContent content;
         if((content = message.getContent()) != null
                 && content.getContentType() == ContentType.text){
             TextContent textContent = (TextContent) content;
@@ -89,6 +99,38 @@ public class MessageAdapterDelegate extends AdapterDelegate<List<BasicData>> {
                 }
             }
         });
+        messageViewHolder.check_detail_tv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(BasicMessage.isMessageValid(message)){
+                    Context context = contextWeakReference.get();
+                    message.setHaveRead(new BasicCallback() {
+                        @Override
+                        public void gotResult(int i, String s) {
+                            if(i == 0){
+                                EventBus.getDefault().post(new MessageStatusChangedMessageEvent());
+                            }
+                        }
+                    });
+                    if(content != null){
+                        String status = content.getStringExtra(BasicMessage.STATUS_KEY);
+                        TextContent content = (TextContent) message.getContent();
+                        String role = content.getStringExtra(BasicMessage.ROLE_KEY);
+                        IdentityMatrix matrix = new IdentityMatrix(role);
+                        int orderId = Integer.parseInt(content.getStringExtra(BasicMessage.ORDER_ID_KEY));
+                        if("APPROVED".equals(status)){
+                            HistoryOrderDetailActivity.start(orderId, matrix, context);
+                        }else {
+                            if(matrix.isCustomer() || matrix.isManager()){
+                                OrderDetailActivity.reload(context, orderId);
+                            }else {
+                                OrderListActivity.start(context, true);
+                            }
+                        }
+                    }
+                }
+            }
+        });
     }
 
     private static class MessageViewHolder extends RecyclerView.ViewHolder{
@@ -103,6 +145,8 @@ public class MessageAdapterDelegate extends AdapterDelegate<List<BasicData>> {
 
         private TextView delete_tv;
 
+        private TextView check_detail_tv;
+
         MessageViewHolder(View itemView) {
             super(itemView);
             title_tv = (TextView) itemView.findViewById(R.id.title_tv);
@@ -110,6 +154,7 @@ public class MessageAdapterDelegate extends AdapterDelegate<List<BasicData>> {
             date_tv = (TextView) itemView.findViewById(R.id.date_tv);
             content_tv = (TextView) itemView.findViewById(R.id.content_tv);
             delete_tv = (TextView) itemView.findViewById(R.id.btnDelete);
+            check_detail_tv = (TextView) itemView.findViewById(R.id.check_detail_tv);
         }
     }
 }

@@ -19,6 +19,7 @@ import com.iplay.feastbooking.component.view.messageIcon.MessageIcon;
 import com.iplay.feastbooking.dto.UserDto;
 import com.iplay.feastbooking.gson.cashBack.CashBackMessageEvent;
 import com.iplay.feastbooking.gson.selfInfo.SelfInfo;
+import com.iplay.feastbooking.messageEvent.notification.MessageStatusChangedMessageEvent;
 import com.iplay.feastbooking.messageEvent.selfInfo.SelfInfoMessageEvent;
 import com.iplay.feastbooking.net.utilImpl.cashBack.CashBackUtility;
 import com.iplay.feastbooking.net.utilImpl.favourite.FavouriteHotelUtility;
@@ -27,6 +28,7 @@ import com.iplay.feastbooking.net.utilImpl.selfDetail.ChangeSelfInfoUtility;
 import com.iplay.feastbooking.ui.favourite.FavouriteHotelActivity;
 import com.iplay.feastbooking.ui.message.MessageActivity;
 import com.iplay.feastbooking.ui.order.OrderListActivity;
+import com.iplay.feastbooking.ui.setting.SettingActivity;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -109,6 +111,7 @@ public class SelfFragment extends BasicFragment implements View.OnClickListener{
 
         functionBars[SETTING_INDEX] = (FunctionBar) view.findViewById(R.id.setting_fb);
         functionBars[SETTING_INDEX].function_name_tv.setText("設置");
+        functionBars[SETTING_INDEX].setOnClickListener(this);
 
         UserDto currentUser;
         if((currentUser = LoginUserHolder.getInstance().getCurrentUser())!=null){
@@ -148,10 +151,16 @@ public class SelfFragment extends BasicFragment implements View.OnClickListener{
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageStatusChangedMessageEvent(MessageStatusChangedMessageEvent event){
+        updateUnreadIcon();
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         isRegisteredNeed = true;
         super.onCreate(savedInstanceState);
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -197,6 +206,11 @@ public class SelfFragment extends BasicFragment implements View.OnClickListener{
                 functionBars[MY_COLLECTION_INDEX].disable();
                 FavouriteHotelActivity.start(mContext);
                 functionBars[MY_COLLECTION_INDEX].enable();
+                break;
+            case R.id.setting_fb:
+                functionBars[SETTING_INDEX].disable();
+                SettingActivity.start(mContext);
+                functionBars[SETTING_INDEX].enable();
                 break;
             case R.id.message_icon:
                 MessageActivity.start(mContext);

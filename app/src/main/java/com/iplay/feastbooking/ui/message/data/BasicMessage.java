@@ -26,7 +26,7 @@ public class BasicMessage extends BasicData {
         this.message = message;
     }
 
-    private static String ROLE_KEY = "role", ORDER_ID_KEY = "orderId";
+    public static String ROLE_KEY = "role", ORDER_ID_KEY = "orderId", STATUS_KEY = "status";
 
     public Conversation getConversation() {
         return conversation;
@@ -37,8 +37,7 @@ public class BasicMessage extends BasicData {
     }
 
     public static boolean isMessageValid(Message message) {
-        return true;
-        /*if (message == null || message.getContentType() != ContentType.text) {
+        if (message == null || message.getContentType() != ContentType.text) {
             return false;
         } else {
             TextContent content = (TextContent) message.getContent();
@@ -49,6 +48,5 @@ public class BasicMessage extends BasicData {
             }
         }
         return true;
-        */
     }
 }

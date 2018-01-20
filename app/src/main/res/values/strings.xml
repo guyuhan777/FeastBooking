@@ -1,4 +1,7 @@
 <resources>
+    <string name="version_up">版本更新</string>
+    <string name="clear_cache">清除緩存</string>
+    <string name="service_protocol">服務協議</string>
     <string name="item_delete">刪除</string>
     <string name="check_detail">查看詳情</string>
     <string name="message_manage_title">消息列表</string>

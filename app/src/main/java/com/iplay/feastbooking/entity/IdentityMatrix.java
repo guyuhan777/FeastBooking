@@ -14,6 +14,22 @@ public class IdentityMatrix implements Serializable{
 
     private boolean isRecommender;
 
+    public IdentityMatrix(String role){
+        switch (role){
+            case "CUSTOMER":
+                isCustomer = true;
+                break;
+            case "MANAGER":
+                isManager = true;
+                break;
+            case "RECOMMENDER":
+                isRecommender = true;
+                break;
+            default:
+                throw new IllegalArgumentException("unkown role");
+        }
+    }
+
     public IdentityMatrix(boolean isCustomer, boolean isManager, boolean isRecommender){
         this.isCustomer = isCustomer;
         this.isManager = isManager;

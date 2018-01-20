@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.iplay.feastbooking.R;
 import com.iplay.feastbooking.assistance.WindowAttr;
 import com.iplay.feastbooking.basic.BasicActivity;
-import com.iplay.feastbooking.messageEvent.notification.MessageDeleteMessageEvent;
+import com.iplay.feastbooking.messageEvent.notification.MessageStatusChangedMessageEvent;
 import com.iplay.feastbooking.net.utilImpl.jMessage.JMessageUtility;
 import com.iplay.feastbooking.ui.message.adapter.MessageAdapter;
 import com.iplay.feastbooking.ui.message.data.BasicMessage;
@@ -61,8 +61,8 @@ public class MessageActivity extends BasicActivity implements View.OnClickListen
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         JMessageClient.unRegisterEventReceiver(this);
+        super.onDestroy();
     }
 
     @Override
@@ -84,13 +84,13 @@ public class MessageActivity extends BasicActivity implements View.OnClickListen
 
     private void refreshMessageTitle(){
         int unreadCount = JMessageUtility.getInstance(this).getUnreadMessageCount();
-        if(unreadCount >= 0){
+        if(unreadCount > 0){
             title_tv.setText(getText(R.string.message_manage_title) + "(" + unreadCount + ")");
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageDeleteMessageEvent(MessageDeleteMessageEvent event){
+    public void onMessageStatusChangedMessageEvent(MessageStatusChangedMessageEvent event){
         refreshMessageTitle();
     }
 

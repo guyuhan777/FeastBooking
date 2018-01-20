@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <View
+        android:id="@+id/status_bar_fix_title"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/white" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:padding="@dimen/app_body_margin">
+
+        <ImageView
+            android:id="@+id/back_iv"
+            android:layout_width="@dimen/app_back_size"
+            android:layout_height="@dimen/app_back_size"
+            android:layout_centerVertical="true"
+            android:src="@drawable/back_sm" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="@string/self_tab_set"
+            android:textColor="@color/app_title_color"
+            android:textSize="@dimen/app_text_title_size" />
+    </RelativeLayout>
+    <include layout="@layout/title_sepertae_horizontal" />
+    <LinearLayout
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:id="@+id/version_up_bar"
+            android:background="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/app_body_margin">
+            <TextView
+                android:text="@string/version_up"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/app_recycle_view_text_size" />
+            <ImageView
+                android:id="@+id/version_up_forwards"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
+                android:src="@drawable/forwards"
+                android:layout_width="@dimen/app_forward_size"
+                android:layout_height="@dimen/app_forward_size" />
+            <TextView
+                android:id="@+id/version_tv"
+                android:layout_marginRight="@dimen/padding_sm"
+                android:layout_toLeftOf="@id/version_up_forwards"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/app_recycle_view_text_size" />
+        </RelativeLayout>
+        <include layout="@layout/seperateline_horizontal" />
+        <RelativeLayout
+            android:id="@+id/clear_cache_bar"
+            android:background="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/app_body_margin">
+            <TextView
+                android:text="@string/clear_cache"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/app_recycle_view_text_size" />
+            <ImageView
+                android:id="@+id/clear_cache_forwards"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
+                android:src="@drawable/forwards"
+                android:layout_width="@dimen/app_forward_size"
+                android:layout_height="@dimen/app_forward_size" />
+            <TextView
+                android:id="@+id/cache_tv"
+                android:layout_marginRight="@dimen/padding_sm"
+                android:layout_toLeftOf="@id/clear_cache_forwards"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/app_recycle_view_text_size" />
+        </RelativeLayout>
+        <include layout="@layout/seperateline_horizontal" />
+        <RelativeLayout
+            android:id="@+id/service_protocol_bar"
+            android:background="@color/white"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/app_body_margin">
+            <TextView
+                android:text="@string/service_protocol"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/app_recycle_view_text_size" />
+            <ImageView
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
+                android:src="@drawable/forwards"
+                android:layout_width="@dimen/app_forward_size"
+                android:layout_height="@dimen/app_forward_size" />
+        </RelativeLayout>
+        <include layout="@layout/seperateline_horizontal" />
+    </LinearLayout>
+</LinearLayout>

@@ -64,10 +64,10 @@ public abstract class BasicActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         if(isRegistered){
             EventBus.getDefault().unregister(this);
         }
+        super.onDestroy();
     }
 
     public abstract void setContentView();

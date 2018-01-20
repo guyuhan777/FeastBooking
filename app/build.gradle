@@ -26,6 +26,7 @@ android {
     sourceSets{
         main{
             res.srcDirs = [
+                    'src/main/res/layouts/setting',
                     'src/main/res/layouts/message',
                     'src/main/res/layouts/search',
                     'src/main/res/layouts/favourite',
