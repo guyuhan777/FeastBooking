@@ -26,7 +26,7 @@ public class BasicMessage extends BasicData {
         this.message = message;
     }
 
-    public static String ROLE_KEY = "role", ORDER_ID_KEY = "orderId", STATUS_KEY = "status";
+    public static String ROLE_KEY = "role", ORDER_ID_KEY = "orderId", STATUS_KEY = "orderStatus";
 
     public Conversation getConversation() {
         return conversation;

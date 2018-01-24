@@ -118,7 +118,7 @@ public class MessageAdapterDelegate extends AdapterDelegate<List<BasicData>> {
                         String role = content.getStringExtra(BasicMessage.ROLE_KEY);
                         IdentityMatrix matrix = new IdentityMatrix(role);
                         int orderId = Integer.parseInt(content.getStringExtra(BasicMessage.ORDER_ID_KEY));
-                        if("APPROVED".equals(status)){
+                        if("FINISHED".equals(status)){
                             HistoryOrderDetailActivity.start(orderId, matrix, context);
                         }else {
                             if(matrix.isCustomer() || matrix.isManager()){

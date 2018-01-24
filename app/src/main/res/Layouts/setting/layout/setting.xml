@@ -86,12 +86,21 @@
                 android:layout_height="@dimen/app_forward_size" />
             <TextView
                 android:id="@+id/cache_tv"
+                android:text="@string/cache_calculate_hint"
                 android:layout_marginRight="@dimen/padding_sm"
                 android:layout_toLeftOf="@id/clear_cache_forwards"
                 android:layout_centerVertical="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/app_recycle_view_text_size" />
+            <ProgressBar
+                android:id="@+id/clear_cache_pb"
+                android:visibility="invisible"
+                android:layout_marginBottom="@dimen/padding_sm"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@id/cache_tv"
+                android:layout_width="@dimen/app_text_normal"
+                android:layout_height="@dimen/app_text_normal" />
         </RelativeLayout>
         <include layout="@layout/seperateline_horizontal" />
         <RelativeLayout
