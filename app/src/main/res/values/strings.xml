@@ -26,6 +26,7 @@
     <string name="no_internet">網絡不給力</string>
     <string name="wan_cheng_zhu_ce">完成註冊</string>
     <string name="huo_qu_yzm">獲取驗證碼</string>
+    <string name="email_validate">郵箱驗證</string>
     <string name="you_xiang_zhu_ce">郵箱註冊</string>
     <string name="yi_you_zhang_hu">已有賬戶?</string>
     <string name="li_ji_deng_lu">立即登錄</string>

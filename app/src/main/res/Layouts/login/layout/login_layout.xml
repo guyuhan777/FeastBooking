@@ -71,6 +71,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <TextView
+                android:id="@+id/forget_pw_tv"
                 android:gravity="right"
                 android:textColor="@color/grey"
                 android:textSize="@dimen/app_text_normal"

@@ -68,6 +68,7 @@ public class SettingActivity extends BasicActivity implements View.OnClickListen
             clean_pb.setVisibility(View.INVISIBLE);
             if(isSuccess) {
                 Toast.makeText(this, getText(R.string.clean_cache_success), Toast.LENGTH_SHORT).show();
+                cache_size_tv.setText("0.0B");
             }else {
                 Toast.makeText(this, getText(R.string.clean_cache_failure), Toast.LENGTH_SHORT).show();
             }

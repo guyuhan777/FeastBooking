@@ -41,8 +41,6 @@ public class LoginActivity extends BasicActivity implements View.OnClickListener
 
     private Button cancel_btn;
 
-    private View status_bar_fix;
-
     private LoginUtility utility;
 
     private boolean isOnBack = false;
@@ -62,7 +60,7 @@ public class LoginActivity extends BasicActivity implements View.OnClickListener
 
     @Override
     public void findViews() {
-        status_bar_fix = (View) findViewById(R.id.status_bar_fix_title);
+        View status_bar_fix = findViewById(R.id.status_bar_fix_title);
         status_bar_fix.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, WindowAttr.getStatusBarHeight(this)));
         userName_et = (EditText) findViewById(R.id.username);
         userName_et.addTextChangedListener(this);
@@ -74,6 +72,7 @@ public class LoginActivity extends BasicActivity implements View.OnClickListener
         next_btn.setOnClickListener(this);
         findViewById(R.id.register_now).setOnClickListener(this);
         findViewById(R.id.login_layout_root).setOnClickListener(this);
+        findViewById(R.id.forget_pw_tv).setOnClickListener(this);
     }
 
 
@@ -146,6 +145,10 @@ public class LoginActivity extends BasicActivity implements View.OnClickListener
             case R.id.cancel:
                 finish();
                 overridePendingTransition(R.anim.hold,R.anim.top2bottom);
+                break;
+            case R.id.forget_pw_tv:
+                PasswordFindBackActivity.start(this);
+                overridePendingTransition(R.anim.bottom2top, R.anim.hold);
                 break;
             default:
                 break;
