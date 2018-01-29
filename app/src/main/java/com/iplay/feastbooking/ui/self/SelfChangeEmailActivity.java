@@ -12,7 +12,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,12 +28,10 @@ import com.iplay.feastbooking.messageEvent.selfInfo.SelfInfoMessageEvent;
 import com.iplay.feastbooking.net.utilImpl.registerUtil.RegisterValidUtility;
 import com.iplay.feastbooking.net.utilImpl.selfDetail.ChangeSelfInfoUtility;
 import com.iplay.feastbooking.ui.home.HomeActivity;
-import com.iplay.feastbooking.ui.login.RegisterActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.litepal.crud.DataSupport;
 
 /**
  * Created by gu_y-pc on 2017/12/10.
@@ -64,7 +61,7 @@ public class SelfChangeEmailActivity extends BasicActivity implements View.OnCli
 
     @Override
     public void setContentView() {
-        setContentView(R.layout.self_change_user_email_layut);
+        setContentView(R.layout.self_change_user_email_layout);
     }
 
     @Override

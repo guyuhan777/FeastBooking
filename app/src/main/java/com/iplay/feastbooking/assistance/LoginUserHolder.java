@@ -16,7 +16,6 @@ public class LoginUserHolder {
 
     private volatile UserDto currentUser;
 
-
     private LoginUserHolder(){
     }
 

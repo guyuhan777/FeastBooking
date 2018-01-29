@@ -17,14 +17,10 @@ import com.iplay.feastbooking.assistance.WindowAttr;
 import com.iplay.feastbooking.basic.BasicActivity;
 import com.iplay.feastbooking.dao.UserDao;
 import com.iplay.feastbooking.dto.UserDto;
-import com.iplay.feastbooking.gson.selfInfo.SelfInfo;
 import com.iplay.feastbooking.messageEvent.selfInfo.ChangePasswordMessageEvent;
-import com.iplay.feastbooking.messageEvent.selfInfo.ChangePhoneMessageEvent;
-import com.iplay.feastbooking.messageEvent.selfInfo.SelfInfoMessageEvent;
 import com.iplay.feastbooking.net.utilImpl.selfDetail.ChangeSelfInfoUtility;
 import com.iplay.feastbooking.ui.home.HomeActivity;
 
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -72,7 +68,7 @@ public class SelfChangePasswordActivity extends BasicActivity implements View.On
 
     @Override
     public void setContentView() {
-        setContentView(R.layout.self_change_user_password_layut);
+        setContentView(R.layout.self_change_user_password_layout);
     }
 
     @Override
