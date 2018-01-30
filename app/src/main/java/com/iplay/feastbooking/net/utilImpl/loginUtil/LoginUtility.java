@@ -2,12 +2,14 @@ package com.iplay.feastbooking.net.utilImpl.loginUtil;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.iplay.feastbooking.R;
 import com.iplay.feastbooking.assistance.LoginUserHolder;
 import com.iplay.feastbooking.assistance.ProperTies;
 import com.iplay.feastbooking.dto.UserDto;
+import com.iplay.feastbooking.gson.login.EmailTotpResponse;
 import com.iplay.feastbooking.gson.login.EmailTotpValidateRequest;
 import com.iplay.feastbooking.gson.login.LoginRequest;
 import com.iplay.feastbooking.gson.login.LoginResponse;
@@ -49,37 +51,29 @@ public class LoginUtility {
 
         private final String verifyTotp;
 
-        private final String tokenPrefix;
-
         private LoginUtility(Context context){
             properties = ProperTies.getProperties(context);
             serverUrl = properties.getProperty("serverUrl");
             urlSeperator = properties.getProperty("urlSeperator");
             loginAPI = properties.getProperty("createAuthenticationToken");
             verifyTotp = properties.getProperty("verify");
-            tokenPrefix = properties.getProperty("tokenPrefix");
         }
 
         public void getTotp(String email, Context context){
             if(NetProperties.isNetworkConnected(context)){
                 OkHttpClient client = new OkHttpClient.Builder().build();
-                String token = LoginUserHolder.getInstance().getCurrentUser().getToken();
-                if("".equals(token) || token == null){
-                    return;
-                }
-                token += tokenPrefix + " ";
                 Request request = new Request.Builder()
                         .url(serverUrl + urlSeperator + verifyTotp + "?email=" + email)
-                        .header("Authorization", token).build();
-                client.newCall(request).equals(new Callback(){
+                        .build();
+                client.newCall(request).enqueue(new Callback(){
                     @Override
                     public void onFailure(Call call, IOException e) {
-                        // do nothing;
+                        Log.d("f", "here");
                     }
 
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
-                        // do nothing
+                        Log.d("r", "here");
                     }
                 });
             }
@@ -95,7 +89,7 @@ public class LoginUtility {
                 OkHttpClient client = new OkHttpClient.Builder()
                         .connectTimeout(3, TimeUnit.SECONDS).build();
 
-                Gson gson = new Gson();
+                final Gson gson = new Gson();
 
                 EmailTotpValidateRequest validateRequest = new EmailTotpValidateRequest();
                 validateRequest.setEmail(email);
@@ -120,11 +114,19 @@ public class LoginUtility {
                             event.setResultSuccess(false);
                             event.setFailureReason(context.getString(R.string.email_or_totp_invalid));
                         }else {
-
+                            EmailTotpResponse emailTotpResponse = gson
+                                    .fromJson(response.body().string(), EmailTotpResponse.class);
+                            if(!emailTotpResponse.isTotpValid()){
+                                event.setResultSuccess(false);
+                                event.setFailureReason(context.getString(R.string.email_or_totp_invalid));
+                            }else {
+                                event.setResultSuccess(true);
+                                event.setToken(emailTotpResponse.getToken());
+                            }
                         }
+                        EventBus.getDefault().post(event);
                     }
                 });
-
             }
         }
 

@@ -8,6 +8,7 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -19,7 +20,11 @@ import android.widget.Toast;
 import com.iplay.feastbooking.R;
 import com.iplay.feastbooking.assistance.WindowAttr;
 import com.iplay.feastbooking.basic.BasicActivity;
+import com.iplay.feastbooking.messageEvent.selfInfo.TotpEmailValidMessageEvent;
 import com.iplay.feastbooking.net.utilImpl.loginUtil.LoginUtility;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 /**
  * Created by gu_y-pc on 2018/1/27.
@@ -73,6 +78,16 @@ public class PasswordFindBackActivity extends BasicActivity implements View.OnCl
         next_btn.setOnClickListener(this);
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onTotpEmailValidMessageEvent(TotpEmailValidMessageEvent event){
+        if(!event.isResultSuccess()){
+            Toast.makeText(this, event.getFailureReason(), Toast.LENGTH_SHORT).show();
+        }else {
+            Log.d("sub" , "success");
+        }
+        enableNextButton();
+    }
+
     @Override
     public void getData() {
 
@@ -121,12 +136,19 @@ public class PasswordFindBackActivity extends BasicActivity implements View.OnCl
                     LoginUtility.getInstance(this).getTotp(mailStr, this);
                 }
                 break;
-            case R.id.next_btn:
-
+            case R.id.next_btn :
+                onNextBtnClick();
                 break;
             default:
                 break;
         }
+    }
+
+    private void onNextBtnClick(){
+        disableNextButton();
+        String email = email_et.getText().toString();
+        String totp = verify_code_et.getText().toString();
+        LoginUtility.getInstance(this).validEmailAndTotp(email, totp, this);
     }
 
     private boolean isTotpValid(String totp){

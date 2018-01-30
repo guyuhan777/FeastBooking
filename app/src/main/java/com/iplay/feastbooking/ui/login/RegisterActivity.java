@@ -2,8 +2,10 @@ package com.iplay.feastbooking.ui.login;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -62,8 +64,13 @@ public class RegisterActivity extends BasicActivity implements View.OnClickListe
     }
 
     @Override
-    public void setContentView() {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         isRegistered = true;
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void setContentView() {
         setContentView(R.layout.register_layout);
     }
 

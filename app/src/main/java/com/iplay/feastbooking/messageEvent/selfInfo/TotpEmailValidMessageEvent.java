@@ -10,6 +10,16 @@ public class TotpEmailValidMessageEvent {
 
     private String failureReason;
 
+    private String token;
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
     public boolean isResultSuccess() {
         return resultSuccess;
     }
