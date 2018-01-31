@@ -121,6 +121,7 @@ public class LoginUtility {
                                 event.setFailureReason(context.getString(R.string.email_or_totp_invalid));
                             }else {
                                 event.setResultSuccess(true);
+                                event.setEmail(email);
                                 event.setToken(emailTotpResponse.getToken());
                             }
                         }

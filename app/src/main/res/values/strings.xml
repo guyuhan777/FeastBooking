@@ -1,4 +1,8 @@
 <resources>
+    <string name="new_password_et_hint">填寫新密碼</string>
+    <string name="new_password_confirm_hint">確認新密碼</string>
+    <string name="set_new_password_hint">請設置新密碼</string>
+    <string name="change_password_title">更改密碼</string>
     <string name="email_or_totp_invalid">郵箱或驗證碼錯誤</string>
     <string name="email_format_invalid">郵箱格式錯誤</string>
     <string name="clean_cache_failure">清理失敗</string>

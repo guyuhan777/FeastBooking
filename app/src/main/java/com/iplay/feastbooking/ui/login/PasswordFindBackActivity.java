@@ -83,7 +83,9 @@ public class PasswordFindBackActivity extends BasicActivity implements View.OnCl
         if(!event.isResultSuccess()){
             Toast.makeText(this, event.getFailureReason(), Toast.LENGTH_SHORT).show();
         }else {
-            Log.d("sub" , "success");
+            String email = event.getEmail();
+            String token = event.getToken();
+            SetNewPasswordActivity.start(this, email, token);
         }
         enableNextButton();
     }
