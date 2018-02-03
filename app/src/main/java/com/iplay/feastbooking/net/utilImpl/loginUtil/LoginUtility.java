@@ -9,12 +9,15 @@ import com.iplay.feastbooking.R;
 import com.iplay.feastbooking.assistance.LoginUserHolder;
 import com.iplay.feastbooking.assistance.ProperTies;
 import com.iplay.feastbooking.dto.UserDto;
+import com.iplay.feastbooking.gson.common.CommonSingleStringRequest;
+import com.iplay.feastbooking.gson.consult.CommonStateResponse;
 import com.iplay.feastbooking.gson.login.EmailTotpResponse;
 import com.iplay.feastbooking.gson.login.EmailTotpValidateRequest;
 import com.iplay.feastbooking.gson.login.LoginRequest;
 import com.iplay.feastbooking.gson.login.LoginResponse;
 import com.iplay.feastbooking.messageEvent.home.LoginMessageEvent;
 import com.iplay.feastbooking.messageEvent.home.NoInternetMessageEvent;
+import com.iplay.feastbooking.messageEvent.selfInfo.ChangePasswordMessageEvent;
 import com.iplay.feastbooking.messageEvent.selfInfo.TotpEmailValidMessageEvent;
 import com.iplay.feastbooking.net.NetProperties;
 import com.iplay.feastbooking.net.message.UtilMessage;
@@ -51,12 +54,18 @@ public class LoginUtility {
 
         private final String verifyTotp;
 
+        private final String changePassword;
+
+        private final String tokenPrefix;
+
         private LoginUtility(Context context){
             properties = ProperTies.getProperties(context);
             serverUrl = properties.getProperty("serverUrl");
             urlSeperator = properties.getProperty("urlSeperator");
             loginAPI = properties.getProperty("createAuthenticationToken");
             verifyTotp = properties.getProperty("verify");
+            changePassword = properties.getProperty("resetPassword");
+            tokenPrefix = properties.getProperty("tokenPrefix");
         }
 
         public void getTotp(String email, Context context){
@@ -68,12 +77,59 @@ public class LoginUtility {
                 client.newCall(request).enqueue(new Callback(){
                     @Override
                     public void onFailure(Call call, IOException e) {
-                        Log.d("f", "here");
+                        // do nothing here
                     }
 
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
-                        Log.d("r", "here");
+                        // do nothing here
+                    }
+                });
+            }
+        }
+
+        public void changePassword(final Context context, String password, String token){
+            if(!NetProperties.isNetworkConnected(context)){
+                ChangePasswordMessageEvent event = new ChangePasswordMessageEvent();
+                event.setType(ChangePasswordMessageEvent.TYPE.FAILURE);
+                event.setFailureResult(context.getString(R.string.no_internet));
+                EventBus.getDefault().post(event);
+            }else {
+                OkHttpClient client  = new OkHttpClient.Builder()
+                        .connectTimeout(3, TimeUnit.SECONDS).build();
+                final Gson gson = new Gson();
+                CommonSingleStringRequest singleStringRequest = new CommonSingleStringRequest();
+                singleStringRequest.setValue(password);
+                RequestBody body = RequestBody.create(UtilMessage.JSON, gson.toJson(singleStringRequest));
+                Request request = new Request.Builder()
+                        .url(serverUrl + urlSeperator + changePassword)
+                        .header("Authorization", tokenPrefix + " " +token)
+                        .put(body).build();
+                client.newCall(request).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        ChangePasswordMessageEvent event = new ChangePasswordMessageEvent();
+                        event.setType(ChangePasswordMessageEvent.TYPE.FAILURE);
+                        event.setFailureResult(context.getString(R.string.failure_reason_unknown_reason));
+                        EventBus.getDefault().post(event);
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        ChangePasswordMessageEvent event = new ChangePasswordMessageEvent();
+                        if(response.isSuccessful()){
+                            CommonStateResponse commonStateResponse = gson.fromJson(response.body().string(), CommonStateResponse.class);
+                            if(commonStateResponse.success){
+                                event.setType(ChangePasswordMessageEvent.TYPE.SUCCESS);
+                            }else {
+                                event.setType(ChangePasswordMessageEvent.TYPE.FAILURE);
+                                event.setFailureResult((String) commonStateResponse.data);
+                            }
+                        }else {
+                            event.setType(ChangePasswordMessageEvent.TYPE.FAILURE);
+                            event.setFailureResult(context.getString(R.string.failure_reason_unknown_reason));
+                        }
+                        EventBus.getDefault().post(event);
                     }
                 });
             }

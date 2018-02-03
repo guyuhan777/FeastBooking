@@ -1,4 +1,6 @@
 <resources>
+    <string name="change_password_success">修改成功</string>
+    <string name="password_not_consistent">重復密碼錯誤</string>
     <string name="new_password_et_hint">填寫新密碼</string>
     <string name="new_password_confirm_hint">確認新密碼</string>
     <string name="set_new_password_hint">請設置新密碼</string>

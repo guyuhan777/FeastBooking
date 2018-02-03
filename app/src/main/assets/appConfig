@@ -28,4 +28,5 @@ phone=phone
 password=password
 cashBack=cashback
 favourites=favourites
+resetPassword=auth/password
 appKey=a9d87fcaed2bcfcc393783aa
