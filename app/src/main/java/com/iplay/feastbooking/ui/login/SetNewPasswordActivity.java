@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -63,12 +64,18 @@ public class SetNewPasswordActivity extends BasicActivity implements View.OnClic
     @Override
     public void findViews() {
         findViewById(R.id.root_layout).setOnClickListener(this);
-        findViewById(R.id.next_btn).setOnClickListener(this);
         View status_bar_fix = findViewById(R.id.status_bar_fix_title);
-        status_bar_fix.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, WindowAttr.getStatusBarHeight(this)));
+        status_bar_fix.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, WindowAttr.getStatusBarHeight(this)));
         findViewById(R.id.back_iv).setOnClickListener(this);
-        new_password_et = (EditText) findViewById(R.id.new_email_et);
+
+        next_btn = (Button) findViewById(R.id.next_btn);
+        next_btn.setOnClickListener(this);
+
+        new_password_et = (EditText) findViewById(R.id.new_pasword_et);
+        new_password_et.addTextChangedListener(this);
+
         new_password_confirm_et = (EditText) findViewById(R.id.new_password_confirm_et);
+        new_password_confirm_et.addTextChangedListener(this);
     }
 
     @Override
@@ -87,7 +94,7 @@ public class SetNewPasswordActivity extends BasicActivity implements View.OnClic
         enableNextButton();
         if(event.getType() == ChangePasswordMessageEvent.TYPE.SUCCESS){
             Toast.makeText(this, getText(R.string.change_password_success), Toast.LENGTH_SHORT).show();
-            finish();
+            LoginActivity.startActivity(this);
         }else {
             Toast.makeText(this, event.getFailureResult(), Toast.LENGTH_SHORT).show();
         }
